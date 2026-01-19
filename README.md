@@ -40,8 +40,8 @@ npm start
 
 Dự án sử dụng HTML/CSS/JS thuần, bạn có thể mở trực tiếp các file `.html` bằng trình duyệt hoặc dùng extension **Live Server** trên VS Code để chạy.
 
-- Admin Dashboard: `admin-dashboard.html` hoặc `admin-portal/dashboard.html`
-- User Dashboard: `index.html` hoặc `user-portal/dashboard.html`
+- **Quản trị viên (Admin Portal)**: `admin-portal/index.html` (Trang đăng nhập Admin)
+- **Nhân viên (User Portal)**: `user-portal/index.html` (Trang landing page và đăng nhập)
 
 ## Yêu cầu Hệ thống
 
