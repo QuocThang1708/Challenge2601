@@ -1,0 +1,11 @@
+{
+  "name": "Nguyễn Văn Test",
+  "email": "test@congdoan.vn",
+  "phone": "0909123456",
+  "employeeId": "CB9999",
+  "password": "test123",
+  "department": "IT",
+  "position": "Developer",
+  "gender": "Nam",
+  "birthDate": "1995-05-15"
+}

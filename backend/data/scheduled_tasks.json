@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1768654915087",
+    "name": "Báo cáo hằng tuần gửi sếp",
+    "reportType": "general",
+    "cronExpression": "13 20 * * *",
+    "dataPeriod": "current_week",
+    "recipients": [
+      "hovanquocthang1708+6@gmail.com"
+    ],
+    "department": "",
+    "createdBy": "Admin",
+    "active": true,
+    "createdAt": "2026-01-17T13:01:55.087Z"
+  },
+  {
+    "id": "1768666094206",
+    "name": "Báo cáo hàng ngày gửi sếp",
+    "reportType": "general",
+    "cronExpression": "10 23 * * *",
+    "dataPeriod": "previous_week",
+    "recipients": [
+      "hovanquocthang1708+6@gmail.com"
+    ],
+    "department": "",
+    "createdBy": "Admin",
+    "active": true,
+    "createdAt": "2026-01-17T16:08:14.206Z"
+  }
+]

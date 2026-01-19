@@ -1,0 +1,1527 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trình Độ & Học Vấn - HRM</title>
+    <link rel="stylesheet" href="../shared/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- APP LAYOUT -->
+    <div class="app-layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" aria-label="Main Navigation">
+        <div class="sidebar-header">
+          <img src="../shared/logo.png" alt="Logo" />
+          <div class="logo-text">
+            <span style="display: block; font-size: 1.1rem; font-weight: 800"
+              >CỔNG CÁN BỘ</span
+            >
+            <span
+              style="
+                display: block;
+                font-size: 0.8rem;
+                font-weight: 500;
+                color: #94a3b8;
+              "
+              >HRM SYSTEM</span
+            >
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i> Dashboard
+          </a>
+          <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i> Hồ sơ cá nhân
+          </a>
+          <a href="cv.html" class="nav-item">
+            <i class="fas fa-file-alt"></i> Quản lý CV
+          </a>
+          <a
+            href="qualifications.html"
+            class="nav-item active"
+            aria-current="page"
+          >
+            <i class="fas fa-graduation-cap"></i> Trình độ & Bằng cấp
+          </a>
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content" role="main">
+        <!-- TOPBAR -->
+        <header class="topbar">
+          <h2 class="page-title">Trình độ & Bằng cấp</h2>
+          <div class="user-profile">
+            <button
+              onclick="logout()"
+              class="btn btn-icon btn-outline"
+              title="Đăng xuất"
+            >
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </header>
+
+        <!-- CONTENT WRAPPER -->
+        <div class="content-wrapper">
+          <div class="flex items-center gap-3 mb-4">
+            <!-- <button
+              onclick="window.history.back()"
+              class="btn btn-outline btn-icon"
+              aria-label="Quay lại"
+            >
+              <i class="fas fa-arrow-left"></i>
+            </button> -->
+            <h1 style="margin: 0; font-size: 1.75rem">TRÌNH ĐỘ & HỌC VẤN</h1>
+          </div>
+
+          <!-- Education Section -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <div class="flex justify-between items-center">
+                <h3 class="card-title">HỌC VẤN</h3>
+                <button
+                  class="btn btn-primary"
+                  onclick="showModal('addEducationModal')"
+                >
+                  <i class="fas fa-plus"></i> Thêm
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="timeline" id="educationTimeline">
+                <div
+                  style="
+                    text-align: center;
+                    padding: var(--space-4);
+                    color: var(--color-gray-700);
+                  "
+                >
+                  Chưa có thông tin học vấn. Click "Thêm" để bắt đầu!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Experience Section -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <div class="flex justify-between items-center">
+                <h3 class="card-title">KINH NGHIỆM CÔNG TÁC</h3>
+                <button
+                  class="btn btn-primary"
+                  onclick="showModal('addExperienceModal')"
+                >
+                  <i class="fas fa-plus"></i> Thêm
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="timeline" id="experienceTimeline">
+                <div
+                  style="
+                    text-align: center;
+                    padding: var(--space-4);
+                    color: var(--color-gray-700);
+                  "
+                >
+                  Chưa có kinh nghiệm công tác. Click "Thêm" để bắt đầu!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Skills Section -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <div class="flex justify-between items-center">
+                <h3 class="card-title">KỸ NĂNG</h3>
+                <button
+                  class="btn btn-primary"
+                  onclick="showModal('addSkillModal')"
+                >
+                  <i class="fas fa-plus"></i> Thêm
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="skillsList">
+                <div
+                  style="
+                    text-align: center;
+                    padding: var(--space-4);
+                    color: var(--color-gray-700);
+                  "
+                >
+                  Chưa có kỹ năng nào. Click "Thêm" để bắt đầu!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Achievements Section -->
+          <div class="card">
+            <div class="card-header">
+              <div class="flex justify-between items-center">
+                <h3 class="card-title">THÀNH TÍCH & KHEN THƯỞNG</h3>
+                <button
+                  class="btn btn-primary"
+                  onclick="showModal('addAchievementModal')"
+                >
+                  <i class="fas fa-plus"></i> Thêm
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="achievementsList">
+                <div
+                  style="
+                    text-align: center;
+                    padding: var(--space-4);
+                    color: var(--color-gray-700);
+                  "
+                >
+                  Chưa có thành tích nào. Click "Thêm" để bắt đầu!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modals remain unchanged below, but conceptually they are children of body/layout now. 
+         Ideally, they should be placed outside app-layout or at the end of body.
+         Since I'm replacing lines 10-168, and the existing modals start at line 171, this tool call will insert the layout logic and close it properly.
+    -->
+
+    <!-- View Detail Modal -->
+    <div class="modal-overlay" id="viewDetailModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title" id="detailModalTitle">CHI TIẾT</h2>
+          <button class="modal-close" onclick="closeModal('viewDetailModal')">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body" id="detailModalBody">
+          <!-- Content will be injected here -->
+        </div>
+        <div class="modal-footer" style="justify-content: space-between">
+          <div style="display: flex; gap: var(--space-2)">
+            <button class="btn btn-primary" onclick="handleEditFromDetail()">
+              Chỉnh sửa
+            </button>
+            <button
+              class="btn btn-outline"
+              onclick="handleDeleteFromDetail()"
+              style="color: var(--color-red); border-color: var(--color-red)"
+            >
+              Xóa
+            </button>
+          </div>
+          <button
+            class="btn btn-outline"
+            onclick="closeModal('viewDetailModal')"
+          >
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Education Modal -->
+    <div class="modal-overlay" id="addEducationModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">THÊM HỌC VẤN</h2>
+          <button class="modal-close" onclick="closeModal('addEducationModal')">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form
+            id="educationForm"
+            onsubmit="handleAddEducation(event)"
+            novalidate
+          >
+            <div class="form-group">
+              <label class="form-label" for="eduSchool"
+                >Trường/Cơ sở đào tạo *</label
+              >
+              <input type="text" id="eduSchool" class="form-input" required />
+              <div class="form-error-message" id="error-eduSchool"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="eduDegree"
+                >Bằng cấp/Chứng chỉ *</label
+              >
+              <input type="text" id="eduDegree" class="form-input" required />
+              <div class="form-error-message" id="error-eduDegree"></div>
+            </div>
+            <div class="grid grid-2 gap-3">
+              <div class="form-group">
+                <label class="form-label" for="eduStartYear"
+                  >Năm bắt đầu *</label
+                >
+                <input
+                  type="number"
+                  id="eduStartYear"
+                  class="form-input"
+                  required
+                  min="1950"
+                  max="2030"
+                />
+                <div class="form-error-message" id="error-eduStartYear"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="eduEndYear">Năm kết thúc</label>
+                <input
+                  type="number"
+                  id="eduEndYear"
+                  class="form-input"
+                  min="1950"
+                  max="2030"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="eduDescription">Mô tả</label>
+              <textarea
+                id="eduDescription"
+                class="form-input"
+                rows="3"
+              ></textarea>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="closeModal('addEducationModal')"
+              >
+                Hủy
+              </button>
+              <button type="submit" class="btn btn-primary">Thêm</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Experience Modal -->
+    <div class="modal-overlay" id="addExperienceModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">THÊM KINH NGHIỆM</h2>
+          <button
+            class="modal-close"
+            onclick="closeModal('addExperienceModal')"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form
+            id="experienceForm"
+            onsubmit="handleAddExperience(event)"
+            novalidate
+          >
+            <div class="form-group">
+              <label class="form-label" for="expCompany"
+                >Công ty/Tổ chức *</label
+              >
+              <input type="text" id="expCompany" class="form-input" required />
+              <div class="form-error-message" id="error-expCompany"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="expPosition">Vị trí *</label>
+              <input type="text" id="expPosition" class="form-input" required />
+              <div class="form-error-message" id="error-expPosition"></div>
+            </div>
+            <div class="grid grid-2 gap-3">
+              <div class="form-group">
+                <label class="form-label" for="expStartDate">Từ năm *</label>
+                <input
+                  type="number"
+                  id="expStartDate"
+                  class="form-input"
+                  required
+                  min="1950"
+                  max="2030"
+                />
+                <div class="form-error-message" id="error-expStartDate"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="expEndDate">Đến năm</label>
+                <input
+                  type="number"
+                  id="expEndDate"
+                  class="form-input"
+                  min="1950"
+                  max="2030"
+                  placeholder="Hiện tại"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="expDescription"
+                >Mô tả công việc</label
+              >
+              <textarea
+                id="expDescription"
+                class="form-input"
+                rows="3"
+              ></textarea>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="closeModal('addExperienceModal')"
+              >
+                Hủy
+              </button>
+              <button type="submit" class="btn btn-primary">Thêm</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Skill Modal -->
+    <div class="modal-overlay" id="addSkillModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">THÊM KỸ NĂNG</h2>
+          <button class="modal-close" onclick="closeModal('addSkillModal')">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="skillForm" onsubmit="handleAddSkill(event)" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="skillName">Tên kỹ năng *</label>
+              <input type="text" id="skillName" class="form-input" required />
+              <div class="form-error-message" id="error-skillName"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="skillLevel"
+                >Trình độ (1-5) *</label
+              >
+              <input
+                type="range"
+                id="skillLevel"
+                min="1"
+                max="5"
+                value="3"
+                oninput="
+                  document.getElementById('skillLevelValue').textContent =
+                    this.value
+                "
+              />
+              <div style="text-align: center; margin-top: var(--space-1)">
+                <span
+                  id="skillLevelValue"
+                  style="
+                    font-family: var(--font-mono);
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                  "
+                  >3</span
+                >
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="closeModal('addSkillModal')"
+              >
+                Hủy
+              </button>
+              <button type="submit" class="btn btn-primary">Thêm</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Achievement Modal -->
+    <div class="modal-overlay" id="addAchievementModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">THÊM THÀNH TÍCH</h2>
+          <button
+            class="modal-close"
+            onclick="closeModal('addAchievementModal')"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form
+            id="achievementForm"
+            onsubmit="handleAddAchievement(event)"
+            novalidate
+          >
+            <div class="form-group">
+              <label class="form-label" for="achTitle"
+                >Danh hiệu/Giải thưởng *</label
+              >
+              <input type="text" id="achTitle" class="form-input" required />
+              <div class="form-error-message" id="error-achTitle"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="achIssuer">Cơ quan cấp</label>
+              <input type="text" id="achIssuer" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="achDate">Năm đạt được *</label>
+              <input
+                type="number"
+                id="achDate"
+                class="form-input"
+                required
+                min="1950"
+                max="2030"
+              />
+              <div class="form-error-message" id="error-achDate"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="achDescription">Mô tả</label>
+              <textarea
+                id="achDescription"
+                class="form-input"
+                rows="2"
+              ></textarea>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="closeModal('addAchievementModal')"
+              >
+                Hủy
+              </button>
+              <button type="submit" class="btn btn-primary">Thêm</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <style>
+      .dashboard-container {
+        background: var(--color-gray-100);
+        min-height: 100vh;
+      }
+
+      .timeline {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+      }
+
+      .timeline-item {
+        background: var(--color-white);
+        border-left: 4px solid var(--color-red);
+        padding: var(--space-3);
+        transition: all var(--transition-base);
+      }
+
+      .timeline-item:hover {
+        background: var(--color-gray-100);
+        transform: translateX(4px);
+      }
+
+      .timeline-title {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 1.125rem;
+        margin-bottom: var(--space-1);
+      }
+
+      .timeline-subtitle {
+        color: var(--color-gray-700);
+        margin-bottom: var(--space-2);
+      }
+
+      .skill-item {
+        margin-bottom: var(--space-4);
+        padding: var(--space-4);
+        background: var(--color-white);
+        border: 2px solid var(--color-black);
+        border-radius: 8px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+      }
+
+      .skill-item:hover {
+        background: #fafafa;
+        transform: translateY(-3px);
+        box-shadow: 6px 6px 0 var(--color-black);
+      }
+
+      .skill-item:hover .skill-bar-fill {
+        box-shadow:
+          0 0 12px rgba(220, 38, 38, 0.4),
+          inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .skill-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-3);
+      }
+
+      .skill-name {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 1.15rem;
+        color: var(--color-black);
+        line-height: 1.3;
+      }
+
+      .skill-level-badge {
+        font-family: var(--font-mono);
+        font-size: 1rem;
+        background: transparent;
+        color: var(--color-black);
+        padding: 0;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .skill-bar {
+        height: 24px;
+        background: #e5e7eb;
+        border: 2px solid var(--color-black);
+        overflow: hidden;
+        position: relative;
+        border-radius: 12px;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+      }
+
+      .skill-bar-fill {
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          #dc2626 0%,
+          #ef4444 50%,
+          #f87171 100%
+        );
+        transition:
+          width 1s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.3s;
+        position: relative;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .skill-bar-fill::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        border-radius: 12px 12px 0 0;
+      }
+
+      .skill-bar-fill::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 4px;
+        right: 4px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 4px;
+      }
+      .achievement-item {
+        background: var(--color-white);
+        border: 2px solid var(--color-black);
+        padding: var(--space-3);
+        margin-bottom: var(--space-2);
+      }
+
+      .achievement-title {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 1.125rem;
+        margin-bottom: var(--space-1);
+      }
+
+      input[type="range"] {
+        width: 100%;
+        height: 8px;
+        background: var(--color-gray-100);
+        border: 2px solid var(--color-black);
+        outline: none;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        width: 20px;
+        height: 20px;
+        background: var(--color-red);
+        cursor: pointer;
+        border: 2px solid var(--color-black);
+      }
+    </style>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      requireAuth();
+
+      let qualificationsData = {
+        education: [],
+        experience: [],
+        skills: [],
+        achievements: [],
+      };
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        await loadQualifications();
+      });
+
+      async function loadQualifications() {
+        try {
+          const data = await apiCall("/qualifications");
+          qualificationsData = data.data || {
+            education: [],
+            experience: [],
+            skills: [],
+            achievements: [],
+          };
+
+          renderEducation();
+          renderExperience();
+          renderSkills();
+          renderAchievements();
+        } catch (error) {
+          console.error("Load qualifications error:", error);
+        }
+      }
+
+      function renderEducation() {
+        const container = document.getElementById("educationTimeline");
+        const items = qualificationsData.education || [];
+
+        if (items.length === 0) {
+          container.innerHTML =
+            '<div style="text-align: center; padding: var(--space-4); color: var(--color-gray-700);">Chưa có thông tin học vấn. Click "Thêm" để bắt đầu!</div>';
+          return;
+        }
+
+        container.innerHTML = items
+          .map(
+            (item, index) => `
+                <div class="timeline-item" onclick="viewEducationDetail(${index})" style="cursor: pointer;">
+                    <div class="timeline-title">${item.degree}</div>
+                    <div class="timeline-subtitle">${item.school} • ${
+                      item.startYear
+                    } - ${item.endYear || "Hiện tại"}</div>
+                    ${
+                      item.description
+                        ? `<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.description}</p>`
+                        : ""
+                    }
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function renderExperience() {
+        const container = document.getElementById("experienceTimeline");
+        const items = qualificationsData.experience || [];
+
+        if (items.length === 0) {
+          container.innerHTML =
+            '<div style="text-align: center; padding: var(--space-4); color: var(--color-gray-700);">Chưa có kinh nghiệm công tác. Click "Thêm" để bắt đầu!</div>';
+          return;
+        }
+
+        container.innerHTML = items
+          .map(
+            (item, index) => `
+                <div class="timeline-item" onclick="viewExperienceDetail(${index})" style="cursor: pointer;">
+                    <div class="timeline-title">${item.position}</div>
+                    <div class="timeline-subtitle">${item.company} • ${
+                      item.startDate
+                    } - ${item.endDate || "Hiện tại"}</div>
+                    ${
+                      item.description
+                        ? `<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.description}</p>`
+                        : ""
+                    }
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function renderSkills() {
+        const container = document.getElementById("skillsList");
+        const items = qualificationsData.skills || [];
+
+        if (items.length === 0) {
+          container.innerHTML =
+            '<div style="text-align: center; padding: var(--space-4); color: var(--color-gray-700);">Chưa có kỹ năng nào. Click "Thêm" để bắt đầu!</div>';
+          return;
+        }
+
+        container.innerHTML = items
+          .map(
+            (item, index) => `
+                <div class="skill-item" onclick="viewSkillDetail(${index})">
+                    <div class="skill-header">
+                        <div class="skill-name">${item.name}</div>
+                        <span class="skill-level-badge">${item.level}/5</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-bar-fill" style="width: ${
+                          (item.level / 5) * 100
+                        }%"></div>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function renderAchievements() {
+        const container = document.getElementById("achievementsList");
+        const items = qualificationsData.achievements || [];
+
+        if (items.length === 0) {
+          container.innerHTML =
+            '<div style="text-align: center; padding: var(--space-4); color: var(--color-gray-700);">Chưa có thành tích nào. Click "Thêm" để bắt đầu!</div>';
+          return;
+        }
+
+        container.innerHTML = items
+          .map(
+            (item, index) => `
+                <div class="achievement-item" onclick="viewAchievementDetail(${index})" style="cursor: pointer;">
+                    <div class="achievement-title">🏆 ${item.title}</div>
+                    <div style="color: var(--color-gray-700); margin-bottom: var(--space-1);">
+                        ${item.issuer ? item.issuer + " • " : ""}${item.date}
+                    </div>
+                    ${
+                      item.description
+                        ? `<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.description}</p>`
+                        : ""
+                    }
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      async function handleAddEducation(event) {
+        event.preventDefault();
+
+        // 1. Get Elements
+        const schoolEl = document.getElementById("eduSchool");
+        const degreeEl = document.getElementById("eduDegree");
+        const startYearEl = document.getElementById("eduStartYear");
+
+        // 2. Clear errors
+        document.getElementById("error-eduSchool").textContent = "";
+        document.getElementById("error-eduDegree").textContent = "";
+        document.getElementById("error-eduStartYear").textContent = "";
+
+        let hasError = false;
+
+        // 3. Validate
+        if (!schoolEl.value.trim()) {
+          document.getElementById("error-eduSchool").textContent =
+            "Vui lòng nhập trường/cơ sở đào tạo";
+          hasError = true;
+        }
+
+        if (!degreeEl.value.trim()) {
+          document.getElementById("error-eduDegree").textContent =
+            "Vui lòng nhập bằng cấp/chứng chỉ";
+          hasError = true;
+        }
+
+        if (!startYearEl.value.trim()) {
+          document.getElementById("error-eduStartYear").textContent =
+            "Vui lòng nhập năm bắt đầu";
+          hasError = true;
+        } else if (
+          parseInt(startYearEl.value) < 1950 ||
+          parseInt(startYearEl.value) > 2030
+        ) {
+          document.getElementById("error-eduStartYear").textContent =
+            "Năm không hợp lệ (1950-2030)";
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        const form = document.getElementById("educationForm");
+        const isEdit = form.dataset.editIndex !== undefined;
+        const editIndex = parseInt(form.dataset.editIndex);
+
+        const newItem = {
+          school: schoolEl.value,
+          degree: degreeEl.value,
+          startYear: startYearEl.value,
+          endYear: document.getElementById("eduEndYear").value,
+          description: document.getElementById("eduDescription").value,
+        };
+
+        try {
+          // showToast(isEdit ? "Đang cập nhật..." : "Đang thêm...", "info");
+          document.body.style.cursor = "wait";
+
+          const endpoint = isEdit
+            ? `/qualifications/education/${editIndex}`
+            : "/qualifications/education";
+          const method = isEdit ? "PUT" : "POST";
+
+          await apiCall(endpoint, {
+            method: method,
+            body: JSON.stringify(newItem),
+          });
+
+          showToast(
+            isEdit
+              ? "Cập nhật học vấn thành công!"
+              : "Thêm học vấn thành công!",
+            "success"
+          );
+          closeModal("addEducationModal");
+          document.getElementById("educationForm").reset();
+          delete form.dataset.editIndex;
+
+          // Reset modal title
+          document.querySelector(
+            "#addEducationModal .modal-title"
+          ).textContent = "THÊM HỌC VẤN";
+          document.querySelector(
+            '#educationForm button[type="submit"]'
+          ).textContent = "Thêm";
+
+          await loadQualifications();
+        } catch (error) {
+          showToast(
+            error.message || (isEdit ? "Cập nhật thất bại" : "Thêm thất bại"),
+            "error"
+          );
+        } finally {
+          document.body.style.cursor = "default";
+        }
+      }
+
+      async function handleAddExperience(event) {
+        event.preventDefault();
+
+        // 1. Get Elements
+        const companyEl = document.getElementById("expCompany");
+        const positionEl = document.getElementById("expPosition");
+        const startDateEl = document.getElementById("expStartDate");
+
+        // 2. Clear errors
+        document.getElementById("error-expCompany").textContent = "";
+        document.getElementById("error-expPosition").textContent = "";
+        document.getElementById("error-expStartDate").textContent = "";
+
+        let hasError = false;
+
+        // 3. Validate
+        if (!companyEl.value.trim()) {
+          document.getElementById("error-expCompany").textContent =
+            "Vui lòng nhập công ty/tổ chức";
+          hasError = true;
+        }
+
+        if (!positionEl.value.trim()) {
+          document.getElementById("error-expPosition").textContent =
+            "Vui lòng nhập vị trí";
+          hasError = true;
+        }
+
+        if (!startDateEl.value.trim()) {
+          document.getElementById("error-expStartDate").textContent =
+            "Vui lòng nhập năm bắt đầu";
+          hasError = true;
+        } else if (
+          parseInt(startDateEl.value) < 1950 ||
+          parseInt(startDateEl.value) > 2030
+        ) {
+          document.getElementById("error-expStartDate").textContent =
+            "Năm không hợp lệ (1950-2030)";
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        const form = document.getElementById("experienceForm");
+        const isEdit = form.dataset.editIndex !== undefined;
+        const editIndex = parseInt(form.dataset.editIndex);
+
+        const newItem = {
+          company: companyEl.value,
+          position: positionEl.value,
+          startDate: startDateEl.value,
+          endDate: document.getElementById("expEndDate").value,
+          description: document.getElementById("expDescription").value,
+        };
+
+        try {
+          // showToast(isEdit ? "Đang cập nhật..." : "Đang thêm...", "info");
+          document.body.style.cursor = "wait";
+
+          const endpoint = isEdit
+            ? `/qualifications/experience/${editIndex}`
+            : "/qualifications/experience";
+          const method = isEdit ? "PUT" : "POST";
+
+          await apiCall(endpoint, {
+            method: method,
+            body: JSON.stringify(newItem),
+          });
+
+          showToast(
+            isEdit
+              ? "Cập nhật kinh nghiệm thành công!"
+              : "Thêm kinh nghiệm thành công!",
+            "success"
+          );
+          closeModal("addExperienceModal");
+          document.getElementById("experienceForm").reset();
+          delete form.dataset.editIndex;
+
+          document.querySelector(
+            "#addExperienceModal .modal-title"
+          ).textContent = "THÊM KINH NGHIỆM";
+          document.querySelector(
+            '#experienceForm button[type="submit"]'
+          ).textContent = "Thêm";
+
+          await loadQualifications();
+        } catch (error) {
+          showToast(
+            error.message || (isEdit ? "Cập nhật thất bại" : "Thêm thất bại"),
+            "error"
+          );
+        } finally {
+          document.body.style.cursor = "default";
+        }
+      }
+
+      async function handleAddSkill(event) {
+        event.preventDefault();
+
+        // 1. Get Elements
+        const skillNameEl = document.getElementById("skillName");
+
+        // 2. Clear errors
+        document.getElementById("error-skillName").textContent = "";
+
+        // 3. Validate
+        let hasError = false;
+        if (!skillNameEl.value.trim()) {
+          document.getElementById("error-skillName").textContent =
+            "Vui lòng nhập tên kỹ năng";
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        const form = document.getElementById("skillForm");
+        const isEdit = form.dataset.editIndex !== undefined;
+        const editIndex = parseInt(form.dataset.editIndex);
+
+        const newItem = {
+          name: skillNameEl.value,
+          level: document.getElementById("skillLevel").value,
+        };
+
+        try {
+          // showToast(isEdit ? "Đang cập nhật..." : "Đang thêm...", "info");
+          document.body.style.cursor = "wait";
+
+          const endpoint = isEdit
+            ? `/qualifications/skills/${editIndex}`
+            : "/qualifications/skills";
+          const method = isEdit ? "PUT" : "POST";
+
+          await apiCall(endpoint, {
+            method: method,
+            body: JSON.stringify(newItem),
+          });
+
+          showToast(
+            isEdit
+              ? "Cập nhật kỹ năng thành công!"
+              : "Thêm kỹ năng thành công!",
+            "success"
+          );
+          closeModal("addSkillModal");
+          document.getElementById("skillForm").reset();
+          delete form.dataset.editIndex;
+
+          // Reset slider value
+          document.getElementById("skillLevel").value = 3;
+          document.getElementById("skillLevelValue").textContent = "3";
+
+          document.querySelector("#addSkillModal .modal-title").textContent =
+            "THÊM KỸ NĂNG";
+          document.querySelector(
+            '#skillForm button[type="submit"]'
+          ).textContent = "Thêm";
+
+          await loadQualifications();
+        } catch (error) {
+          showToast(
+            error.message || (isEdit ? "Cập nhật thất bại" : "Thêm thất bại"),
+            "error"
+          );
+        } finally {
+          document.body.style.cursor = "default";
+        }
+      }
+
+      async function handleAddAchievement(event) {
+        event.preventDefault();
+
+        // 1. Get Elements
+        const achTitleEl = document.getElementById("achTitle");
+        const achDateEl = document.getElementById("achDate");
+
+        // 2. Clear errors
+        document.getElementById("error-achTitle").textContent = "";
+        document.getElementById("error-achDate").textContent = "";
+
+        let hasError = false;
+
+        // 3. Validate
+        if (!achTitleEl.value.trim()) {
+          document.getElementById("error-achTitle").textContent =
+            "Vui lòng nhập danh hiệu/giải thưởng";
+          hasError = true;
+        }
+
+        if (!achDateEl.value.trim()) {
+          document.getElementById("error-achDate").textContent =
+            "Vui lòng nhập năm đạt được";
+          hasError = true;
+        } else if (
+          parseInt(achDateEl.value) < 1950 ||
+          parseInt(achDateEl.value) > 2030
+        ) {
+          document.getElementById("error-achDate").textContent =
+            "Năm không hợp lệ (1950-2030)";
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        const form = document.getElementById("achievementForm");
+        const isEdit = form.dataset.editIndex !== undefined;
+        const editIndex = parseInt(form.dataset.editIndex);
+
+        const newItem = {
+          title: achTitleEl.value,
+          issuer: document.getElementById("achIssuer").value,
+          date: achDateEl.value,
+          description: document.getElementById("achDescription").value,
+        };
+
+        try {
+          // showToast(isEdit ? "Đang cập nhật..." : "Đang thêm...", "info");
+          document.body.style.cursor = "wait";
+
+          const endpoint = isEdit
+            ? `/qualifications/achievements/${editIndex}`
+            : "/qualifications/achievements";
+          const method = isEdit ? "PUT" : "POST";
+
+          await apiCall(endpoint, {
+            method: method,
+            body: JSON.stringify(newItem),
+          });
+
+          showToast(
+            isEdit
+              ? "Cập nhật thành tích thành công!"
+              : "Thêm thành tích thành công!",
+            "success"
+          );
+          closeModal("addAchievementModal");
+          document.getElementById("achievementForm").reset();
+          delete form.dataset.editIndex;
+
+          document.querySelector(
+            "#addAchievementModal .modal-title"
+          ).textContent = "THÊM THÀNH TÍCH";
+          document.querySelector(
+            '#achievementForm button[type="submit"]'
+          ).textContent = "Thêm";
+
+          await loadQualifications();
+        } catch (error) {
+          showToast(
+            error.message || (isEdit ? "Cập nhật thất bại" : "Thêm thất bại"),
+            "error"
+          );
+        } finally {
+          document.body.style.cursor = "default";
+        }
+      }
+      // View detail functions
+      function viewEducationDetail(index) {
+        const item = qualificationsData.education[index];
+        document.getElementById("detailModalTitle").textContent =
+          "CHI TIẾT HỌC VẤN";
+        document.getElementById("detailModalBody").innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Bằng cấp/Chứng chỉ</label>
+                    <div style="font-size: 1.125rem; font-weight: 700; margin-bottom: var(--space-2);">${
+                      item.degree
+                    }</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Trường/Cơ sở đào tạo</label>
+                    <div>${item.school}</div>
+                </div>
+                <div class="grid grid-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label">Năm bắt đầu</label>
+                        <div>${item.startYear}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Năm kết thúc</label>
+                        <div>${item.endYear || "Hiện tại"}</div>
+                    </div>
+                </div>
+                ${
+                  item.description
+                    ? `
+                    <div class="form-group">
+                        <label class="form-label">Mô tả</label>
+                        <div style="white-space: pre-wrap;">${item.description}</div>
+                    </div>
+                `
+                    : ""
+                }
+            `;
+        showModal("viewDetailModal");
+      }
+
+      function viewExperienceDetail(index) {
+        const item = qualificationsData.experience[index];
+        document.getElementById("detailModalTitle").textContent =
+          "CHI TIẾT KINH NGHIỆM";
+        document.getElementById("detailModalBody").innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Vị trí</label>
+                    <div style="font-size: 1.125rem; font-weight: 700; margin-bottom: var(--space-2);">${
+                      item.position
+                    }</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Công ty/Tổ chức</label>
+                    <div>${item.company}</div>
+                </div>
+                <div class="grid grid-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label">Từ năm</label>
+                        <div>${item.startDate}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Đến năm</label>
+                        <div>${item.endDate || "Hiện tại"}</div>
+                    </div>
+                </div>
+                ${
+                  item.description
+                    ? `
+                    <div class="form-group">
+                        <label class="form-label">Mô tả công việc</label>
+                        <div style="white-space: pre-wrap;">${item.description}</div>
+                    </div>
+                `
+                    : ""
+                }
+            `;
+        showModal("viewDetailModal");
+      }
+
+      function viewAchievementDetail(index) {
+        const item = qualificationsData.achievements[index];
+        document.getElementById("detailModalTitle").textContent =
+          "CHI TIẾT THÀNH TÍCH";
+        document.getElementById("detailModalBody").innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Danh hiệu/Giải thưởng</label>
+                    <div style="font-size: 1.125rem; font-weight: 700; margin-bottom: var(--space-2);">🏆 ${
+                      item.title
+                    }</div>
+                </div>
+                ${
+                  item.issuer
+                    ? `
+                    <div class="form-group">
+                        <label class="form-label">Cơ quan cấp</label>
+                        <div>${item.issuer}</div>
+                    </div>
+                `
+                    : ""
+                }
+                <div class="form-group">
+                    <label class="form-label">Năm đạt được</label>
+                    <div>${item.date}</div>
+                </div>
+                ${
+                  item.description
+                    ? `
+                    <div class="form-group">
+                        <label class="form-label">Mô tả</label>
+                        <div style="white-space: pre-wrap;">${item.description}</div>
+                    </div>
+                `
+                    : ""
+                }
+            `;
+        showModal("viewDetailModal");
+      }
+
+      function viewSkillDetail(index) {
+        currentDetailType = "skill";
+        currentDetailIndex = index;
+        const item = qualificationsData.skills[index];
+        document.getElementById("detailModalTitle").textContent =
+          "CHI TIẾT KỸ NĂNG";
+        document.getElementById("detailModalBody").innerHTML = `
+          <div class="form-group">
+            <label class="form-label">Tên kỹ năng</label>
+            <div style="font-size: 1.125rem; font-weight: 700; margin-bottom: var(--space-2);">${
+              item.name
+            }</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Trình độ</label>
+            <div style="display: flex; align-items: center; gap: var(--space-2);">
+              <div class="skill-bar" style="flex: 1; margin: 0;">
+                <div class="skill-bar-fill" style="width: ${
+                  (item.level / 5) * 100
+                }%"></div>
+              </div>
+              <span style="font-family: var(--font-mono); font-size: 1.25rem; font-weight: 700;">${
+                item.level
+              }/5</span>
+            </div>
+          </div>
+        `;
+        showModal("viewDetailModal");
+      }
+
+      // Track current detail for edit/delete
+      let currentDetailType = "";
+      let currentDetailIndex = -1;
+
+      // Update view functions to track type and index
+      const originalViewEducation = viewEducationDetail;
+      viewEducationDetail = function (index) {
+        currentDetailType = "education";
+        currentDetailIndex = index;
+        originalViewEducation(index);
+      };
+
+      const originalViewExperience = viewExperienceDetail;
+      viewExperienceDetail = function (index) {
+        currentDetailType = "experience";
+        currentDetailIndex = index;
+        originalViewExperience(index);
+      };
+
+      const originalViewAchievement = viewAchievementDetail;
+      viewAchievementDetail = function (index) {
+        currentDetailType = "achievement";
+        currentDetailIndex = index;
+        originalViewAchievement(index);
+      };
+
+      // Edit from detail modal
+      function handleEditFromDetail() {
+        closeModal("viewDetailModal");
+
+        if (currentDetailType === "education") {
+          const item = qualificationsData.education[currentDetailIndex];
+          document.getElementById("eduSchool").value = item.school;
+          document.getElementById("eduDegree").value = item.degree;
+          document.getElementById("eduStartYear").value = item.startYear;
+          document.getElementById("eduEndYear").value = item.endYear || "";
+          document.getElementById("eduDescription").value =
+            item.description || "";
+
+          document.querySelector(
+            "#addEducationModal .modal-title"
+          ).textContent = "CHỈNH SỬA HỌC VẤN";
+          document.querySelector(
+            '#educationForm button[type="submit"]'
+          ).textContent = "Cập nhật";
+          document.getElementById("educationForm").dataset.editIndex =
+            currentDetailIndex;
+
+          showModal("addEducationModal");
+        } else if (currentDetailType === "experience") {
+          const item = qualificationsData.experience[currentDetailIndex];
+          document.getElementById("expCompany").value = item.company;
+          document.getElementById("expPosition").value = item.position;
+          document.getElementById("expStartDate").value = item.startDate;
+          document.getElementById("expEndDate").value = item.endDate || "";
+          document.getElementById("expDescription").value =
+            item.description || "";
+
+          document.querySelector(
+            "#addExperienceModal .modal-title"
+          ).textContent = "CHỈNH SỬA KINH NGHIỆM";
+          document.querySelector(
+            '#experienceForm button[type="submit"]'
+          ).textContent = "Cập nhật";
+          document.getElementById("experienceForm").dataset.editIndex =
+            currentDetailIndex;
+
+          showModal("addExperienceModal");
+        } else if (currentDetailType === "achievement") {
+          const item = qualificationsData.achievements[currentDetailIndex];
+          document.getElementById("achTitle").value = item.title;
+          document.getElementById("achIssuer").value = item.issuer || "";
+          document.getElementById("achDate").value = item.date;
+          document.getElementById("achDescription").value =
+            item.description || "";
+
+          document.querySelector(
+            "#addAchievementModal .modal-title"
+          ).textContent = "CHỈNH SỬA THÀNH TÍCH";
+          document.querySelector(
+            '#achievementForm button[type="submit"]'
+          ).textContent = "Cập nhật";
+          document.getElementById("achievementForm").dataset.editIndex =
+            currentDetailIndex;
+
+          showModal("addAchievementModal");
+        } else if (currentDetailType === "skill") {
+          const item = qualificationsData.skills[currentDetailIndex];
+          document.getElementById("skillName").value = item.name;
+          document.getElementById("skillLevel").value = item.level;
+          document.getElementById("skillLevelValue").textContent = item.level;
+
+          document.querySelector("#addSkillModal .modal-title").textContent =
+            "CHỈNH SỬA KỸ NĂNG";
+          document.querySelector(
+            '#skillForm button[type="submit"]'
+          ).textContent = "Cập nhật";
+          document.getElementById("skillForm").dataset.editIndex =
+            currentDetailIndex;
+
+          showModal("addSkillModal");
+        }
+      }
+
+      // Delete from detail modal
+      async function handleDeleteFromDetail() {
+        if (!(await showConfirm("Bạn có chắc muốn xóa mục này?"))) return;
+
+        try {
+          // showToast("Đang xóa...", "info");
+          document.body.style.cursor = "wait";
+
+          let endpoint = "";
+          if (currentDetailType === "education") {
+            endpoint = `/qualifications/education/${currentDetailIndex}`;
+          } else if (currentDetailType === "experience") {
+            endpoint = `/qualifications/experience/${currentDetailIndex}`;
+          } else if (currentDetailType === "achievement") {
+            endpoint = `/qualifications/achievements/${currentDetailIndex}`;
+          } else if (currentDetailType === "skill") {
+            endpoint = `/qualifications/skills/${currentDetailIndex}`;
+          }
+
+          await apiCall(endpoint, { method: "DELETE" });
+
+          showToast("Xóa thành công!", "success");
+          closeModal("viewDetailModal");
+          await loadQualifications();
+        } catch (error) {
+          showToast(error.message || "Xóa thất bại", "error");
+        } finally {
+          document.body.style.cursor = "default";
+        }
+      }
+    </script>
+  </body>
+</html>

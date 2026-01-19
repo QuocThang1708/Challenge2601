@@ -1,0 +1,319 @@
+{
+  "reports": [
+    {
+      "id": "1768666204769",
+      "name": "Báo cáo Phân loại & Quy hoạch ",
+      "type": "classifications",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-17T16:10:04.769Z",
+      "format": "csv",
+      "recordCount": 18,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-17"
+      }
+    },
+    {
+      "id": "1768666176173",
+      "name": "Báo cáo Biến động Nhân sự ",
+      "type": "movement",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-17T16:09:36.173Z",
+      "format": "csv",
+      "recordCount": 10,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-17"
+      }
+    },
+    {
+      "id": "1768666003822",
+      "name": "Danh sách trích ngang (Tổng hợp) ",
+      "type": "general",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-17T16:06:43.822Z",
+      "format": "csv",
+      "recordCount": 18,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-17"
+      }
+    },
+    {
+      "id": "1768654300014",
+      "name": "Danh sách trích ngang (Tổng hợp) ",
+      "type": "general",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-17T12:51:40.014Z",
+      "format": "csv",
+      "recordCount": 12,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-11",
+        "dateTo": "2026-01-17"
+      }
+    },
+    {
+      "id": "1768654281520",
+      "name": "Danh sách trích ngang (Tổng hợp) ",
+      "type": "general",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-17T12:51:21.520Z",
+      "format": "csv",
+      "recordCount": 0,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-04",
+        "dateTo": "2026-01-10"
+      }
+    },
+    {
+      "id": "1768553152509",
+      "name": "Danh sách trích ngang (Tổng hợp) ",
+      "type": "general",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-16T08:45:52.509Z",
+      "format": "csv",
+      "recordCount": 9,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-15",
+        "dateTo": "2026-01-15"
+      }
+    },
+    {
+      "id": "1768539576483",
+      "name": "Danh sách trích ngang (Tổng hợp) ",
+      "type": "general",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-16T04:59:36.483Z",
+      "format": "csv",
+      "recordCount": 11,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-17"
+      }
+    },
+    {
+      "id": "1768539526326",
+      "name": "Báo cáo Biến động Nhân sự ",
+      "type": "movement",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-16T04:58:46.326Z",
+      "format": "csv",
+      "recordCount": 7,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-17"
+      }
+    },
+    {
+      "id": "1768534698724",
+      "name": "Danh sách trích ngang (Tổng hợp) - Ban Giám Đốc",
+      "type": "general",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-16T03:38:18.724Z",
+      "format": "csv",
+      "recordCount": 4,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "Ban Giám Đốc",
+        "dateFrom": "",
+        "dateTo": ""
+      }
+    },
+    {
+      "id": "1768534266037",
+      "name": "Báo cáo Biến động Nhân sự - Ban Giám Đốc",
+      "type": "movement",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-16T03:31:06.037Z",
+      "format": "csv",
+      "recordCount": 7,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "Ban Giám Đốc",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-17"
+      }
+    },
+    {
+      "id": "1768534021206",
+      "name": "Danh sách trích ngang (Tổng hợp) - undefined",
+      "type": "general",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-16T03:27:01.206Z",
+      "format": "csv",
+      "recordCount": 0,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "undefined",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-16"
+      }
+    },
+    {
+      "id": "1768533971973",
+      "name": "Báo cáo Phân loại & Quy hoạch ",
+      "type": "classifications",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-16T03:26:11.973Z",
+      "format": "csv",
+      "recordCount": 10,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-16"
+      }
+    },
+    {
+      "id": "1768533925536",
+      "name": "Báo cáo Biến động Nhân sự ",
+      "type": "movement",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-16T03:25:25.536Z",
+      "format": "csv",
+      "recordCount": 7,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-16"
+      }
+    },
+    {
+      "id": "1768533885796",
+      "name": "Danh sách trích ngang (Tổng hợp) ",
+      "type": "general",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-16T03:24:45.796Z",
+      "format": "csv",
+      "recordCount": 10,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-16"
+      }
+    },
+    {
+      "id": "1768533441502",
+      "name": "Báo cáo đơn vị ",
+      "type": "department",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-16T03:17:21.502Z",
+      "format": "csv",
+      "recordCount": 10,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-17"
+      }
+    },
+    {
+      "id": "1768533403935",
+      "name": "Báo cáo Tổng hợp",
+      "type": "general",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-16T03:16:43.935Z",
+      "format": "csv",
+      "recordCount": 10,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-17"
+      }
+    },
+    {
+      "id": "1768443976863",
+      "name": "Báo cáo Tổng hợp",
+      "type": "general",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-15T02:26:16.863Z",
+      "format": "csv",
+      "recordCount": 2,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "",
+        "dateTo": ""
+      }
+    },
+    {
+      "id": "1768443573513",
+      "name": "Báo cáo Tổng hợp",
+      "type": "general",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-15T02:19:33.513Z",
+      "format": "csv",
+      "recordCount": 0,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2025-12-31",
+        "dateTo": "2026-01-30"
+      }
+    },
+    {
+      "id": "1768443452331",
+      "name": "Báo cáo đơn vị ",
+      "type": "department",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-15T02:17:32.331Z",
+      "format": "csv",
+      "recordCount": 2,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "",
+        "dateTo": ""
+      }
+    },
+    {
+      "id": "1768440075069",
+      "name": "Báo cáo đơn vị ",
+      "type": "department",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-15T01:21:15.069Z",
+      "format": "pdf",
+      "recordCount": 0,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-17"
+      }
+    },
+    {
+      "id": "1768440038645",
+      "name": "Báo cáo Tổng hợp",
+      "type": "general",
+      "createdBy": "Admin",
+      "createdAt": "2026-01-15T01:20:38.645Z",
+      "format": "pdf",
+      "recordCount": 0,
+      "status": "Hoàn thành",
+      "criteria": {
+        "department": "",
+        "dateFrom": "2026-01-01",
+        "dateTo": "2026-01-17"
+      }
+    }
+  ]
+}

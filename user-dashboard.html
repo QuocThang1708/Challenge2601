@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - HRM System</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="container nav-container">
+        <a href="index.html" class="nav-logo">HRM</a>
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Trang chủ</a></li>
+          <li>
+            <a href="user-dashboard.html" class="nav-link active">Dashboard</a>
+          </li>
+          <li><a href="user-profile.html" class="nav-link">Hồ sơ</a></li>
+          <li><a href="user-cv.html" class="nav-link">CV</a></li>
+          <li>
+            <a href="user-qualifications.html" class="nav-link">Trình độ</a>
+          </li>
+          <li><a href="#" class="nav-link" onclick="logout()">Đăng xuất</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- User Dashboard -->
+    <div class="dashboard-container">
+      <div class="container" style="padding-top: 48px; padding-bottom: 48px">
+        <!-- Welcome Section -->
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h1 id="welcomeTitle">DASHBOARD</h1>
+            <p style="color: var(--color-gray-700); margin-top: 8px">
+              Mã cán bộ: <span class="code" id="userEmployeeId">-</span>
+            </p>
+          </div>
+          <div class="user-avatar">
+            <span id="userInitials">U</span>
+          </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-4 mb-4">
+          <div class="stat-card">
+            <div class="stat-number" id="totalEmployees">-</div>
+            <div class="stat-label">TỔNG CÁN BỘ</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="userDept">-</div>
+            <div class="stat-label">ĐƠN VỊ CỦA BẠN</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="cvCount">0</div>
+            <div class="stat-label">CV ĐÃ TẢI LÊN</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="recentActivities">0</div>
+            <div class="stat-label">HOẠT ĐỘNG GẦN ĐÂY</div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3 class="card-title">HÀNH ĐỘNG NHANH</h3>
+          </div>
+          <div class="card-body">
+            <div class="grid grid-4 gap-3">
+              <a href="user-profile.html" class="quick-action">
+                <div class="quick-action-icon">👤</div>
+                <div class="quick-action-label">Cập nhật hồ sơ</div>
+              </a>
+              <a href="user-cv.html" class="quick-action">
+                <div class="quick-action-icon">📄</div>
+                <div class="quick-action-label">Quản lý CV</div>
+              </a>
+              <a href="user-qualifications.html" class="quick-action">
+                <div class="quick-action-icon">🎓</div>
+                <div class="quick-action-label">Trình độ & học vấn</div>
+              </a>
+              <a
+                href="admin-reports.html"
+                class="quick-action"
+                id="adminReportsLink"
+                style="display: none"
+              >
+                <div class="quick-action-icon">📊</div>
+                <div class="quick-action-label">Báo cáo (Admin)</div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">HOẠT ĐỘNG GẦN ĐÂY</h3>
+          </div>
+          <div class="card-body">
+            <div class="activity-list" id="activityList">
+              <p
+                style="
+                  color: var(--color-gray-700);
+                  text-align: center;
+                  padding: 24px;
+                "
+              >
+                Đang tải...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <style>
+      .dashboard-container {
+        background: var(--color-gray-100);
+        min-height: 100vh;
+      }
+
+      .user-avatar {
+        width: 80px;
+        height: 80px;
+        background: var(--color-black);
+        color: var(--color-white);
+        border-radius: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-heading);
+        font-size: 2rem;
+        font-weight: 700;
+        border: 3px solid var(--color-black);
+      }
+
+      .stat-card {
+        background: var(--color-white);
+        border: 3px solid var(--color-black);
+        padding: var(--space-3);
+        text-align: center;
+      }
+
+      .stat-number {
+        font-family: var(--font-heading);
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: var(--space-2);
+      }
+
+      .stat-label {
+        font-family: var(--font-heading);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+      }
+
+      .quick-action {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-4);
+        background: var(--color-white);
+        border: 2px solid var(--color-black);
+        text-decoration: none;
+        color: var(--color-black);
+        transition: all var(--transition-base);
+      }
+
+      .quick-action:hover {
+        background: var(--color-black);
+        color: var(--color-white);
+        transform: translateY(-4px);
+      }
+
+      .quick-action-icon {
+        font-size: 2.5rem;
+      }
+
+      .quick-action-label {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 0.875rem;
+        text-align: center;
+      }
+
+      .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+      }
+
+      .activity-item {
+        padding: var(--space-2);
+        border-left: 3px solid var(--color-gray-400);
+        transition: all var(--transition-base);
+      }
+
+      .activity-item:hover {
+        border-left-color: var(--color-red);
+        background: var(--color-gray-100);
+      }
+    </style>
+
+    <script src="js/api.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      requireAuth();
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        await loadUserDashboard();
+      });
+
+      async function loadUserDashboard() {
+        try {
+          const user = getCurrentUser();
+
+          if (user) {
+            // Set user info
+            document.getElementById(
+              "welcomeTitle"
+            ).textContent = `CHÀO, ${user.name.toUpperCase()}`;
+            document.getElementById("userEmployeeId").textContent =
+              user.employeeId || "-";
+            document.getElementById("userDept").textContent =
+              user.department || "-";
+
+            // Set initials
+            const initials = user.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .substring(0, 2)
+              .toUpperCase();
+            document.getElementById("userInitials").textContent = initials;
+
+            // Show admin link if admin
+            if (user.role === "admin" || user.role === "superadmin") {
+              document.getElementById("adminReportsLink").style.display =
+                "flex";
+            }
+          }
+
+          // Load statistics
+          const stats = await apiCall("/statistics");
+          if (stats.success) {
+            document.getElementById("totalEmployees").textContent =
+              stats.data.totalEmployees || 0;
+          }
+
+          // Load user's CVs count
+          const cvs = await apiCall("/cv");
+          if (cvs.success) {
+            document.getElementById("cvCount").textContent =
+              cvs.data.length || 0;
+          }
+
+          // Load recent activities (mock for now)
+          loadRecentActivities();
+        } catch (error) {
+          console.error("Dashboard load error:", error);
+          showToast("Không thể tải dashboard", "error");
+        }
+      }
+
+      function loadRecentActivities() {
+        const activityList = document.getElementById("activityList");
+        const activities = [
+          { action: "Đăng nhập hệ thống", time: "Vừa xong" },
+          { action: "Xem dashboard", time: "1 phút trước" },
+        ];
+
+        activityList.innerHTML = activities
+          .map(
+            (activity) => `
+                <div class="activity-item">
+                    <div class="flex justify-between">
+                        <strong>${activity.action}</strong>
+                        <span style="font-size: 0.875rem; color: var(--color-gray-700);">${activity.time}</span>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+
+        document.getElementById("recentActivities").textContent =
+          activities.length;
+      }
+    </script>
+  </body>
+</html>

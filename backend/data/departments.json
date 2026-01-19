@@ -1,0 +1,26 @@
+[
+  {
+    "id": "dep-001",
+    "name": "Ban Giám Đốc",
+    "description": "Ban lãnh đạo công ty",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "dep-002",
+    "name": "Phòng Hành Chính - Nhân Sự",
+    "description": "Quản lý nhân sự và hành chính",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "dep-003",
+    "name": "Phòng Kỹ Thuật",
+    "description": "Phát triển và bảo trì hệ thống",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "dep-1768665467120",
+    "name": "Phòng Kế toán",
+    "description": "",
+    "createdAt": "2026-01-17T15:57:47.120Z"
+  }
+]

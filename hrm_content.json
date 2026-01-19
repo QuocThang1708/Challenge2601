@@ -1,0 +1,57 @@
+{
+  "paragraphs": [
+    "I. Phân hệ người dùng",
+    "II. Phân hệ admin"
+  ],
+  "tables": [
+    [
+      [
+        "STT",
+        "Nhóm tính năng",
+        "Mô tả chi tiết"
+      ],
+      [
+        "1",
+        "Quản lý tài khoản",
+        "Đăng ký tài khoản (theo email/số điện thoại/mã cán bộ)\nXác thực tài khoản (email/SMS)\nĐăng nhập / đăng xuất\nQuên mật khẩu / đổi mật khẩu\nCập nhật thông tin cá nhân"
+      ],
+      [
+        "2",
+        "Hồ sơ cán bộ công đoàn (Profile)",
+        "Họ tên, ngày sinh, giới tính\nSố CCCD/CMND\nĐịa chỉ liên hệ\nEmail, số điện thoại\nĐơn vị công tác\nChức vụ công đoàn\nNgày vào công đoàn\nMã cán bộ\nTình trạng công tác (đang công tác / nghỉ / chuyển đơn vị)"
+      ],
+      [
+        "3",
+        "Quản lý CV & hồ sơ chuyên môn",
+        "Tải lên CV (PDF/DOC)\nXem / tải lại CV\nCập nhật phiên bản CV\nTự động tạo CV từ dữ liệu hệ thống (tuỳ chọn)"
+      ],
+      [
+        "4",
+        "Trình độ & học vấn",
+        "Trình độ & học vấn\nKinh nghiệm công tác & nghiên cứu\nKỹ năng & năng lực\nThành tích – khen thưởng – kỷ luật"
+      ]
+    ],
+    [
+      [
+        "STT",
+        "Nhóm tính năng",
+        "Mô tả chi tiết"
+      ],
+      [
+        "1",
+        "Quản lý người dùng",
+        "Danh sách cán bộ công đoàn\nTạo / sửa / xoá tài khoản\nKích hoạt / khóa tài khoản\nPhân quyền:\nAdmin tổng\nAdmin đơn vị\nCán bộ thường"
+      ],
+      [
+        "2",
+        "Quản lý hồ sơ cán bộ",
+        "Xem chi tiết hồ sơ cán bộ\nDuyệt / từ chối chỉnh sửa hồ sơ (nếu áp dụng)\nGắn nhãn / phân loại cán bộ\nTheo dõi biến động cán bộ (chuyển đơn vị, nghỉ hưu…)"
+      ],
+      [
+        "3",
+        "Quản lý hệ thống",
+        "Quản lý danh mục hệ thống\nTìm kiếm & lọc nâng cao\nBáo cáo & thống kê (RẤT QUAN TRỌNG)"
+      ]
+    ]
+  ]
+}

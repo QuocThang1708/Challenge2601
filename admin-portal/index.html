@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hệ Thống Quản Trị - HRM</title>
+    <link rel="stylesheet" href="../shared/styles.css" />
+  </head>
+  <body>
+    <!-- Background Parallax Container -->
+    <div class="parallax-container" id="hero-section">
+      <!-- Layer 1: Ambient Orbs & Light Spots -->
+      <div class="parallax-layer" data-speed="0.02">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+
+        <!-- Glowing Light Spots -->
+        <div class="light-spot spot-1"></div>
+        <div class="light-spot spot-2"></div>
+        <div class="light-spot spot-3"></div>
+        <div class="light-spot spot-4"></div>
+      </div>
+
+      <!-- Layer 2: Decorative Grid/Shapes -->
+      <div class="parallax-layer" data-speed="0.04">
+        <div class="decorative-grid"></div>
+        <!-- Particles for detail -->
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+
+        <!-- Icon 1: Grid -->
+        <div class="floating-icon icon-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+        </div>
+        <!-- Icon 2: Database -->
+        <div class="floating-icon icon-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <!-- Icon 3: Chart (New) -->
+        <div class="floating-icon icon-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </div>
+        <!-- Icon 4: Users (New) -->
+        <div class="floating-icon icon-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Main Content Layer -->
+      <div class="content-layer">
+        <!-- Glass Login Card -->
+        <div class="glass-login-card animate-fade-up">
+          <div class="card-header-visual">
+            <div class="logo-wrapper">
+              <img
+                src="../shared/logo.png"
+                alt="Admin Logo"
+                class="admin-logo"
+              />
+            </div>
+            <h1 class="admin-title">QUẢN TRỊ HỆ THỐNG</h1>
+            <p class="admin-subtitle">Đăng nhập để truy cập Admin Portal</p>
+          </div>
+
+          <form
+            id="adminLoginForm"
+            onsubmit="handleAdminLogin(event)"
+            novalidate
+          >
+            <div class="form-group">
+              <label class="form-label">Email quản trị</label>
+              <input
+                type="text"
+                id="adminEmail"
+                class="form-input glass-input"
+                value="admin@congdoan.vn"
+                required
+                placeholder="admin@example.com"
+              />
+              <div class="form-error-message" id="error-adminEmail"></div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Mật khẩu</label>
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="adminPassword"
+                  class="form-input glass-input"
+                  value="admin123"
+                  required
+                  placeholder="••••••"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePasswordVisibility('adminPassword')"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+              <div class="form-error-message" id="error-adminPassword"></div>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary btn-large btn-glow"
+              style="width: 100%; margin-top: 10px"
+            >
+              ĐĂNG NHẬP
+            </button>
+          </form>
+
+          <div class="card-footer">
+            <span class="secure-badge">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Kết nối bảo mật
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <style>
+      /* DARK CYBER COMMAND STYLES */
+      :root {
+        --bg-dark: #0f172a;
+        --glass-dark: rgba(15, 23, 42, 0.6);
+        --glass-border: rgba(56, 189, 248, 0.2);
+        --primary-cyan: #0ea5e9;
+        --primary-glow: #38bdf8;
+        --text-main: #f1f5f9;
+        --text-muted: #94a3b8;
+      }
+
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: var(--bg-dark);
+        font-family: "Inter", sans-serif;
+        color: var(--text-main);
+      }
+
+      .parallax-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1000px;
+        background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+      }
+
+      .parallax-layer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        will-change: transform;
+        transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      /* Cyber Grid */
+      .decorative-grid {
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -50%;
+        left: -50%;
+        background-image:
+          linear-gradient(rgba(56, 189, 248, 0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(56, 189, 248, 0.1) 1px, transparent 1px);
+        background-size: 60px 60px;
+        transform: perspective(500px) rotateX(60deg);
+        z-index: 1;
+        opacity: 0.4;
+        mask-image: linear-gradient(
+          to top,
+          transparent,
+          black 50%,
+          transparent
+        );
+        -webkit-mask-image: linear-gradient(
+          to top,
+          transparent,
+          black 50%,
+          transparent
+        );
+        animation: gridPulse 8s infinite alternate;
+      }
+
+      @keyframes gridPulse {
+        from {
+          opacity: 0.3;
+        }
+        to {
+          opacity: 0.5;
+          box-shadow: 0 0 30px rgba(56, 189, 248, 0.1);
+        }
+      }
+
+      /* Floating Particles */
+      .particle {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: var(--primary-glow);
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--primary-glow);
+        animation: floatParticle 25s infinite linear;
+      }
+      .particle:nth-child(1) {
+        top: 15%;
+        left: 10%;
+        animation-duration: 30s;
+        opacity: 0.5;
+      }
+      .particle:nth-child(2) {
+        top: 75%;
+        left: 5%;
+        animation-duration: 40s;
+        background: #a855f7;
+      }
+      .particle:nth-child(3) {
+        top: 30%;
+        left: 85%;
+        animation-duration: 25s;
+        opacity: 0.4;
+      }
+      .particle:nth-child(4) {
+        top: 85%;
+        left: 75%;
+        animation-duration: 35s;
+        background: #ec4899;
+      }
+      .particle:nth-child(5) {
+        top: 10%;
+        left: 60%;
+        animation-duration: 20s;
+        opacity: 0.3;
+      }
+
+      /* Glowing Orbs */
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.4;
+        animation: floatOrb 12s ease-in-out infinite;
+        mix-blend-mode: screen;
+      }
+      .orb-1 {
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, #3b82f6, transparent);
+        top: -50px;
+        right: 10%;
+      }
+      .orb-2 {
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, #6366f1, transparent);
+        bottom: -100px;
+        left: 5%;
+        animation-delay: -5s;
+      }
+
+      /* Glowing Light Spots */
+      .light-spot {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(40px);
+        mix-blend-mode: screen;
+        animation: lightSpotPulse 6s ease-in-out infinite;
+      }
+      .spot-1 {
+        width: 180px;
+        height: 180px;
+        background: radial-gradient(
+          circle,
+          rgba(56, 189, 248, 0.6),
+          transparent 70%
+        );
+        top: 20%;
+        left: 12%;
+        box-shadow: 0 0 80px rgba(56, 189, 248, 0.4);
+        animation-delay: 0s;
+      }
+      .spot-2 {
+        width: 120px;
+        height: 120px;
+        background: radial-gradient(
+          circle,
+          rgba(168, 85, 247, 0.5),
+          transparent 70%
+        );
+        top: 15%;
+        right: 18%;
+        box-shadow: 0 0 60px rgba(168, 85, 247, 0.3);
+        animation-delay: -2s;
+      }
+      .spot-3 {
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(
+          circle,
+          rgba(236, 72, 153, 0.5),
+          transparent 70%
+        );
+        bottom: 18%;
+        left: 15%;
+        box-shadow: 0 0 100px rgba(236, 72, 153, 0.3);
+        animation-delay: -4s;
+      }
+      .spot-4 {
+        width: 160px;
+        height: 160px;
+        background: radial-gradient(
+          circle,
+          rgba(52, 211, 153, 0.5),
+          transparent 70%
+        );
+        bottom: 25%;
+        right: 20%;
+        box-shadow: 0 0 70px rgba(52, 211, 153, 0.3);
+        animation-delay: -1s;
+      }
+
+      /* Icons */
+      .floating-icon {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(56, 189, 248, 0.2);
+        backdrop-filter: blur(4px);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-glow);
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.05);
+        animation: floatIcon 8s ease-in-out infinite;
+        opacity: 0.8;
+      }
+      .icon-1 {
+        top: 18%;
+        left: 15%;
+        transform: rotate(-10deg);
+      } /* Top Left - Grid */
+      .icon-2 {
+        bottom: 20%;
+        right: 15%;
+        transform: rotate(10deg);
+        animation-delay: -2s;
+      } /* Bottom Right - Shield */
+      .icon-3 {
+        top: 25%;
+        right: 20%;
+        transform: rotate(5deg);
+        animation-delay: -4s;
+        color: #a855f7;
+        border-color: rgba(168, 85, 247, 0.3);
+      } /* Top Right - Chart */
+      .icon-4 {
+        bottom: 15%;
+        left: 20%;
+        transform: rotate(-5deg);
+        animation-delay: -1s;
+        color: #34d399;
+        border-color: rgba(52, 211, 153, 0.3);
+      } /* Bottom Left - Users */
+
+      /* Dark Glass Card */
+      .content-layer {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .glass-login-card {
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        padding: 48px;
+        width: 100%;
+        max-width: 440px;
+        box-shadow:
+          0 25px 50px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+      }
+
+      .logo-wrapper {
+        width: 72px;
+        height: 72px;
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        box-shadow: 0 0 40px rgba(56, 189, 248, 0.15);
+        transition:
+          transform 0.4s ease,
+          box-shadow 0.4s ease;
+        overflow: hidden; /* Prevent giant logo spill */
+      }
+      .glass-login-card:hover .logo-wrapper {
+        /* transform: scale(1.1) rotate(5deg); Removed as per user request */
+        box-shadow: 0 0 60px rgba(56, 189, 248, 0.3);
+      }
+
+      .admin-logo {
+        width: 80%; /* Relative to wrapper */
+        height: auto;
+        object-fit: contain;
+      }
+      .admin-title {
+        font-family: "Inter", sans-serif;
+        font-weight: 800;
+        font-size: 1.75rem;
+        margin: 0 0 8px;
+        color: white;
+        text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+        letter-spacing: -0.01em;
+      }
+
+      .admin-subtitle {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        font-weight: 400;
+      }
+
+      .form-label {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .glass-input {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        border-radius: 12px;
+        padding: 14px 16px;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+      }
+      .glass-input::placeholder {
+        color: rgba(255, 255, 255, 0.2);
+      }
+
+      .glass-input:focus {
+        background: rgba(15, 23, 42, 0.9);
+        border-color: var(--primary-cyan);
+        box-shadow:
+          0 0 0 4px rgba(14, 165, 233, 0.15),
+          0 0 20px rgba(14, 165, 233, 0.1);
+        outline: none;
+      }
+
+      .btn-glow {
+        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+        box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3);
+        color: white;
+        border-radius: 12px;
+        font-weight: 700;
+        padding: 16px;
+        margin-top: 12px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-size: 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .btn-glow:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(14, 165, 233, 0.4);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      .secure-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        /* margin-top: 32px; Moved to footer */
+      }
+      .card-footer {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 32px;
+      }
+      /* Keyframes */
+      @keyframes floatParticle {
+        0% {
+          transform: translate(0, 0);
+        }
+        50% {
+          transform: translate(20px, -50px);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes floatOrb {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-30px) scale(1.1);
+        }
+      }
+      @keyframes lightSpotPulse {
+        0%,
+        100% {
+          transform: scale(1) translateY(0);
+          opacity: 0.6;
+        }
+        33% {
+          transform: scale(1.15) translateY(-10px);
+          opacity: 0.8;
+        }
+        66% {
+          transform: scale(0.95) translateY(5px);
+          opacity: 0.5;
+        }
+      }
+      @keyframes floatIcon {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+
+      .animate-fade-up {
+        animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
+
+      /* Responsive */
+      @media (max-width: 480px) {
+        .glass-login-card {
+          padding: 30px 20px;
+          width: 90%;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        .parallax-layer,
+        .orb,
+        .floating-icon,
+        .animate-fade-up {
+          transition: none !important;
+          animation: none !important;
+          transform: none !important;
+        }
+      }
+    </style>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      // Initialize Parallax
+      document.addEventListener("DOMContentLoaded", () => {
+        const heroSection = document.getElementById("hero-section");
+        const layers = document.querySelectorAll(".parallax-layer");
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        if (!prefersReducedMotion && heroSection) {
+          document.addEventListener("mousemove", (e) => {
+            // Calculate based on window center
+            const x = e.clientX - window.innerWidth / 2;
+            const y = e.clientY - window.innerHeight / 2;
+
+            layers.forEach((layer) => {
+              const speed = parseFloat(layer.getAttribute("data-speed"));
+              const xOffset = x * speed;
+              const yOffset = y * speed;
+              layer.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+          });
+        }
+      });
+
+      // Login Logic
+      async function handleAdminLogin(event) {
+        event.preventDefault();
+
+        const emailEl = document.getElementById("adminEmail");
+        const passwordEl = document.getElementById("adminPassword");
+
+        // Clear errors
+        document.getElementById("error-adminEmail").textContent = "";
+        document.getElementById("error-adminPassword").textContent = "";
+
+        let hasError = false;
+
+        if (!emailEl.value.trim()) {
+          document.getElementById("error-adminEmail").textContent =
+            "Vui lòng nhập email quản trị";
+          hasError = true;
+        }
+
+        if (!passwordEl.value) {
+          document.getElementById("error-adminPassword").textContent =
+            "Vui lòng nhập mật khẩu";
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        const email = emailEl.value;
+        const password = passwordEl.value;
+
+        try {
+          // showToast("Đang đăng nhập...", "info");
+          document.body.style.cursor = "wait";
+          const btn = document.querySelector(".btn-glow");
+          const originalText = btn.innerHTML;
+          btn.textContent = "ĐANG XỬ LÝ...";
+          btn.disabled = true;
+
+          const data = await apiCall("/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password, portal: "admin" }),
+          });
+
+          // Check if user is admin or dept_admin
+          if (
+            data.data.user.role !== "admin" &&
+            data.data.user.role !== "superadmin" &&
+            data.data.user.role !== "dept_admin"
+          ) {
+            showToast("Bạn không có quyền quản trị!", "error");
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            return;
+          }
+
+          // RBAC CHECK: Explicitly deny 'user' role (redundant but safe)
+          const role = data.data.user.role;
+          if (role === "user") {
+            showToast("Bạn không có quyền truy cập Admin Portal", "error");
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            return;
+          }
+
+          // Store token and user data
+          localStorage.setItem("authToken", data.data.token);
+          localStorage.setItem("currentUser", JSON.stringify(data.data.user));
+          localStorage.setItem("isLoggedIn", "true");
+
+          showToast("Đăng nhập thành công!", "success");
+
+          // Redirect to admin dashboard
+          setTimeout(() => {
+            window.location.href = "admin.html";
+          }, 500);
+        } catch (error) {
+          showToast(error.message || "Đăng nhập thất bại", "error");
+          const btn = document.querySelector(".btn-glow");
+          if (btn) {
+            btn.textContent = "ĐĂNG NHẬP";
+            btn.disabled = false;
+          }
+        } finally {
+          document.body.style.cursor = "default";
+        }
+      }
+    </script>
+  </body>
+</html>

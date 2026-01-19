@@ -1,0 +1,122 @@
+// Prisma schema for HRM system
+// SQLite database for easy local development
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// User model
+model User {
+  id           String   @id @default(uuid())
+  employeeId   String   @unique
+  name         String
+  email        String   @unique
+  phone        String
+  password     String
+  gender       String
+  birthDate    DateTime
+  idCard       String
+  address      String
+  department   String
+  position     String
+  unionDate    DateTime
+  status       String   @default("Đang công tác")
+  role         String   @default("user") // user, admin, superadmin
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  cvs            CV[]
+  education      Education[]
+  experience     Experience[]
+  skills         Skill[]
+  achievements   Achievement[]
+}
+
+// CV model
+model CV {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fileName    String
+  originalName String
+  filePath    String
+  fileSize    Int
+  version     String
+  mimeType    String
+  status      String   @default("Hiện tại")
+  uploadDate  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Education model
+model Education {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  degree      String
+  institution String
+  major       String
+  yearStart   String
+  yearEnd     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Experience model
+model Experience {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  position    String
+  company     String
+  description String
+  periodStart String
+  periodEnd   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Skill model
+model Skill {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  level     Int      // 0-100
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Achievement model
+model Achievement {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  year        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Report model
+model Report {
+  id          String   @id @default(uuid())
+  name        String
+  type        String
+  createdBy   String
+  fileName    String
+  filePath    String
+  fileSize    Int
+  format      String   // pdf, excel, csv
+  status      String   @default("Hoàn thành")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

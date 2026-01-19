@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trình Độ & Học Vấn - HRM System</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="container nav-container">
+        <a href="index.html" class="nav-logo">HRM</a>
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Trang chủ</a></li>
+          <li><a href="user-dashboard.html" class="nav-link">Dashboard</a></li>
+          <li><a href="user-profile.html" class="nav-link">Hồ sơ</a></li>
+          <li><a href="user-cv.html" class="nav-link">CV</a></li>
+          <li>
+            <a href="user-qualifications.html" class="nav-link active"
+              >Trình độ</a
+            >
+          </li>
+          <li><a href="#" class="nav-link" onclick="logout()">Đăng xuất</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Qualifications Content -->
+    <div class="dashboard-container">
+      <div class="container" style="padding-top: 48px; padding-bottom: 48px">
+        <h1 class="mb-4">TRÌNH ĐỘ & HỌC VẤN</h1>
+
+        <!-- Education -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <div class="flex justify-between items-center">
+              <h3 class="card-title">HỌC VẤN</h3>
+              <button
+                class="btn btn-small"
+                onclick="alert('Chức năng đang phát triển')"
+              >
+                + Thêm
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="timeline" id="educationTimeline">
+              <!-- Education timeline will be loaded here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Work Experience -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <div class="flex justify-between items-center">
+              <h3 class="card-title">KINH NGHIỆM CÔNG TÁC</h3>
+              <button
+                class="btn btn-small"
+                onclick="alert('Chức năng đang phát triển')"
+              >
+                + Thêm
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="timeline" id="experienceTimeline">
+              <!-- Experience timeline will be loaded here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <div class="flex justify-between items-center">
+              <h3 class="card-title">KỸ NĂNG</h3>
+              <button
+                class="btn btn-small"
+                onclick="alert('Chức năng đang phát triển')"
+              >
+                + Thêm
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="skills-grid" id="skillsGrid">
+              <!-- Skills will be loaded here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="card">
+          <div class="card-header">
+            <div class="flex justify-between items-center">
+              <h3 class="card-title">THÀNH TÍCH & KHEN THƯỞNG</h3>
+              <button
+                class="btn btn-small"
+                onclick="alert('Chức năng đang phát triển')"
+              >
+                + Thêm
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="achievements-list" id="achievementsList">
+              <!-- Achievements will be loaded here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <style>
+      .dashboard-container {
+        background: var(--color-gray-100);
+        min-height: 100vh;
+      }
+
+      .timeline {
+        position: relative;
+        padding-left: var(--space-4);
+      }
+
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--color-black);
+      }
+
+      .timeline-item {
+        position: relative;
+        padding-bottom: var(--space-4);
+      }
+
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -37px;
+        top: 4px;
+        width: 12px;
+        height: 12px;
+        background: var(--color-red);
+        border: 3px solid var(--color-black);
+      }
+
+      .timeline-year {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        color: var(--color-gray-700);
+        margin-bottom: var(--space-1);
+      }
+
+      .timeline-title {
+        font-family: var(--font-heading);
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: var(--space-1);
+      }
+
+      .timeline-subtitle {
+        color: var(--color-gray-700);
+        margin-bottom: var(--space-1);
+      }
+
+      .skills-grid {
+        display: grid;
+        gap: var(--space-3);
+      }
+
+      .skill-item {
+        display: grid;
+        grid-template-columns: 200px 1fr auto;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .skill-name {
+        font-family: var(--font-heading);
+        font-weight: 700;
+      }
+
+      .skill-bar {
+        height: 24px;
+        background: var(--color-gray-100);
+        border: 2px solid var(--color-black);
+        overflow: hidden;
+      }
+
+      .skill-fill {
+        height: 100%;
+        background: var(--color-black);
+        transition: width var(--transition-slow);
+      }
+
+      .skill-level {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        min-width: 40px;
+        text-align: right;
+      }
+
+      .achievements-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: var(--space-3);
+      }
+
+      .achievement-card {
+        background: var(--color-gray-100);
+        border-left: 4px solid var(--color-red);
+        padding: var(--space-3);
+      }
+
+      .achievement-title {
+        font-family: var(--font-heading);
+        font-size: 1.125rem;
+        font-weight: 700;
+        margin-bottom: var(--space-1);
+      }
+
+      .achievement-year {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+        color: var(--color-gray-700);
+        margin-bottom: var(--space-2);
+      }
+
+      @media (max-width: 768px) {
+        .skill-item {
+          grid-template-columns: 1fr;
+        }
+
+        .achievements-list {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      requireAuth();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadEducation();
+        loadExperience();
+        loadSkills();
+        loadAchievements();
+      });
+
+      function loadEducation() {
+        const timeline = document.getElementById("educationTimeline");
+        const education = sampleQualifications["CB0001"].education;
+
+        timeline.innerHTML = education
+          .map(
+            (edu) => `
+                <div class="timeline-item">
+                    <div class="timeline-year">${edu.year}</div>
+                    <div class="timeline-title">${edu.degree}</div>
+                    <div class="timeline-subtitle">${edu.institution}</div>
+                    <div>Chuyên ngành: ${edu.major}</div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function loadExperience() {
+        const timeline = document.getElementById("experienceTimeline");
+        const experience = sampleQualifications["CB0001"].experience;
+
+        timeline.innerHTML = experience
+          .map(
+            (exp) => `
+                <div class="timeline-item">
+                    <div class="timeline-year">${exp.period}</div>
+                    <div class="timeline-title">${exp.position}</div>
+                    <div class="timeline-subtitle">${exp.company}</div>
+                    <div>${exp.description}</div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function loadSkills() {
+        const grid = document.getElementById("skillsGrid");
+        const skills = sampleQualifications["CB0001"].skills;
+
+        grid.innerHTML = skills
+          .map(
+            (skill) => `
+                <div class="skill-item">
+                    <div class="skill-name">${skill.name}</div>
+                    <div class="skill-bar">
+                        <div class="skill-fill" style="width: ${skill.level}%"></div>
+                    </div>
+                    <div class="skill-level">${skill.level}%</div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function loadAchievements() {
+        const list = document.getElementById("achievementsList");
+        const achievements = sampleQualifications["CB0001"].achievements;
+
+        list.innerHTML = achievements
+          .map(
+            (achievement) => `
+                <div class="achievement-card">
+                    <div class="achievement-title">${achievement.title}</div>
+                    <div class="achievement-year">${achievement.year}</div>
+                    <div>${achievement.description}</div>
+                </div>
+            `
+          )
+          .join("");
+      }
+    </script>
+  </body>
+</html>

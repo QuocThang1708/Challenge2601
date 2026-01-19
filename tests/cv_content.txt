@@ -1,0 +1,40 @@
+CURRICULUM VITAE
+
+Họ và tên: Hồ Văn Quốc Thắng
+
+Ngày sinh: 17/08/2000
+
+Điện thoại: 0123456789
+
+Email: testing@gmail.com
+
+Địa chỉ: 123 test
+
+MỤC TIÊU NGHỀ NGHIỆP
+
+QC (Quality Control) với hơn 8 năm kinh nghiệm trong lĩnh vực kiểm thử phần mềm. Mong muốn phát triển chuyên sâu về kiểm thử tự động, tối ưu quy trình QA/QC và nâng cao chất lượng sản phẩm cho doanh nghiệp.
+
+KINH NGHIỆM CÔNG TÁC
+
+Công ty: Tenomad- Vị trí: QC- Từ năm 2024 đến năm 2026
+
+KINH NGHIỆM LÀM VIỆC
+
+QC / QA Engineer (8 năm kinh nghiệm)- Phân tích tài liệu yêu cầu (BRD, SRS)- Viết test plan, test case, test scenario- Thực hiện manual testing (Web, Mobile, API)- Thực hiện regression test, smoke test, UAT- Quản lý và theo dõi bug bằng Jira/Redmine- Phối hợp với Dev, BA, PO để xử lý lỗi- Hỗ trợ automation testing (Cypress / Selenium / Playwright)
+
+KỸ NĂNG CHUYÊN MÔN
+
+- Manual Testing- Automation Testing- API Testing (Postman)- SQL cơ bản- Agile / Scrum- Jira, TestRail- Git cơ bản
+
+HỌC VẤN
+
+Trình độ học vấn: Đại học Kinh tế Huế từ 2018 - 2025
+
+NGOẠI NGỮ
+
+- Tiếng Anh: Đọc hiểu tài liệu kỹ thuật, giao tiếp cơ bản
+
+THÔNG TIN KHÁC
+
+- Chăm chỉ, cẩn thận, có trách nhiệm- Khả năng làm việc nhóm và độc lập tốt
+

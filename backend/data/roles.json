@@ -1,0 +1,25 @@
+{
+  "roles": [
+    {
+      "id": "admin",
+      "name": "Admin Tổng",
+      "description": "Quản trị viên cao cấp, có toàn quyền hệ thống.",
+      "type": "admin",
+      "department": ""
+    },
+    {
+      "id": "dept_admin",
+      "name": "Admin Đơn vị",
+      "description": "Quản trị viên phòng ban, chỉ quản lý nhân sự thuộc đơn vị mình.",
+      "type": "dept_admin",
+      "department": "Phòng Kỹ Thuật"
+    },
+    {
+      "id": "user",
+      "name": "Cán bộ",
+      "description": "Nhân viên bình thường, chỉ truy cập được cổng thông tin cá nhân.",
+      "type": "user",
+      "department": ""
+    }
+  ]
+}

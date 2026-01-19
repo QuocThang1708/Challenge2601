@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Báo Cáo & Thống Kê - HRM System</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="container nav-container">
+        <a href="index.html" class="nav-logo">HRM</a>
+        <ul class="nav-menu">
+          <li><a href="admin-dashboard.html" class="nav-link">Dashboard</a></li>
+          <li><a href="admin-users.html" class="nav-link">Người dùng</a></li>
+          <li>
+            <a href="admin-reports.html" class="nav-link active">Báo cáo</a>
+          </li>
+          <li><a href="#" class="nav-link" onclick="logout()">Đăng xuất</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Reports Content -->
+    <div class="dashboard-container">
+      <div class="container" style="padding-top: 48px; padding-bottom: 48px">
+        <div class="flex items-center justify-between mb-4">
+          <h1>BÁO CÁO & THỐNG KÊ</h1>
+          <span class="badge badge-red">RẤT QUAN TRỌNG</span>
+        </div>
+
+        <!-- Report Builder -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3 class="card-title">TẠO BÁO CÁO MỚI</h3>
+          </div>
+          <div class="card-body">
+            <form id="reportForm" onsubmit="handleGenerateReport(event)">
+              <div class="grid grid-3 gap-3 mb-3">
+                <div class="form-group">
+                  <label class="form-label" for="reportType"
+                    >Loại báo cáo *</label
+                  >
+                  <select id="reportType" class="form-select" required>
+                    <option value="">Chọn loại báo cáo</option>
+                    <option value="general">Tổng hợp</option>
+                    <option value="department">Theo đơn vị</option>
+                    <option value="movement">Biến động nhân sự</option>
+                    <option value="qualifications">Trình độ học vấn</option>
+                    <option value="statistics">Thống kê chuyên sâu</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="dateFrom">Từ ngày</label>
+                  <input type="date" id="dateFrom" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="dateTo">Đến ngày</label>
+                  <input type="date" id="dateTo" class="form-input" />
+                </div>
+              </div>
+
+              <div class="grid grid-2 gap-3 mb-3">
+                <div class="form-group">
+                  <label class="form-label" for="department"
+                    >Đơn vị (tùy chọn)</label
+                  >
+                  <select id="department" class="form-select">
+                    <option value="">Tất cả</option>
+                    <option value="Hành chính">Hành chính</option>
+                    <option value="Tài chính">Tài chính</option>
+                    <option value="Nhân sự">Nhân sự</option>
+                    <option value="Kỹ thuật">Kỹ thuật</option>
+                    <option value="Marketing">Marketing</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="exportFormat"
+                    >Định dạng xuất *</label
+                  >
+                  <select id="exportFormat" class="form-select" required>
+                    <option value="pdf">PDF</option>
+                    <option value="excel">Excel</option>
+                    <option value="csv">CSV</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                  Tạo báo cáo
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-accent"
+                  onclick="scheduleReport()"
+                >
+                  Lên lịch
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Quick Reports -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3 class="card-title">BÁO CÁO NHANH</h3>
+          </div>
+          <div class="card-body">
+            <div class="quick-reports">
+              <button
+                class="report-quick-btn"
+                onclick="generateQuickReport('monthly')"
+              >
+                <div class="report-icon">📅</div>
+                <div>Báo cáo tháng</div>
+              </button>
+              <button
+                class="report-quick-btn"
+                onclick="generateQuickReport('quarterly')"
+              >
+                <div class="report-icon">📊</div>
+                <div>Báo cáo quý</div>
+              </button>
+              <button
+                class="report-quick-btn"
+                onclick="generateQuickReport('annual')"
+              >
+                <div class="report-icon">📈</div>
+                <div>Báo cáo năm</div>
+              </button>
+              <button
+                class="report-quick-btn"
+                onclick="generateQuickReport('custom')"
+              >
+                <div class="report-icon">⚙️</div>
+                <div>Tùy chỉnh</div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report History -->
+        <div class="card">
+          <div class="card-header">
+            <div class="flex justify-between items-center">
+              <h3 class="card-title">LỊCH SỬ BÁO CÁO</h3>
+              <input
+                type="text"
+                class="form-input"
+                placeholder="Tìm kiếm báo cáo..."
+                style="max-width: 300px"
+                onkeyup="filterReports(this.value)"
+              />
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="table" id="reportsTable">
+                <thead>
+                  <tr>
+                    <th>Mã báo cáo</th>
+                    <th>Tên báo cáo</th>
+                    <th>Loại</th>
+                    <th>Người tạo</th>
+                    <th>Ngày tạo</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="reportsTableBody">
+                  <!-- Reports will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <style>
+      .dashboard-container {
+        background: var(--color-gray-100);
+        min-height: 100vh;
+      }
+
+      .quick-reports {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-3);
+      }
+
+      .report-quick-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-4);
+        background: var(--color-white);
+        border: 3px solid var(--color-black);
+        cursor: pointer;
+        transition: all var(--transition-base);
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 0.875rem;
+      }
+
+      .report-quick-btn:hover {
+        background: var(--color-black);
+        color: var(--color-white);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .report-icon {
+        font-size: 2.5rem;
+      }
+
+      .report-actions {
+        display: flex;
+        gap: var(--space-1);
+      }
+
+      .report-actions button {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+      }
+
+      @media (max-width: 768px) {
+        .quick-reports {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        loadReports();
+      });
+
+      function loadReports() {
+        const tbody = document.getElementById("reportsTableBody");
+        const reports = sampleReports;
+
+        tbody.innerHTML = reports
+          .map(
+            (report, index) => `
+                <tr>
+                    <td class="code">${report.id}</td>
+                    <td>${report.name}</td>
+                    <td><span class="badge badge-outline">${
+                      report.type
+                    }</span></td>
+                    <td>${report.createdBy}</td>
+                    <td>${formatDate(report.createdDate)}</td>
+                    <td><span class="badge">${report.status}</span></td>
+                    <td class="report-actions">
+                        <button class="btn btn-small btn-outline" onclick="viewReport(${index})">Xem</button>
+                        <button class="btn btn-small btn-outline" onclick="downloadReport(${index})">Tải</button>
+                        <button class="btn btn-small btn-outline" onclick="deleteReport(${index})">Xóa</button>
+                    </td>
+                </tr>
+            `
+          )
+          .join("");
+      }
+
+      function handleGenerateReport(event) {
+        event.preventDefault();
+
+        if (!validateForm("reportForm")) {
+          return;
+        }
+
+        const reportType = document.getElementById("reportType").value;
+        const exportFormat = document.getElementById("exportFormat").value;
+
+        showToast("Đang tạo báo cáo...", "info");
+
+        // Simulate report generation
+        setTimeout(() => {
+          showToast(
+            `Báo cáo đã được tạo thành công! (${exportFormat.toUpperCase()})`,
+            "success"
+          );
+          loadReports();
+        }, 2000);
+      }
+
+      function scheduleReport() {
+        showToast("Mở cửa sổ lên lịch báo cáo...", "info");
+        setTimeout(() => {
+          alert(
+            "Chức năng lên lịch báo cáo đang được phát triển.\n\nCác tính năng:\n- Lên lịch hàng ngày/tuần/tháng\n- Gửi email tự động\n- Lưu trữ báo cáo"
+          );
+        }, 500);
+      }
+
+      function generateQuickReport(type) {
+        let reportName = "";
+        switch (type) {
+          case "monthly":
+            reportName = "Báo cáo tháng";
+            break;
+          case "quarterly":
+            reportName = "Báo cáo quý";
+            break;
+          case "annual":
+            reportName = "Báo cáo năm";
+            break;
+          case "custom":
+            reportName = "Báo cáo tùy chỉnh";
+            break;
+        }
+
+        showToast(`Đang tạo ${reportName}...`, "info");
+        setTimeout(() => {
+          showToast(`${reportName} đã được tạo thành công!`, "success");
+        }, 1500);
+      }
+
+      function viewReport(index) {
+        const report = sampleReports[index];
+        showToast(`Đang mở báo cáo: ${report.name}`, "info");
+        setTimeout(() => {
+          alert(`Xem báo cáo: ${report.name}\n\nChức năng đang phát triển`);
+        }, 500);
+      }
+
+      function downloadReport(index) {
+        const report = sampleReports[index];
+        showToast(`Đang tải xuống: ${report.name}`, "info");
+        setTimeout(() => {
+          showToast("Tải xuống thành công!", "success");
+        }, 1000);
+      }
+
+      function deleteReport(index) {
+        const report = sampleReports[index];
+        if (confirm(`Bạn có chắc muốn xóa báo cáo: ${report.name}?`)) {
+          showToast("Đã xóa báo cáo", "success");
+          loadReports();
+        }
+      }
+
+      function filterReports(searchValue) {
+        filterTable("reportsTable", searchValue);
+      }
+    </script>
+  </body>
+</html>

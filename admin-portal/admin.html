@@ -1,0 +1,2256 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hệ Thống Quản Trị - HRM</title>
+    <link rel="stylesheet" href="../shared/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* Day selector buttons */
+      .day-btn {
+        padding: 10px;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s;
+        background: white;
+        font-weight: 600;
+        user-select: none;
+      }
+      .day-btn:hover {
+        border-color: #b91c1c;
+        background: #fef2f2;
+      }
+      .day-btn.active {
+        border-color: #dc2626;
+        background: #dc2626;
+        color: white;
+      }
+      /* Week selector */
+      .week-selector {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      /* Month grid - calendar style */
+      .month-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+        max-width: 420px;
+      }
+      /* Frequency tab active state */
+      .freq-tab.active {
+        border-color: #dc2626 !important;
+        background: #fef2f2 !important;
+      }
+      .freq-tab.active span {
+        color: #dc2626;
+      }
+      /* Chart Loader Spinner */
+      .chart-loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        border-radius: 8px;
+        transition: opacity 0.3s ease;
+      }
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #dc2626;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        animation: spin 1s linear infinite;
+      }
+      
+      /* Standardized Page Header */
+      .page-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: flex-end !important;
+        width: 100% !important;
+        margin-bottom: 24px !important;
+        /* Matches .topbar spacing: 24px left/right */
+        padding: 0 24px 16px 24px !important;
+        border-bottom: 2px solid #eee !important;
+        box-sizing: border-box !important; /* Ensure padding doesn't overflow width */
+        gap: 0 !important;
+      }
+      .page-header h1 {
+        font-size: 1.75rem !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.01em !important;
+        color: #111 !important;
+        margin: 0 0 4px 0 !important;
+        padding: 0 !important;
+        line-height: 1.2 !important;
+      }
+      .page-header p {
+        color: #555 !important;
+        font-size: 0.95rem !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1.4 !important;
+      }
+      .page-header .actions {
+        display: flex !important;
+        gap: 12px !important;
+        align-items: center !important;
+        flex-shrink: 0 !important;
+        margin-left: auto !important;
+        /* Removing explicit padding-right as container handles it */
+        padding-right: 0 !important;
+      }
+      .page-header .actions .btn {
+        padding: 10px 20px !important;
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        white-space: nowrap !important;
+        margin: 0 !important;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- APP LAYOUT -->
+    <div class="app-layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <img src="../shared/logo.png" alt="Logo" />
+          <div class="logo-text">
+            <span style="display: block; font-size: 1.1rem; font-weight: 800"
+              >QUẢN TRỊ</span
+            >
+            <span
+              style="
+                display: block;
+                font-size: 0.8rem;
+                font-weight: 500;
+                color: #94a3b8;
+              "
+              >HỆ THỐNG</span
+            >
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a
+            href="#dashboard"
+            class="nav-item active"
+            onclick="switchTab('dashboard')"
+          >
+            <i class="fas fa-home"></i> Dashboard
+          </a>
+
+          <div class="nav-group">
+            <span class="nav-label">QUẢN LÝ</span>
+            <a href="#users" class="nav-item" onclick="switchTab('users')">
+              <i class="fas fa-users"></i> Nhân sự
+            </a>
+            <a
+              href="#permissions"
+              class="nav-item"
+              onclick="switchTab('permissions')"
+            >
+              <i class="fas fa-user-shield"></i> Phân quyền
+            </a>
+            <a
+              href="#departments"
+              class="nav-item"
+              onclick="switchTab('departments')"
+            >
+              <i class="fas fa-building"></i> Phòng ban
+            </a>
+          </div>
+
+          <div class="nav-group">
+            <span class="nav-label">BÁO CÁO & DỮ LIỆU</span>
+            <a href="#reports" class="nav-item" onclick="switchTab('reports')">
+              <i class="fas fa-chart-bar"></i> Báo cáo
+            </a>
+            <a href="#audit" class="nav-item" onclick="switchTab('audit')">
+              <i class="fas fa-history"></i> Nhật ký
+            </a>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content">
+        <!-- TOPBAR -->
+        <header class="topbar">
+          <h2 class="page-title" id="pageTitle">Dashboard</h2>
+
+          <div class="user-profile">
+            <div class="text-right">
+              <span
+                id="userGreeting"
+                class="block"
+                style="font-weight: 700; color: var(--color-primary)"
+                >Admin</span
+              >
+              <span
+                class="block text-xs"
+                style="color: var(--color-text-secondary)"
+                >Quản trị viên</span
+              >
+            </div>
+            <button
+              onclick="logout()"
+              class="btn btn-icon btn-outline"
+              title="Đăng xuất"
+            >
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </header>
+
+        <!-- CONTENT WRAPPER -->
+        <div class="content-wrapper">
+          <!-- DASHBOARD SECTION -->
+          <div id="dashboard-section">
+            <!-- Charts Section -->
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                  <h1 id="welcomeTitle" class="mb-2">QUẢN TRỊ HỆ THỐNG</h1>
+                  <p class="text-gray-700">
+                    Xin chào,
+                    <span id="adminName" style="font-weight: 700">ADMIN</span>
+                  </p>
+                </div>
+                <div class="user-avatar" style="background: var(--color-red)">
+                  <span id="adminInitials">A</span>
+                </div>
+              </div>
+
+              <!-- Stats Cards -->
+              <div class="grid grid-4 mb-4">
+                <div class="stat-card">
+                  <div class="stat-number" id="totalEmployees">-</div>
+                  <div class="stat-label">TỔNG CÁN BỘ</div>
+                  <div
+                    class="stat-change"
+                    style="
+                      color: var(--color-gray-700);
+                      font-size: 0.75rem;
+                      margin-top: 8px;
+                    "
+                  >
+                    +12 tháng này
+                  </div>
+                </div>
+                <div class="stat-card" style="border-color: var(--color-red)">
+                  <div
+                    class="stat-number"
+                    id="activeEmployees"
+                    style="color: var(--color-red)"
+                  >
+                    -
+                  </div>
+                  <div class="stat-label">ĐANG CÔNG TÁC</div>
+                  <div
+                    class="stat-change"
+                    style="
+                      color: var(--color-gray-700);
+                      font-size: 0.75rem;
+                      margin-top: 8px;
+                    "
+                  >
+                    91% tổng số
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-number" id="totalDepartments">-</div>
+                  <div class="stat-label">ĐƠN VỊ</div>
+                  <div
+                    class="stat-change"
+                    style="
+                      color: var(--color-gray-700);
+                      font-size: 0.75rem;
+                      margin-top: 8px;
+                    "
+                  >
+                    Hành chính lớn nhất
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-number" id="recentActivities">-</div>
+                  <div class="stat-label">HOẠT ĐỘNG HÔM NAY</div>
+                  <div
+                    class="stat-change"
+                    style="
+                      color: var(--color-gray-700);
+                      font-size: 0.75rem;
+                      margin-top: 8px;
+                    "
+                  >
+                    15 so với hôm qua
+                  </div>
+                </div>
+              </div>
+
+              <!-- Charts Section -->
+              <div class="grid grid-2 mb-4">
+                <!-- Employees by Department -->
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">PHÂN BỐ THEO ĐƠN VỊ</h3>
+                  </div>
+                  <div class="card-body">
+                    <div style="height: 300px; position: relative">
+                      <div id="dept-chart-loader" class="chart-loader">
+                        <div class="spinner"></div>
+                      </div>
+                      <canvas id="departmentChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Gender Distribution -->
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">PHÂN BỐ THEO GIỚI TÍNH</h3>
+                  </div>
+                  <div class="card-body">
+                    <div
+                      style="
+                        height: 300px;
+                        position: relative;
+                        display: flex;
+                        justify-content: center;
+                      "
+                    >
+                      <div id="gender-chart-loader" class="chart-loader">
+                        <div class="spinner"></div>
+                      </div>
+                      <canvas id="genderChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recent Activity -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="flex justify-between items-center">
+                    <h3 class="card-title">HOẠT ĐỘNG GẦN ĐÂY</h3>
+                    <a href="#audit" class="text-sm text-primary hover:underline" onclick="switchSection('audit')">Xem thêm</a>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="activity-list" id="activityList">
+                    <!-- Loaded by JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- USERS SECTION -->
+          <div id="users-section" style="display: none">
+            <div class="page-header">
+              <div>
+                <h1>QUẢN LÝ NGƯỜI DÙNG</h1>
+                <p>Danh sách cán bộ nhân viên trong hệ thống</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-primary" onclick="openAddUserModal()">
+                  + Thêm cán bộ
+                </button>
+              </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="grid grid-4 gap-3">
+                  <div class="form-group">
+                    <label class="form-label" for="searchUser">Tìm kiếm</label>
+                    <input
+                      type="text"
+                      id="searchUser"
+                      class="form-input"
+                      placeholder="Tên, email, mã CB..."
+                      onkeyup="filterUsers()"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="filterDepartment"
+                      >Phòng ban</label
+                    >
+                    <select
+                      id="filterDepartment"
+                      class="form-select"
+                      onchange="filterUsers()"
+                    >
+                      <option value="">Tất cả</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="filterRole">Vai trò</label>
+                    <select
+                      id="filterRole"
+                      class="form-select"
+                      onchange="filterUsers()"
+                    >
+                      <option value="">Tất cả</option>
+                      <option value="admin">Admin tổng</option>
+                      <option value="dept_admin">Admin đơn vị</option>
+                      <option value="user">Cán bộ thường</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="filterStatus"
+                      >Trạng thái</label
+                    >
+                    <select
+                      id="filterStatus"
+                      class="form-select"
+                      onchange="filterUsers()"
+                    >
+                      <option value="">Tất cả</option>
+                      <option value="Đang công tác">Đang công tác</option>
+                      <option value="Đã nghỉ việc">Nghỉ việc</option>
+                      <option value="Chuyển đơn vị">Chuyển đơn vị</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="card">
+              <div class="card-header">
+                <div class="flex justify-between items-center">
+                  <h3 class="card-title">DANH SÁCH CÁN BỘ</h3>
+                  <div class="flex gap-2">
+                    <button
+                      class="btn btn-small btn-outline"
+                      onclick="
+                        exportTableToCSV('usersTable', 'danh-sach-can-bo.csv')
+                      "
+                    >
+                      Xuất CSV
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-container">
+                  <table class="table" id="usersTable">
+                    <thead>
+                      <tr>
+                        <th>Họ và tên</th>
+                        <th>Mã cán bộ</th>
+                        <th>Email</th>
+                        <th>Vai trò</th>
+                        <th>Phòng ban</th>
+                        <th>Chức vụ</th>
+                        <th class="text-center" style="width: 120px">
+                          Trạng thái
+                        </th>
+                        <th class="text-center" style="width: 100px">
+                          Thao tác
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                      <!-- Users will be loaded here -->
+                    </tbody>
+                  </table>
+                </div>
+                <!-- Pagination -->
+                <div id="usersPagination" class="pagination"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DEPARTMENTS SECTION -->
+          <div id="departments-section" style="display: none">
+            <!-- Header -->
+            <div class="page-header">
+              <div>
+                <h1>QUẢN LÝ PHÒNG BAN</h1>
+                <p>Danh sách các phòng ban trong hệ thống</p>
+              </div>
+              <div class="actions">
+                <button
+                  onclick="openCreateDepartmentModal()"
+                  class="btn btn-primary"
+                >
+                  + THÊM PHÒNG BAN
+                </button>
+              </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="form-group mb-0">
+                  <label class="form-label" for="searchDepartment"
+                    >Tìm kiếm</label
+                  >
+                  <input
+                    type="text"
+                    id="searchDepartment"
+                    class="form-input"
+                    placeholder="Nhập tên phòng ban..."
+                    onkeyup="filterDepartments()"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Department Table -->
+            <div class="card p-0" style="overflow: hidden">
+              <div
+                class="card-header"
+                style="
+                  background: white;
+                  border-bottom: 2px solid #eee;
+                  padding: 16px;
+                "
+              >
+                <div class="flex justify-between items-center">
+                  <h3 class="card-title" style="font-size: 1.25rem; margin: 0">
+                    DANH SÁCH PHÒNG BAN
+                  </h3>
+                  <button
+                    class="btn btn-small btn-outline"
+                    onclick="
+                      exportTableToCSV(
+                        'departmentTable',
+                        'danh-sach-phong-ban.csv'
+                      )
+                    "
+                  >
+                    XUẤT CSV
+                  </button>
+                </div>
+              </div>
+              <div class="table-container" style="border: none">
+                <table class="table" id="departmentTable">
+                  <thead>
+                    <tr>
+                      <th style="width: 30%">TÊN PHÒNG BAN</th>
+                      <th>MÔ TẢ</th>
+                      <th style="width: 20%">NGÀY TẠO</th>
+                      <th style="width: 100px" class="text-center">THAO TÁC</th>
+                    </tr>
+                  </thead>
+                  <tbody id="departmentTableBody">
+                    <!-- JS renders rows here -->
+                    <tr>
+                      <td colspan="4" class="text-center p-4">
+                        Đang tải dữ liệu...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Pagination -->
+              <div
+                id="departmentsPagination"
+                class="pagination"
+                style="padding: 16px"
+              ></div>
+            </div>
+          </div>
+
+          <!-- REPORTS SECTION -->
+          <div id="reports-section" style="display: none">
+            <div class="page-header">
+              <div>
+                <h1>BÁO CÁO & THỐNG KÊ</h1>
+                <p>Xem và xuất các báo cáo thống kê</p>
+              </div>
+            </div>
+
+            <!-- Report Builder -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="card-title">TẠO BÁO CÁO MỚI</h3>
+              </div>
+              <div class="card-body">
+                <form id="reportForm" onsubmit="handleGenerateReport(event)">
+                  <div class="grid grid-3 gap-3 mb-3">
+                    <div class="form-group">
+                      <label class="form-label" for="reportType"
+                        >Loại báo cáo *</label
+                      >
+                      <select id="reportType" class="form-select" required>
+                        <option value="">Chọn loại báo cáo</option>
+                        <option value="general">
+                          Danh sách trích ngang (Tổng hợp)
+                        </option>
+                        <option value="movement">
+                          Báo cáo Biến động Nhân sự
+                        </option>
+                        <option value="classifications">
+                          Báo cáo Phân loại & Quy hoạch
+                        </option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="dateFrom">Từ ngày</label>
+                      <input type="date" id="dateFrom" class="form-input" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="dateTo">Đến ngày</label>
+                      <input type="date" id="dateTo" class="form-input" />
+                    </div>
+                  </div>
+
+                  <div class="grid grid-2 gap-3 mb-3">
+                    <div class="form-group">
+                      <label class="form-label" for="department"
+                        >PHÒNG BAN (TÙY CHỌN)</label
+                      >
+                      <select id="reportDepartment" class="form-select">
+                        <option value="">Tất cả phòng ban</option>
+                        <!-- Dynamically loaded -->
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="flex gap-2">
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      onclick="handleGenerateReport(event)"
+                    >
+                      Tạo báo cáo
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-accent"
+                      onclick="scheduleReport()"
+                    >
+                      Lên lịch
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Quick Reports -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="card-title">BÁO CÁO NHANH</h3>
+              </div>
+              <div class="card-body">
+                <div class="quick-reports">
+                  <button
+                    class="report-quick-btn"
+                    onclick="generateQuickReport('monthly')"
+                  >
+                    <div class="report-icon">📅</div>
+                    <div>Báo cáo tháng</div>
+                  </button>
+                  <button
+                    class="report-quick-btn"
+                    onclick="generateQuickReport('quarterly')"
+                  >
+                    <div class="report-icon">📊</div>
+                    <div>Báo cáo quý</div>
+                  </button>
+                  <button
+                    class="report-quick-btn"
+                    onclick="generateQuickReport('annual')"
+                  >
+                    <div class="report-icon">📈</div>
+                    <div>Báo cáo năm</div>
+                  </button>
+                  <button
+                    class="report-quick-btn"
+                    onclick="generateQuickReport('custom')"
+                  >
+                    <div class="report-icon">⚙️</div>
+                    <div>Tùy chỉnh</div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Scheduled Tasks List -->
+            <div class="card mb-4" id="scheduledTasksCard">
+              <div class="card-header">
+                <h3 class="card-title">CẤU HÌNH TỰ ĐỘNG GỬI BÁO CÁO</h3>
+              </div>
+              <div class="card-body">
+                <table class="table" id="scheduledTasksTable">
+                  <thead>
+                    <tr>
+                      <th>Tên cấu hình</th>
+                      <th>Loại báo cáo</th>
+                      <th>Lịch chạy (Cron)</th>
+                      <th>Email nhận</th>
+                      <th class="text-center" style="width: 120px">
+                        Trạng thái
+                      </th>
+                      <th class="text-center" style="width: 100px">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody id="scheduledTasksBody">
+                    <tr>
+                      <td colspan="5" class="text-center">Đang tải...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Report History -->
+            <div class="card">
+              <div class="card-header">
+                <div class="flex justify-between items-center">
+                  <h3 class="card-title">LỊCH SỬ BÁO CÁO</h3>
+                  <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Tìm kiếm báo cáo..."
+                    style="max-width: 300px"
+                    onkeyup="filterReports(this.value)"
+                  />
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-container">
+                  <table class="table" id="reportsTable">
+                    <thead>
+                      <tr>
+                        <th>Mã báo cáo</th>
+                        <th>Tên báo cáo</th>
+                        <th>Loại</th>
+                        <th>Người tạo</th>
+                        <th>Ngày tạo</th>
+                        <th class="text-center" style="width: 120px">
+                          Trạng thái
+                        </th>
+                        <th class="text-center" style="width: 100px">
+                          Thao tác
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody id="reportsTableBody">
+                      <!-- Reports will be loaded here -->
+                    </tbody>
+                  </table>
+                </div>
+                <!-- Pagination -->
+                <div id="reportsPagination" class="pagination"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PERMISSIONS SECTION -->
+          <div id="permissions-section" style="display: none">
+            <div class="page-header">
+              <div>
+                <h1>PHÂN QUYỀN HỆ THỐNG</h1>
+                <p>Quản lý vai trò và quyền hạn người dùng</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-primary" onclick="openRoleModal()">
+                  + THÊM ROLE
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="table-container">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Mã Role</th>
+                      <th>Tên Vai trò</th>
+                      <th>Mô tả</th>
+                      <th class="text-center" style="width: 100px">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody id="rolesTableBody">
+                    <!-- Roles dynamically loaded -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- AUDIT LOG SECTION -->
+          <div id="audit-section" style="display: none">
+            <div class="page-header">
+              <div>
+                <h1>NHẬT KÝ HOẠT ĐỘNG</h1>
+                <p>Theo dõi các hoạt động trong hệ thống</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-outline" onclick="loadAuditLogs()">
+                  <i class="fas fa-sync"></i> Làm mới
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header bg-black text-white">
+                <h3 class="card-title text-white">Lịch sử hệ thống</h3>
+              </div>
+              <div class="card-body p-0">
+                <table class="table table-striped table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>Thời gian</th>
+                      <th>Người thực hiện</th>
+                      <th>Hành động</th>
+                      <th>Đối tượng</th>
+                      <th class="text-center" style="width: 120px">
+                        Trạng thái
+                      </th>
+                      <th class="text-center" style="width: 100px">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody id="auditTableBody">
+                    <!-- JS Rendered -->
+                  </tbody>
+                </table>
+                <!-- Pagination -->
+                <div
+                  id="auditPagination"
+                  class="pagination"
+                  style="padding: 16px"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <!-- END AUDIT LOG SECTION -->
+        </div>
+      </main>
+    </div>
+
+    <!-- MODALS -->
+
+    <!-- Role Modal -->
+    <div class="modal-overlay" id="roleModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title" id="roleModalTitle">THÊM/SỬA ROLE</h2>
+          <button class="modal-close" onclick="closeModal('roleModal')">
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="roleForm" onsubmit="handleSaveRole(event)">
+            <!-- ID hidden or generated -->
+            <input type="hidden" id="roleId" />
+
+            <div class="form-group">
+              <label class="form-label" for="roleName">Tên Vai trò *</label>
+              <input
+                type="text"
+                id="roleName"
+                class="form-input"
+                required
+                placeholder="VD: Trưởng phòng IT"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="roleType">Loại Quản trị *</label>
+              <select
+                id="roleType"
+                class="form-select"
+                required
+                onchange="handleRoleTypeChange()"
+              >
+                <option value="user">Cán bộ</option>
+                <option value="admin">Admin Tổng</option>
+                <option value="dept_admin">Admin Phòng ban</option>
+              </select>
+            </div>
+
+            <!-- Conditional Department Select -->
+            <div
+              class="form-group"
+              id="roleDepartmentGroup"
+              style="display: none"
+            >
+              <label class="form-label" for="roleDepartment"
+                >Thuộc Phòng ban *</label
+              >
+              <select id="roleDepartment" class="form-select">
+                <option value="">Chọn phòng ban áp dụng</option>
+              </select>
+              <small class="text-gray-500"
+                >Vai trò này sẽ chỉ có quyền hạn trong phạm vi phòng ban được
+                chọn.</small
+              >
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="roleDesc">Mô tả</label>
+              <textarea id="roleDesc" class="form-input" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary" style="width: 100%">
+                Lưu
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal-overlay" id="addUserModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">THÊM CÁN BỘ MỚI</h2>
+          <button class="modal-close" onclick="closeModal('addUserModal')">
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addUserForm" onsubmit="handleAddUser(event)">
+            <div class="grid grid-2 gap-3">
+              <div class="form-group">
+                <label class="form-label" for="newName">Họ và tên *</label>
+                <input type="text" id="newName" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newEmployeeId"
+                  >Mã cán bộ *</label
+                >
+                <input
+                  type="text"
+                  id="newEmployeeId"
+                  class="form-input"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newEmail">Email *</label>
+                <input type="email" id="newEmail" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newPhone">Số điện thoại *</label>
+                <input type="tel" id="newPhone" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newPassword">Mật khẩu</label>
+                <div class="password-wrapper">
+                  <input
+                    type="password"
+                    id="newPassword"
+                    class="form-input"
+                    placeholder="Mặc định: password123"
+                  />
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    onclick="togglePasswordVisibility('newPassword')"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newDepartment"
+                  >Phòng ban *</label
+                >
+                <select id="newDepartment" class="form-select" required>
+                  <option value="">Chọn phòng ban</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newRole">Vai trò *</label>
+                <select id="newRole" class="form-select" required>
+                  <option value="user">Cán bộ (Mặc định)</option>
+                  <option value="dept_admin">Admin Đơn vị</option>
+                  <option value="admin">Admin Tổng</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newPosition">Chức vụ *</label>
+                <input
+                  type="text"
+                  id="newPosition"
+                  class="form-input"
+                  required
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="closeModal('addUserModal')"
+              >
+                Hủy
+              </button>
+              <button type="submit" class="btn btn-primary">Thêm cán bộ</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal-overlay" id="userModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modalTitleUserId">
+            CHỈNH SỬA NGƯỜI DÙNG
+          </h2>
+          <button class="modal-close" onclick="closeModal('userModal')">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="editUserForm" onsubmit="handleUpdateUser(event)">
+            <input type="hidden" id="userId" />
+            <div class="grid grid-2 gap-3">
+              <div class="form-group">
+                <label class="form-label" for="userName">Họ và tên *</label>
+                <input type="text" id="userName" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="userEmployeeId"
+                  >Mã cán bộ *</label
+                >
+                <input
+                  type="text"
+                  id="userEmployeeId"
+                  class="form-input"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="userEmail">Email *</label>
+                <input
+                  type="email"
+                  id="userEmail"
+                  class="form-input"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="userPhone"
+                  >Số điện thoại *</label
+                >
+                <input type="tel" id="userPhone" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="userDept">Phòng ban</label>
+                <select id="userDept" class="form-select">
+                  <option value="">Chọn phòng ban</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="userRole">Vai trò *</label>
+                <select id="userRole" class="form-select" required>
+                  <option value="user">Cán bộ</option>
+                  <option value="dept_admin">Admin Đơn vị</option>
+                  <option value="admin">Admin Tổng</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="userPosition">Chức vụ</label>
+                <input type="text" id="userPosition" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="userStatus">Trạng thái *</label>
+                <select id="userStatus" class="form-select" required>
+                  <option value="Đang công tác">Đang công tác</option>
+                  <option value="Nghỉ việc">Nghỉ việc</option>
+                  <option value="Nghỉ phép">Nghỉ phép</option>
+                  <option value="Chuyển đơn vị">Chuyển đơn vị</option>
+                </select>
+              </div>
+              <div class="form-group" style="grid-column: span 2">
+                <label class="form-label" for="userTags"
+                  >Nhãn / Phân loại</label
+                >
+                <input
+                  type="text"
+                  id="userTags"
+                  class="form-input"
+                  placeholder="VD: Cán bộ nguồn, Đảng viên (phân cách phẩy)"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="userDob">Ngày sinh</label>
+                <input type="date" id="userDob" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="userIdCard">CCCD/CMND</label>
+                <input type="text" id="userIdCard" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="userAddress">Địa chỉ</label>
+                <input type="text" id="userAddress" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="userJoinDate"
+                  >Ngày gia nhập</label
+                >
+                <input type="date" id="userJoinDate" class="form-input" />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="closeModal('userModal')"
+              >
+                Hủy
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Lưu thay đổi
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete User Confirmation Modal -->
+    <div class="modal-overlay" id="deleteConfirmationModal">
+      <div class="modal" style="max-width: 400px">
+        <div class="modal-header">
+          <h2 class="modal-title">XÁC NHẬN</h2>
+          <button
+            class="modal-close"
+            onclick="closeModal('deleteConfirmationModal')"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Bạn có chắc chắn muốn xóa cán bộ này? Hành động này không thể hoàn
+            tác.
+          </p>
+          <input type="hidden" id="deleteUserId" />
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-outline"
+            onclick="closeModal('deleteConfirmationModal')"
+          >
+            Hủy
+          </button>
+          <button class="btn btn-danger" onclick="handleDeleteUser()">
+            Xóa vĩnh viễn
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Generic Confirmation Modal -->
+    <div class="modal-overlay" id="confirmationModal">
+      <div class="modal" style="max-width: 400px">
+        <div class="modal-header">
+          <h2 class="modal-title">XÁC NHẬN</h2>
+          <button class="modal-close" onclick="closeModal('confirmationModal')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="confirmationMessage">Bạn có chắc chắn muốn thực hiện hành động này?</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal('confirmationModal')">Hủy</button>
+          <button class="btn btn-primary" id="confirmOkBtn">ĐỒNG Ý</button>
+        </div>
+      </div>
+    </div>
+    <!-- View User Modal -->
+    <div class="modal-overlay" id="viewUserModal">
+      <div class="modal" style="max-width: 800px">
+        <div class="modal-header">
+          <h2 class="modal-title">CHI TIẾT CÁN BỘ</h2>
+          <button class="modal-close" onclick="closeModal('viewUserModal')">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchUserTab('profile')">
+              Thông tin
+            </button>
+            <button class="tab-btn" onclick="switchUserTab('cvs')">
+              Hồ sơ đi kèm
+            </button>
+            <button class="tab-btn" onclick="switchUserTab('history')">
+              Lịch sử công tác
+            </button>
+          </div>
+
+          <!-- Tab Content: Profile -->
+          <div
+            id="tab-profile"
+            class="tab-content active"
+            style="display: block"
+          >
+            <div class="grid grid-2 gap-4">
+              <!-- Left Column: Avatar & Basic Info -->
+              <div
+                class="flex flex-col items-center justify-center text-center"
+                style="
+                  padding: var(--space-3);
+                  background: var(--color-gray-100);
+                  border: 2px solid var(--color-black);
+                "
+              >
+                <div
+                  class="user-avatar-large mb-3"
+                  id="viewUserAvatarContainer"
+                >
+                  <span id="viewUserAvatarInitials"></span>
+                  <img
+                    id="viewUserAvatarImg"
+                    src=""
+                    alt="Avatar"
+                    style="
+                      display: none;
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                      border-radius: 50%;
+                    "
+                  />
+                </div>
+                <h3 class="user-name mb-2" id="viewUserName"></h3>
+                <div id="viewUserRole" class="badge">USER</div>
+              </div>
+
+              <!-- Right Column: Detailed Info -->
+              <div class="user-details-list">
+                <div class="detail-item">
+                  <span class="detail-label">Mã cán bộ</span>
+                  <span class="detail-value" id="viewUserCode">CB000</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Email</span>
+                  <span class="detail-value" id="viewUserEmail"></span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Số điện thoại</span>
+                  <span class="detail-value" id="viewUserPhone"></span>
+                </div>
+                <!-- Extended Info -->
+                <div class="detail-item">
+                  <span class="detail-label">Ngày sinh</span>
+                  <span class="detail-value" id="viewUserDob">-</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">CCCD/CMND</span>
+                  <span class="detail-value" id="viewUserIdCard">-</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Địa chỉ</span>
+                  <span class="detail-value" id="viewUserAddress">-</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Đơn vị</span>
+                  <span class="detail-value" id="viewUserDept"></span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Chức vụ</span>
+                  <span class="detail-value" id="viewUserPosition"></span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Trạng thái</span>
+                  <span class="detail-value" id="viewUserStatus"></span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Ngày gia nhập</span>
+                  <span class="detail-value" id="viewUserJoinDate">-</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Ngày tạo</span>
+                  <span class="detail-value" id="viewUserDate"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Content: CVs -->
+          <div id="tab-cvs" class="tab-content" style="display: none">
+            <h4 style="margin-bottom: 12px; font-weight: bold">
+              Danh sách CV đã tải lên
+            </h4>
+            <div id="viewUserCVList" class="cv-list-container">
+              <p class="text-gray-500">Đang tải...</p>
+            </div>
+          </div>
+
+          <!-- Tab: History -->
+          <div id="tab-history" class="tab-content" style="display: none">
+            <div style="max-height: 400px; overflow-y: auto; padding: 10px">
+              <ul
+                id="viewUserHistoryList"
+                style="list-style: none; padding: 0; position: relative"
+              >
+                <!-- JS will render timeline -->
+                <li class="text-gray-500 text-center">Đang tải lịch sử...</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-primary"
+            id="btnEditUser"
+            onclick="
+              editUser(window.currentUserIndex);
+              closeModal('viewUserModal');
+            "
+          >
+            Chỉnh sửa
+          </button>
+          <button class="btn btn-outline" onclick="closeModal('viewUserModal')">
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create/Edit Department Modal -->
+    <div class="modal-overlay" id="departmentModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalTitle">THÊM PHÒNG BAN</h3>
+          <button class="modal-close" onclick="closeDepartmentModal()">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="departmentForm" onsubmit="handleSaveDepartment(event)">
+            <input type="hidden" id="depId" />
+            <div class="form-group" style="margin-bottom: 24px">
+              <label class="form-label">TÊN PHÒNG BAN *</label>
+              <input
+                type="text"
+                id="depName"
+                class="form-input"
+                required
+                placeholder="Ví dụ: Phòng Kỹ Thuật"
+              />
+            </div>
+            <div class="form-group" style="margin-bottom: 24px">
+              <label class="form-label">MÔ TẢ</label>
+              <textarea
+                id="depDescription"
+                class="form-textarea"
+                placeholder="Nhập mô tả chức năng, nhiệm vụ..."
+              ></textarea>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="closeDepartmentModal()"
+              >
+                Hủy
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Lưu thông tin
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Delete Department Modal -->
+    <div class="modal-overlay" id="confirmDeleteDepartmentModal">
+      <div class="modal" style="max-width: 400px">
+        <div class="modal-header bg-black text-white">
+          <h3 class="modal-title h5" style="font-size: 1.25rem">XÁC NHẬN</h3>
+          <button
+            class="modal-close text-white"
+            onclick="closeDeleteDepartmentModal()"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Bạn có chắc chắn muốn xóa phòng ban
+            <strong id="deleteDepName"></strong>?
+          </p>
+          <p class="text-sm text-gray-500 mt-2">
+            Dữ liệu liên quan có thể bị ảnh hưởng. Hành động này không thể hoàn
+            tác.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-outline"
+            onclick="closeDeleteDepartmentModal()"
+          >
+            Không, giữ lại
+          </button>
+          <button
+            type="button"
+            class="btn btn-accent"
+            onclick="confirmDeleteDepartment()"
+          >
+            Có, xóa ngay
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- View CV Modal -->
+    <div class="modal-overlay" id="viewCVModal">
+      <div
+        class="modal"
+        style="
+          max-width: 900px;
+          width: 90%;
+          height: 90vh;
+          display: flex;
+          flex-direction: column;
+        "
+      >
+        <div
+          class="modal-header"
+          style="
+            background-color: #323639;
+            color: white;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <div style="display: flex; align-items: center; gap: 16px">
+            <button
+              class="modal-close"
+              onclick="closeModal('viewCVModal')"
+              style="
+                position: static;
+                color: white;
+                background: none;
+                border: none;
+                cursor: pointer;
+                width: 36px;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+            <h2
+              class="modal-title"
+              style="color: white; font-size: 16px; font-weight: 500"
+            >
+              <span id="viewCVTitle"></span>
+            </h2>
+          </div>
+          <button
+            id="headerDownloadBtn"
+            class="btn btn-primary"
+            style="
+              background-color: #8ab4f8;
+              color: #333;
+              font-weight: 500;
+              border: none;
+            "
+          >
+            <i class="fas fa-download" style="margin-right: 5px"></i> Tải xuống
+          </button>
+        </div>
+        <div
+          class="modal-body"
+          style="
+            flex: 1;
+            padding: 0;
+            overflow: hidden;
+            background: #f5f5f5;
+            position: relative;
+          "
+        >
+          <div id="cvPreviewContainer" style="width: 100%; height: 100%"></div>
+          <div
+            id="cvPreviewMessage"
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-direction: column;
+              gap: 1rem;
+              background: #f5f5f5;
+              z-index: 10;
+            "
+          >
+            <p class="text-gray-700">Đang tải...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Audit Detail Modal -->
+    <div class="modal-overlay" id="auditDetailModal">
+      <div class="modal" style="max-width: 700px">
+        <div
+          class="modal-header"
+          style="color: #000; border-bottom: 1px solid #eee"
+        >
+          <h2 class="modal-title" style="font-size: 1.25rem">
+            Chi tiết nhật ký
+          </h2>
+          <button
+            class="modal-close"
+            style="color: #666"
+            onclick="closeModal('auditDetailModal')"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p
+            class="mb-3"
+            id="auditDetailSummary"
+            style="font-weight: 500; color: #333"
+          ></p>
+          <div class="json-viewer" id="auditJsonContent"></div>
+        </div>
+        <div class="modal-footer" style="padding: 1rem; background: #fff">
+          <button
+            class="btn btn-outline"
+            onclick="closeModal('auditDetailModal')"
+          >
+            Đóng
+          </button>
+          <button
+            class="btn btn-primary"
+            onclick="copyAuditJson()"
+            style="background: #fbc02d; border-color: #fbc02d; color: #000"
+          >
+            Sao chép
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schedule Report Modal -->
+    <div class="modal-overlay" id="scheduleReportModal">
+      <div class="modal" style="width: 600px; max-width: 90%">
+        <div class="modal-header">
+          <h3 class="modal-title">LÊN LỊCH BÁO CÁO</h3>
+          <button
+            class="modal-close"
+            onclick="closeModal('scheduleReportModal')"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="scheduleForm" onsubmit="handleSaveSchedule(event)">
+            <input type="hidden" id="scheduleId" value="" />
+
+            <!-- Basic Config Section -->
+            <div style="margin-bottom: 24px">
+              <h4
+                style="
+                  font-size: 1rem;
+                  font-weight: 700;
+                  margin-bottom: 16px;
+                  color: #1a1a1a;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                Thông tin cơ bản
+              </h4>
+
+              <div class="form-group mb-3">
+                <label
+                  class="form-label"
+                  style="font-weight: 600; margin-bottom: 8px; display: block"
+                  >Tên cấu hình *</label
+                >
+                <input
+                  type="text"
+                  id="scheduleName"
+                  class="form-input"
+                  required
+                  placeholder="VD: Báo cáo tuần gửi Sếp"
+                />
+              </div>
+            </div>
+
+            <!-- Report Config Section -->
+            <div style="margin-bottom: 24px">
+              <h4
+                style="
+                  font-size: 1rem;
+                  font-weight: 700;
+                  margin-bottom: 16px;
+                  color: #1a1a1a;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                  />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <polyline points="10 9 9 9 8 9" />
+                </svg>
+                Cấu hình báo cáo
+              </h4>
+
+              <div class="grid grid-2 gap-3 mb-3">
+                <div class="form-group">
+                  <label
+                    class="form-label"
+                    style="font-weight: 600; margin-bottom: 8px; display: block"
+                    >Loại báo cáo *</label
+                  >
+                  <select id="scheduleReportType" class="form-select" required>
+                    <option value="general">Tổng hợp nhân sự</option>
+                    <option value="movement">Biến động nhân sự</option>
+                    <option value="classifications">
+                      Phân loại / Trình độ
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label
+                    class="form-label"
+                    style="font-weight: 600; margin-bottom: 8px; display: block"
+                    >Phạm vi dữ liệu</label
+                  >
+                  <select
+                    id="scheduleDataPeriod"
+                    class="form-select"
+                    required
+                    onchange="toggleCustomDateRange()"
+                  >
+                    <option value="same_day">Trong ngày (Hôm nay)</option>
+                    <option value="previous_day" selected>
+                      Hôm qua (Hôm trước)
+                    </option>
+                    <option value="current_week">Tuần này</option>
+                    <option value="previous_week">Tuần trước</option>
+                    <option value="current_month">Tháng này</option>
+                    <option value="previous_month">Tháng trước</option>
+                    <option value="custom">
+                      Tùy chỉnh (Từ ngày - Đến ngày)
+                    </option>
+                  </select>
+
+                  <!-- Custom Date Range (Hidden by default) -->
+                  <div
+                    id="customDateRange"
+                    class="grid grid-2 gap-2 mt-2"
+                    style="display: none"
+                  >
+                    <div>
+                      <label class="text-xs text-gray-500">Từ ngày</label>
+                      <input
+                        type="date"
+                        id="scheduleDateFrom"
+                        class="form-input text-sm p-1"
+                      />
+                    </div>
+                    <div>
+                      <label class="text-xs text-gray-500">Đến ngày</label>
+                      <input
+                        type="date"
+                        id="scheduleDateTo"
+                        class="form-input text-sm p-1"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group mb-3">
+                <label
+                  class="form-label"
+                  style="font-weight: 600; margin-bottom: 8px; display: block"
+                  >Phòng ban (Tùy chọn)</label
+                >
+                <!-- Will be populated by JS -->
+                <select id="scheduleDepartment" class="form-select">
+                  <option value="">Tất cả phòng ban</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Schedule Config Section -->
+            <div style="margin-bottom: 24px">
+              <h4
+                style="
+                  font-size: 1rem;
+                  font-weight: 700;
+                  margin-bottom: 16px;
+                  color: #1a1a1a;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                Cấu hình thời gian
+              </h4>
+
+              <div class="schedule-planner mb-4">
+                <!-- Frequency Tabs -->
+                <div
+                  class="freq-tabs flex gap-2 mb-3"
+                  style="display: flex; gap: 8px"
+                >
+                  <label
+                    class="freq-tab"
+                    style="
+                      flex: 1;
+                      padding: 12px;
+                      border: 2px solid #e0e0e0;
+                      border-radius: 6px;
+                      cursor: pointer;
+                      text-align: center;
+                      transition: all 0.2s;
+                      background: white;
+                    "
+                  >
+                    <input
+                      type="radio"
+                      name="freq"
+                      value="daily"
+                      checked
+                      onchange="toggleScheduleOptions()"
+                      style="display: none"
+                    />
+                    <span style="font-weight: 600">Hàng ngày</span>
+                  </label>
+                  <label
+                    class="freq-tab"
+                    style="
+                      flex: 1;
+                      padding: 12px;
+                      border: 2px solid #e0e0e0;
+                      border-radius: 6px;
+                      cursor: pointer;
+                      text-align: center;
+                      transition: all 0.2s;
+                      background: white;
+                    "
+                  >
+                    <input
+                      type="radio"
+                      name="freq"
+                      value="weekly"
+                      onchange="toggleScheduleOptions()"
+                      style="display: none"
+                    />
+                    <span style="font-weight: 600">Hàng tuần</span>
+                  </label>
+                  <label
+                    class="freq-tab"
+                    style="
+                      flex: 1;
+                      padding: 12px;
+                      border: 2px solid #e0e0e0;
+                      border-radius: 6px;
+                      cursor: pointer;
+                      text-align: center;
+                      transition: all 0.2s;
+                      background: white;
+                    "
+                  >
+                    <input
+                      type="radio"
+                      name="freq"
+                      value="monthly"
+                      onchange="toggleScheduleOptions()"
+                      style="display: none"
+                    />
+                    <span style="font-weight: 600">Hàng tháng</span>
+                  </label>
+                </div>
+
+                <!-- Time Picker -->
+                <div class="form-group mb-3" style="margin-top: 24px">
+                  <label
+                    class="form-label"
+                    style="font-weight: 600; margin-bottom: 8px; display: block"
+                    >Giờ gửi</label
+                  >
+                  <input
+                    type="time"
+                    id="scheduleTime"
+                    class="form-input"
+                    value="08:00"
+                    style="width: 150px"
+                    required
+                  />
+                </div>
+
+                <!-- Weekly Specifics -->
+                <div
+                  id="weeklyOptions"
+                  class="freq-options"
+                  style="display: none"
+                >
+                  <label class="form-label mb-2">Chọn thứ trong tuần</label>
+                  <div class="week-selector flex gap-2">
+                    <div class="day-btn" data-val="1" onclick="selectDay(this)">
+                      T2
+                    </div>
+                    <div class="day-btn" data-val="2" onclick="selectDay(this)">
+                      T3
+                    </div>
+                    <div class="day-btn" data-val="3" onclick="selectDay(this)">
+                      T4
+                    </div>
+                    <div class="day-btn" data-val="4" onclick="selectDay(this)">
+                      T5
+                    </div>
+                    <div class="day-btn" data-val="5" onclick="selectDay(this)">
+                      T6
+                    </div>
+                    <div class="day-btn" data-val="6" onclick="selectDay(this)">
+                      T7
+                    </div>
+                    <div class="day-btn" data-val="0" onclick="selectDay(this)">
+                      CN
+                    </div>
+                  </div>
+                  <input type="hidden" id="selectedWeekDay" value="1" />
+                </div>
+
+                <!-- Monthly Specifics -->
+                <div
+                  id="monthlyOptions"
+                  class="freq-options"
+                  style="display: none"
+                >
+                  <label class="form-label mb-2">Chọn ngày trong tháng</label>
+                  <div class="month-grid grid grid-7 gap-1">
+                    <!-- JS to populate 1-31? Or manual HTML for simplicity -->
+                    <!-- Let's render via JS or just simple html -->
+                    <script>
+                      // Inline script to generate days? No, avoid inline.
+                      // I will generate this HTML via this tool call.
+                    </script>
+                    <div class="day-btn" onclick="selectMonthDay(this, 1)">
+                      1
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 2)">
+                      2
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 3)">
+                      3
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 4)">
+                      4
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 5)">
+                      5
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 6)">
+                      6
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 7)">
+                      7
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 8)">
+                      8
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 9)">
+                      9
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 10)">
+                      10
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 11)">
+                      11
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 12)">
+                      12
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 13)">
+                      13
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 14)">
+                      14
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 15)">
+                      15
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 16)">
+                      16
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 17)">
+                      17
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 18)">
+                      18
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 19)">
+                      19
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 20)">
+                      20
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 21)">
+                      21
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 22)">
+                      22
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 23)">
+                      23
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 24)">
+                      24
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 25)">
+                      25
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 26)">
+                      26
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 27)">
+                      27
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 28)">
+                      28
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 29)">
+                      29
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 30)">
+                      30
+                    </div>
+                    <div class="day-btn" onclick="selectMonthDay(this, 31)">
+                      31
+                    </div>
+                  </div>
+                  <input type="hidden" id="selectedMonthDay" value="1" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Recipients Section -->
+            <div style="margin-bottom: 24px">
+              <h4
+                style="
+                  font-size: 1rem;
+                  font-weight: 700;
+                  margin-bottom: 16px;
+                  color: #1a1a1a;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                  />
+                  <polyline points="22,6 12,13 2,6" />
+                </svg>
+                Người nhận
+              </h4>
+
+              <div class="form-group mb-3">
+                <label
+                  class="form-label"
+                  style="font-weight: 600; margin-bottom: 8px; display: block"
+                >
+                  Email nhận báo cáo
+                  <span
+                    style="font-size: 0.85rem; color: #666; font-weight: 400"
+                    >(Cách nhau bởi dấu phẩy)</span
+                  >
+                </label>
+                <input
+                  type="text"
+                  id="scheduleRecipients"
+                  class="form-input"
+                  required
+                  placeholder="boss@company.com, admin@company.com"
+                />
+              </div>
+            </div>
+
+            <div
+              class="modal-footer"
+              style="
+                border-top: 1px solid #e0e0e0;
+                padding: 16px 0;
+                margin-top: 8px;
+              "
+            >
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="closeModal('scheduleReportModal')"
+              >
+                Hủy
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Lưu cấu hình
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="confirmationModal">
+      <div class="modal" style="max-width: 400px; animation: slideIn 0.3s ease">
+        <div class="modal-header" style="color: white">
+          <h3
+            class="modal-title"
+            style="font-size: 1.1rem; font-weight: 600"
+            id="confirmTitle"
+          >
+            XÁC NHẬN
+          </h3>
+          <button
+            class="modal-close text-white"
+            onclick="closeConfirmationModal()"
+            style="
+              color: black;
+              background: none;
+              border: none;
+              cursor: pointer;
+            "
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body" style="padding: 24px">
+          <p
+            id="confirmMessage"
+            style="color: #333; font-size: 1rem; line-height: 1.5"
+          ></p>
+        </div>
+        <div
+          class="modal-footer"
+          style="
+            padding: 16px 24px;
+            background: #f9fafb;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+          "
+        >
+          <button
+            type="button"
+            class="btn btn-outline"
+            onclick="closeConfirmationModal()"
+            style="
+              padding: 10px 24px;
+              text-transform: uppercase;
+              font-weight: 600;
+              border-radius: 4px;
+            "
+          >
+            HỦY
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            id="confirmOkBtn"
+            style="
+              padding: 10px 24px;
+              background: #dc2626;
+              border-color: #dc2626;
+              text-transform: uppercase;
+              font-weight: 600;
+              border-radius: 4px;
+            "
+          >
+            ĐỒNG Ý
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/spa-logic.js?v=3"></script>
+  </body>
+</html>

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tạo CV Mới - HRM</title>
+    <link rel="stylesheet" href="../shared/styles.css" />
+    <!-- HTML2PDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+      :root {
+        --preview-width: 210mm;
+        --preview-height: 297mm;
+        --preview-scale: 0.8;
+      }
+
+      body {
+        background: #f0f2f5;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .builder-container {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+        margin-top: 0;
+      }
+
+      /* Left Panel: Form */
+      .form-panel {
+        flex: 1;
+        padding: 24px;
+        overflow-y: auto;
+        background: white;
+        border-right: 1px solid #ddd;
+        max-width: 50%;
+        min-width: 400px;
+      }
+
+      .form-section {
+        background: #fff;
+        margin-bottom: 24px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+      }
+
+      .form-section h3 {
+        margin-top: 0;
+        margin-bottom: 16px;
+        color: #1a73e8;
+        font-size: 1.1rem;
+        border-bottom: 2px solid #e8f0fe;
+        padding-bottom: 8px;
+      }
+
+      .form-group {
+        margin-bottom: 16px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.2s;
+      }
+
+      .form-control:focus {
+        border-color: #1a73e8;
+        outline: none;
+      }
+
+      textarea.form-control {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .btn-add {
+        background: #e8f0fe;
+        color: #1a73e8;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        width: 100%;
+        margin-top: 8px;
+      }
+
+      .btn-add:hover {
+        background: #d2e3fc;
+      }
+
+      .dynamic-item {
+        background: #f8f9fa;
+        padding: 16px;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        position: relative;
+        border: 1px solid #eee;
+      }
+
+      .remove-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: #ff4444;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-size: 18px;
+      }
+
+      /* Right Panel: Preview */
+      .preview-panel {
+        flex: 1;
+        background: #525659;
+        display: flex;
+        justify-content: center;
+        padding: 40px;
+        overflow-y: auto;
+      }
+
+      .cv-preview-page {
+        width: var(--preview-width);
+        min-height: var(--preview-height);
+        background: white;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        padding: 40px;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+        color: #333;
+        transform-origin: top center;
+        /* Using zoom instead of transform for clearer text at specific scales if needed, 
+           but CSS transform is safer for layout consistency. 
+           We will let natural scroll handle it or optional scaling. */
+      }
+
+      /* CV Template Styles (Classic Professional) */
+      .cv-header {
+        border-bottom: 2px solid #333;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+      }
+      .cv-name {
+        font-size: 28px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin: 0;
+        color: #2c3e50;
+      }
+      .cv-title {
+        font-size: 18px;
+        color: #7f8c8d;
+        margin: 5px 0 15px 0;
+      }
+      .cv-contact {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        font-size: 13px;
+        color: #555;
+      }
+      .cv-contact-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .cv-section {
+        margin-bottom: 25px;
+      }
+      .cv-section-title {
+        font-size: 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #2c3e50;
+        border-bottom: 1px solid #bdc3c7;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+      }
+
+      .cv-item {
+        margin-bottom: 15px;
+      }
+      .cv-item-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+      }
+      .cv-item-title {
+        font-weight: 700;
+        font-size: 15px;
+      }
+      .cv-item-date {
+        font-style: italic;
+        color: #7f8c8d;
+        font-size: 13px;
+      }
+      .cv-item-subtitle {
+        font-weight: 500;
+        font-size: 14px;
+        color: #34495e;
+        margin-bottom: 4px;
+      }
+      .cv-item-content {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #444;
+        white-space: pre-line;
+      }
+      .cv-item-content ul {
+        padding-left: 18px;
+        margin: 5px 0;
+      }
+
+      .skills-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      /* Action Bar */
+      .action-bar {
+        height: 60px;
+        background: white;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        z-index: 10;
+      }
+
+      .back-btn {
+        text-decoration: none;
+        color: #555;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+      }
+      .save-btn {
+        background: #1a73e8;
+        color: white;
+        padding: 10px 24px;
+        border-radius: 4px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.2s;
+      }
+      .save-btn:hover {
+        background: #1557b0;
+      }
+      .save-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Action Bar -->
+    <div class="action-bar">
+      <a href="cv.html" class="back-btn">← Quay lại danh sách</a>
+      <div style="font-weight: 600; font-size: 18px">Tạo CV Mới</div>
+      <button class="save-btn" onclick="saveCV()" id="btnSave">
+        <span>💾</span> Lưu & Tải Lên
+      </button>
+    </div>
+
+    <div class="builder-container">
+      <!-- INPUT FORM -->
+      <div class="form-panel">
+        <!-- 1. Contact -->
+        <div class="form-section">
+          <h3>1. Thông tin cá nhân</h3>
+          <div class="form-group">
+            <label>Họ và tên</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inp-name"
+              placeholder="NGUYỄN VĂN A"
+              oninput="updatePreview()"
+            />
+          </div>
+          <div class="form-group">
+            <label>Chức danh (Title)</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inp-title"
+              placeholder="Software Engineer"
+              oninput="updatePreview()"
+            />
+          </div>
+          <div class="row" style="display: flex; gap: 16px">
+            <div class="form-group" style="flex: 1">
+              <label>Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="inp-email"
+                placeholder="email@example.com"
+                oninput="updatePreview()"
+              />
+            </div>
+            <div class="form-group" style="flex: 1">
+              <label>Số điện thoại</label>
+              <input
+                type="text"
+                class="form-control"
+                id="inp-phone"
+                placeholder="0912 345 678"
+                oninput="updatePreview()"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Địa chỉ</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inp-address"
+              placeholder="Q. Cầu Giấy, Hà Nội"
+              oninput="updatePreview()"
+            />
+          </div>
+          <div class="form-group">
+            <label>Link (LinkedIn/Portfolio)</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inp-link"
+              placeholder="linkedin.com/in/..."
+              oninput="updatePreview()"
+            />
+          </div>
+        </div>
+
+        <!-- 2. Summary -->
+        <div class="form-section">
+          <h3>2. Tóm tắt / Mục tiêu</h3>
+          <div class="form-group">
+            <textarea
+              class="form-control"
+              id="inp-summary"
+              placeholder="Tóm tắt kinh nghiệm hoặc mục tiêu nghề nghiệp..."
+              oninput="updatePreview()"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- 3. Experience -->
+        <div class="form-section">
+          <h3>3. Kinh nghiệm làm việc</h3>
+          <div id="experience-list">
+            <!-- Dynamic Items -->
+          </div>
+          <button class="btn-add" onclick="addExperience()">
+            + Thêm kinh nghiệm
+          </button>
+        </div>
+
+        <!-- 4. Education -->
+        <div class="form-section">
+          <h3>4. Học vấn</h3>
+          <div id="education-list">
+            <!-- Dynamic Items -->
+          </div>
+          <button class="btn-add" onclick="addEducation()">
+            + Thêm học vấn
+          </button>
+        </div>
+
+        <!-- 5. Skills -->
+        <div class="form-section">
+          <h3>5. Kỹ năng</h3>
+          <div class="form-group">
+            <label>Kỹ năng chuyên môn (Hard Skills)</label>
+            <textarea
+              class="form-control"
+              id="inp-hardskills"
+              placeholder="Java, Python, React, Project Management..."
+              oninput="updatePreview()"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label>Kỹ năng mềm (Soft Skills)</label>
+            <textarea
+              class="form-control"
+              id="inp-softskills"
+              placeholder="Giao tiếp, Làm việc nhóm, Tư duy phản biện..."
+              oninput="updatePreview()"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- 6. Additional -->
+        <div class="form-section">
+          <h3>6. Mục bổ sung (Chứng chỉ, Dự án...)</h3>
+          <textarea
+            class="form-control"
+            id="inp-additional"
+            placeholder="IELTS 7.0, Dự án cá nhân ABC..."
+            rows="4"
+            oninput="updatePreview()"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- LIVE PREVIEW -->
+      <div class="preview-panel">
+        <div class="cv-preview-page" id="cv-preview">
+          <!-- Header -->
+          <div class="cv-header">
+            <h1 class="cv-name" id="prev-name">TÊN ỨNG VIÊN</h1>
+            <div class="cv-title" id="prev-title">Chức danh</div>
+            <div class="cv-contact">
+              <div class="cv-contact-item" id="prev-email">
+                ✉ email@example.com
+              </div>
+              <div class="cv-contact-item" id="prev-phone">📞 0123 456 789</div>
+              <div class="cv-contact-item" id="prev-address">📍 Địa chỉ</div>
+              <div class="cv-contact-item" id="prev-link">🌐 Link</div>
+            </div>
+          </div>
+
+          <!-- Summary -->
+          <div class="cv-section" id="sec-summary">
+            <div class="cv-section-title">Tóm tắt / Mục tiêu</div>
+            <div class="cv-item-content" id="prev-summary">
+              Nội dung tóm tắt...
+            </div>
+          </div>
+
+          <!-- Experience -->
+          <div class="cv-section" id="sec-experience">
+            <div class="cv-section-title">Kinh nghiệm làm việc</div>
+            <div id="prev-experience-list"></div>
+          </div>
+
+          <!-- Education -->
+          <div class="cv-section" id="sec-education">
+            <div class="cv-section-title">Học vấn</div>
+            <div id="prev-education-list"></div>
+          </div>
+
+          <!-- Skills -->
+          <div class="cv-section">
+            <div class="cv-section-title">Kỹ năng</div>
+            <div class="skills-grid">
+              <div>
+                <div class="cv-item-subtitle">Chuyên môn</div>
+                <div class="cv-item-content" id="prev-hardskills"></div>
+              </div>
+              <div>
+                <div class="cv-item-subtitle">Kỹ năng mềm</div>
+                <div class="cv-item-content" id="prev-softskills"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional -->
+          <div class="cv-section" id="sec-additional">
+            <div class="cv-section-title">Thông tin thêm</div>
+            <div class="cv-item-content" id="prev-additional"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast for Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      // --- Data State ---
+      let experiences = [];
+      let educations = [];
+
+      // --- Initialization ---
+      document.addEventListener("DOMContentLoaded", () => {
+        requireAuth();
+        addExperience(); // Add one default item
+        addEducation(); // Add one default item
+      });
+
+      // --- Dynamic Forms: Experience ---
+      function addExperience() {
+        const id = Date.now();
+        const div = document.createElement("div");
+        div.className = "dynamic-item";
+        div.id = `exp-form-${id}`;
+        div.innerHTML = `
+               <button class="remove-btn" onclick="removeExperience(${id})">×</button>
+               <div class="form-group">
+                   <label>Tên công ty</label>
+                   <input type="text" class="form-control exp-company" placeholder="ABC Corp" oninput="updatePreview()">
+               </div>
+               <div class="form-group">
+                   <label>Vị trí</label>
+                   <input type="text" class="form-control exp-role" placeholder="Senior Developer" oninput="updatePreview()">
+               </div>
+               <div class="row" style="display:flex; gap:16px;">
+                   <div class="form-group" style="flex:1">
+                       <label>Từ tháng/năm</label>
+                       <input type="text" class="form-control exp-start" placeholder="01/2020" oninput="updatePreview()">
+                   </div>
+                   <div class="form-group" style="flex:1">
+                       <label>Đến tháng/năm</label>
+                       <input type="text" class="form-control exp-end" placeholder="Hiện tại" oninput="updatePreview()">
+                   </div>
+               </div>
+               <div class="form-group">
+                   <label>Mô tả / Thành tựu</label>
+                   <textarea class="form-control exp-desc" rows="3" placeholder="- Đạt doanh số...&#10;- Quản lý team..." oninput="updatePreview()"></textarea>
+               </div>
+           `;
+        document.getElementById("experience-list").appendChild(div);
+        updatePreview();
+      }
+
+      function removeExperience(id) {
+        const el = document.getElementById(`exp-form-${id}`);
+        if (el) el.remove();
+        updatePreview();
+      }
+
+      // --- Dynamic Forms: Education ---
+      function addEducation() {
+        const id = Date.now();
+        const div = document.createElement("div");
+        div.className = "dynamic-item";
+        div.id = `edu-form-${id}`;
+        div.innerHTML = `
+               <button class="remove-btn" onclick="removeEducation(${id})">×</button>
+               <div class="form-group">
+                   <label>Trường</label>
+                   <input type="text" class="form-control edu-school" placeholder="Đại học Bách Khoa" oninput="updatePreview()">
+               </div>
+               <div class="form-group">
+                   <label>Chuyên ngành / Bằng cấp</label>
+                   <input type="text" class="form-control edu-degree" placeholder="Kỹ sư CNTT" oninput="updatePreview()">
+               </div>
+               <div class="form-group">
+                   <label>Thời gian</label>
+                   <input type="text" class="form-control edu-time" placeholder="2018 - 2022" oninput="updatePreview()">
+               </div>
+               <div class="form-group">
+                   <label>Điểm GPA (Tuỳ chọn)</label>
+                   <input type="text" class="form-control edu-gpa" placeholder="3.5/4.0" oninput="updatePreview()">
+               </div>
+           `;
+        document.getElementById("education-list").appendChild(div);
+        updatePreview();
+      }
+
+      function removeEducation(id) {
+        const el = document.getElementById(`edu-form-${id}`);
+        if (el) el.remove();
+        updatePreview();
+      }
+
+      // --- Render Logic ---
+      function updatePreview() {
+        // 1. Personal
+        setText("prev-name", val("inp-name") || "TÊN ỨNG VIÊN");
+        setText("prev-title", val("inp-title") || "Chức danh");
+        setText("prev-email", "✉ " + (val("inp-email") || "email@example.com"));
+        setText("prev-phone", "📞 " + (val("inp-phone") || "Số điện thoại"));
+        setText("prev-address", "📍 " + (val("inp-address") || "Địa chỉ"));
+        setText("prev-link", "🌐 " + (val("inp-link") || "Link"));
+
+        // 2. Summary
+        setText("prev-summary", val("inp-summary"));
+
+        // 3. Experience
+        const expList = document.getElementById("prev-experience-list");
+        expList.innerHTML = "";
+        document
+          .querySelectorAll("#experience-list .dynamic-item")
+          .forEach((item) => {
+            const company = item.querySelector(".exp-company").value;
+            const role = item.querySelector(".exp-role").value;
+            const start = item.querySelector(".exp-start").value;
+            const end = item.querySelector(".exp-end").value;
+            const desc = item.querySelector(".exp-desc").value;
+
+            if (company || role) {
+              const div = document.createElement("div");
+              div.className = "cv-item";
+              div.innerHTML = `
+                       <div class="cv-item-header">
+                           <div class="cv-item-title">${company}</div>
+                           <div class="cv-item-date">${start} - ${end}</div>
+                       </div>
+                       <div class="cv-item-subtitle">${role}</div>
+                       <div class="cv-item-content">${formatBullets(desc)}</div>
+                   `;
+              expList.appendChild(div);
+            }
+          });
+
+        // 4. Education
+        const eduList = document.getElementById("prev-education-list");
+        eduList.innerHTML = "";
+        document
+          .querySelectorAll("#education-list .dynamic-item")
+          .forEach((item) => {
+            const school = item.querySelector(".edu-school").value;
+            const degree = item.querySelector(".edu-degree").value;
+            const time = item.querySelector(".edu-time").value;
+            const gpa = item.querySelector(".edu-gpa").value;
+
+            if (school || degree) {
+              const div = document.createElement("div");
+              div.className = "cv-item";
+              div.innerHTML = `
+                       <div class="cv-item-header">
+                           <div class="cv-item-title">${school}</div>
+                           <div class="cv-item-date">${time}</div>
+                       </div>
+                       <div class="cv-item-subtitle">${degree} ${
+                gpa ? "- GPA: " + gpa : ""
+              }</div>
+                   `;
+              eduList.appendChild(div);
+            }
+          });
+
+        // 5. Skills
+        setHtml("prev-hardskills", formatBullets(val("inp-hardskills")));
+        setHtml("prev-softskills", formatBullets(val("inp-softskills")));
+
+        // 6. Additional
+        setHtml("prev-additional", formatBullets(val("inp-additional")));
+      }
+
+      // Helper
+      function val(id) {
+        return document.getElementById(id).value;
+      }
+      function setText(id, text) {
+        document.getElementById(id).textContent = text;
+      }
+      function setHtml(id, html) {
+        document.getElementById(id).innerHTML = html;
+      }
+      function formatBullets(text) {
+        if (!text) return "";
+        return text
+          .split("\n")
+          .map((line) => line.trim())
+          .filter((line) => line)
+          .join("<br>");
+      }
+
+      // --- Save & Upload ---
+      async function saveCV() {
+        const btn = document.getElementById("btnSave");
+        const name = val("inp-name") || "resume";
+
+        btn.disabled = true;
+        btn.innerHTML = "⏳ Đang xử lý...";
+        document.body.style.cursor = "wait";
+
+        try {
+          // 1. Generate PDF
+          const element = document.getElementById("cv-preview");
+          const opt = {
+            margin: 0,
+            filename: `${name}_CV.pdf`,
+            image: { type: "jpeg", quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+          };
+
+          // Generate Blob
+          const pdfBlob = await html2pdf()
+            .set(opt)
+            .from(element)
+            .output("blob");
+
+          // 2. Upload to Backend
+          const formData = new FormData();
+          // Create a File object from Blob
+          const file = new File(
+            [pdfBlob],
+            `${name.replace(/\s+/g, "_")}_CV.pdf`,
+            { type: "application/pdf" }
+          );
+          formData.append("cv", file);
+
+          // showToast("Đang tải lên hệ thống...", "info");
+
+          const response = await apiCall("/cv/upload", {
+            method: "POST",
+            body: formData,
+            isFormData: true,
+          });
+
+          showToast("Tạo CV và lưu thành công!", "success");
+
+          // 3. Redirect after short delay
+          setTimeout(() => {
+            window.location.href = "cv.html?new_cv=true";
+          }, 1500);
+        } catch (err) {
+          console.error(err);
+          showToast("Lỗi khi lưu CV: " + err.message, "error");
+          btn.disabled = false;
+          btn.innerHTML = "💾 Lưu & Tải Lên";
+        } finally {
+          document.body.style.cursor = "default";
+        }
+      }
+    </script>
+  </body>
+</html>

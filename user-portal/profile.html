@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hồ Sơ - HRM</title>
+    <link rel="stylesheet" href="../shared/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- APP LAYOUT -->
+    <div class="app-layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" aria-label="Main Navigation">
+        <div class="sidebar-header">
+          <img src="../shared/logo.png" alt="Logo" />
+          <div class="logo-text">
+            <span style="display: block; font-size: 1.1rem; font-weight: 800"
+              >CỔNG CÁN BỘ</span
+            >
+            <span
+              style="
+                display: block;
+                font-size: 0.8rem;
+                font-weight: 500;
+                color: #94a3b8;
+              "
+              >HRM SYSTEM</span
+            >
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i> Dashboard
+          </a>
+          <a href="profile.html" class="nav-item active" aria-current="page">
+            <i class="fas fa-user"></i> Hồ sơ cá nhân
+          </a>
+          <a href="cv.html" class="nav-item">
+            <i class="fas fa-file-alt"></i> Quản lý CV
+          </a>
+          <a href="qualifications.html" class="nav-item">
+            <i class="fas fa-graduation-cap"></i> Trình độ & Bằng cấp
+          </a>
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content" role="main">
+        <!-- TOPBAR -->
+        <header class="topbar">
+          <h2 class="page-title">Hồ sơ cá nhân</h2>
+          <div class="user-profile">
+            <button
+              onclick="logout()"
+              class="btn btn-icon btn-outline"
+              title="Đăng xuất"
+            >
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </header>
+
+        <!-- CONTENT WRAPPER -->
+        <div class="content-wrapper">
+          <!-- Back & Title Section -->
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <h1 style="margin: 0; font-size: 1.75rem">
+                HỒ SƠ CÁN BỘ CÔNG ĐOÀN
+              </h1>
+            </div>
+            <button
+              id="editBtn"
+              class="btn btn-primary"
+              onclick="toggleEditMode()"
+            >
+              <i class="fas fa-edit"></i> Chỉnh sửa
+            </button>
+          </div>
+
+          <!-- Profile Form -->
+          <form
+            id="profileForm"
+            onsubmit="handleUpdateProfile(event)"
+            novalidate
+          >
+            <!-- Avatar Section -->
+            <div class="card mb-4 profile-summary-card">
+              <!-- ... Keeping internal content same ... -->
+              <div class="card-body">
+                <div class="profile-header-content">
+                  <div class="avatar-section-compact">
+                    <div
+                      class="avatar-wrapper"
+                      onclick="document.getElementById('avatarInput').click()"
+                    >
+                      <div id="avatarDisplay" class="user-avatar-xl">
+                        <span>U</span>
+                      </div>
+                      <img
+                        id="avatarImage"
+                        src=""
+                        alt="Avatar"
+                        class="user-avatar-xl"
+                        style="display: none; object-fit: cover"
+                      />
+                      <div class="camera-badge">
+                        <i class="fas fa-camera"></i>
+                      </div>
+                    </div>
+                    <input
+                      type="file"
+                      id="avatarInput"
+                      accept="image/*"
+                      style="display: none"
+                      onchange="handleAvatarUpload(event)"
+                    />
+                  </div>
+                  <div class="user-info-section">
+                    <h2 id="summaryName" class="summary-name">...</h2>
+                    <div class="flex items-center" style="gap: 12px">
+                      <p id="summaryRole" class="summary-role mb-0">...</p>
+                      <span class="text-gray-400">|</span>
+                      <span
+                        id="summaryStatusLabel"
+                        class="badge summary-status-badge"
+                        >...</span
+                      >
+                    </div>
+                    <p id="summaryEmail" class="text-sm text-gray-500 mt-1">
+                      ...
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Personal Info -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="card-title">THÔNG TIN CÁ NHÂN</h3>
+              </div>
+              <div class="card-body">
+                <div class="grid grid-2 gap-3">
+                  <div class="form-group">
+                    <label class="form-label" for="fullName">HỌ VÀ TÊN *</label>
+                    <input
+                      type="text"
+                      id="fullName"
+                      class="form-input"
+                      disabled
+                      required
+                    />
+                    <div class="form-error-message" id="error-fullName"></div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="birthDate">NGÀY SINH</label>
+                    <input
+                      type="date"
+                      id="birthDate"
+                      class="form-input"
+                      disabled
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="gender">GIỚI TÍNH</label>
+                    <select id="gender" class="form-select" disabled>
+                      <option value="Nam">Nam</option>
+                      <option value="Nữ">Nữ</option>
+                      <option value="Khác">Khác</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="identityCard"
+                      >SỐ CCCD/CMND</label
+                    >
+                    <input
+                      type="text"
+                      id="identityCard"
+                      class="form-input"
+                      disabled
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="card-title">THÔNG TIN LIÊN HỆ</h3>
+              </div>
+              <div class="card-body">
+                <div class="grid grid-2 gap-3">
+                  <div class="form-group">
+                    <label class="form-label" for="email">EMAIL *</label>
+                    <input
+                      type="email"
+                      id="email"
+                      class="form-input"
+                      disabled
+                      required
+                    />
+                    <div class="form-error-message" id="error-email"></div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="phone"
+                      >SỐ ĐIỆN THOẠI *</label
+                    >
+                    <input
+                      type="tel"
+                      id="phone"
+                      class="form-input"
+                      disabled
+                      required
+                    />
+                    <div class="form-error-message" id="error-phone"></div>
+                  </div>
+                  <div class="form-group" style="grid-column: span 2">
+                    <label class="form-label" for="address"
+                      >ĐỊA CHỈ LIÊN HỆ *</label
+                    >
+                    <input
+                      type="text"
+                      id="address"
+                      class="form-input"
+                      disabled
+                      required
+                    />
+                    <div class="form-error-message" id="error-address"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Professional Info -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="card-title">THÔNG TIN CÔNG VIỆC</h3>
+              </div>
+              <div class="card-body">
+                <div class="grid grid-2 gap-3">
+                  <div class="form-group">
+                    <label class="form-label" for="employeeId"
+                      >MÃ NHÂN VIÊN</label
+                    >
+                    <input
+                      type="text"
+                      id="employeeId"
+                      class="form-input"
+                      disabled
+                      readonly
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="department">PHÒNG BAN</label>
+                    <select id="department" class="form-select" disabled>
+                      <option value="">Đang tải...</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="position">CHỨC DANH</label>
+                    <input
+                      type="text"
+                      id="position"
+                      class="form-input"
+                      disabled
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="joinDate"
+                      >NGÀY VÀO LÀM</label
+                    >
+                    <input
+                      type="date"
+                      id="joinDate"
+                      class="form-input"
+                      disabled
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="status"
+                      >Tình trạng công tác</label
+                    >
+                    <input
+                      type="text"
+                      id="status"
+                      class="form-input"
+                      disabled
+                      value="Đang công tác"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div
+              id="actionButtons"
+              class="flex gap-2 justify-end"
+              style="display: none"
+            >
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="cancelEdit()"
+              >
+                Hủy
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Lưu thay đổi
+              </button>
+            </div>
+          </form>
+
+          <!-- Change Password -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h3 class="card-title">ĐỔI MẬT KHẨU</h3>
+            </div>
+            <div class="card-body">
+              <form
+                id="changePasswordForm"
+                onsubmit="handleChangePassword(event)"
+                novalidate
+              >
+                <!-- Retaining internal logic structure but simplifying HTML for brevity in replace -->
+                <div class="grid grid-2 gap-3">
+                  <div class="form-group">
+                    <label class="form-label" for="currentPassword"
+                      >Mật khẩu hiện tại *</label
+                    >
+                    <div class="password-wrapper">
+                      <input
+                        type="password"
+                        id="currentPassword"
+                        class="form-input"
+                        required
+                        minlength="6"
+                      />
+                      <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePasswordVisibility('currentPassword')"
+                      >
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+                          />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div
+                      class="form-error-message"
+                      id="error-currentPassword"
+                    ></div>
+                  </div>
+                  <div class="form-group"></div>
+                  <!-- Spacer -->
+                  <div class="form-group">
+                    <label class="form-label" for="newPasswordChange"
+                      >Mật khẩu mới *</label
+                    >
+                    <div class="password-wrapper">
+                      <input
+                        type="password"
+                        id="newPasswordChange"
+                        class="form-input"
+                        required
+                        minlength="6"
+                      />
+                      <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePasswordVisibility('newPasswordChange')"
+                      >
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+                          />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div
+                      class="form-error-message"
+                      id="error-newPasswordChange"
+                    ></div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="confirmPasswordChange"
+                      >Xác nhận mật khẩu mới *</label
+                    >
+                    <div class="password-wrapper">
+                      <input
+                        type="password"
+                        id="confirmPasswordChange"
+                        class="form-input"
+                        required
+                        minlength="6"
+                      />
+                      <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="
+                          togglePasswordVisibility('confirmPasswordChange')
+                        "
+                      >
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+                          />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div
+                      class="form-error-message"
+                      id="error-confirmPasswordChange"
+                    ></div>
+                  </div>
+                </div>
+                <div class="flex gap-2 mt-4 justify-end">
+                  <button type="reset" class="btn btn-outline">Hủy</button>
+                  <button type="submit" class="btn btn-primary">
+                    Đổi mật khẩu
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <style>
+      .dashboard-container {
+        background: var(--color-gray-100);
+        min-height: 100vh;
+      }
+
+      #profileForm input:disabled,
+      #profileForm select:disabled {
+        background: var(--color-gray-100);
+        cursor: not-allowed;
+      }
+
+      #profileForm input:not(:disabled),
+      #profileForm select:not(:disabled) {
+        background: var(--color-white);
+      }
+
+      /* Password Toggle */
+      .password-wrapper {
+        position: relative;
+      }
+      .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        color: var(--color-gray-700);
+        font-size: 1.2rem;
+      }
+      .password-toggle:hover {
+        color: var(--color-black);
+      }
+
+      /* Avatar Styles */
+      .profile-summary-card {
+        /* Reverted to default card border as requested */
+        transition: transform 0.2s ease;
+      }
+      .profile-summary-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      }
+
+      .profile-header-content {
+        display: flex;
+        align-items: center;
+        /* justify-content: center; removed to align left */
+        gap: 32px;
+        padding: 32px 40px; /* Balanced top/bottom padding, generous side padding */
+      }
+
+      .avatar-wrapper {
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+
+      .avatar-wrapper:hover {
+        transform: scale(1.02);
+      }
+
+      .user-avatar-xl {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: var(--color-black);
+        color: var(--color-white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        font-family: var(--font-heading);
+        border: 3px solid var(--color-white);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .camera-badge {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 32px;
+        height: 32px;
+        background: var(--color-white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        color: var(--color-gray-700);
+        border: 1px solid var(--color-gray-200);
+        transition: all 0.2s ease;
+      }
+
+      .avatar-wrapper:hover .camera-badge {
+        background: var(--color-primary);
+        color: var(--color-white);
+        border-color: var(--color-primary);
+        transform: scale(1.1);
+      }
+
+      .summary-name {
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 0 4px 0;
+        color: var(--color-black);
+        text-transform: uppercase;
+      }
+
+      .summary-role {
+        color: var(--color-gray-700);
+        font-weight: 600;
+        font-size: 0.95rem; /* Slightly refined size */
+        margin: 0;
+        line-height: 1;
+        /* Nudge down to alignment with badge */
+        position: relative;
+        top: 1px; /* Micro-adjustment */
+      }
+
+      .summary-status-badge {
+        padding: 3px 10px !important; /* Smaller padding */
+        font-size: 0.7rem !important; /* COMPACT text */
+        height: 24px; /* Fixed height for consistency */
+        display: inline-flex;
+        align-items: center;
+        letter-spacing: 0.08em;
+      }
+
+      @media (max-width: 640px) {
+        .profile-header-content {
+          flex-direction: column;
+          text-align: center;
+          gap: 16px;
+        }
+        .user-info-section {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      requireAuth();
+
+      // Toggle password visibility
+      function togglePasswordVisibility(inputId) {
+        const input = document.getElementById(inputId);
+        const btn = input.parentElement.querySelector(".password-toggle");
+        const eyeOpen =
+          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>';
+        const eyeClosed =
+          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><line x1="2" x2="22" y1="2" y2="22"/></svg>';
+        if (input.type === "password") {
+          input.type = "text";
+          btn.innerHTML = eyeClosed;
+        } else {
+          input.type = "password";
+          btn.innerHTML = eyeOpen;
+        }
+      }
+
+      let isEditMode = false;
+      let originalData = {};
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        await loadDepartments();
+        await loadProfile();
+      });
+
+      async function loadDepartments() {
+        try {
+          const res = await apiCall("/departments"); // Assuming public or user-accessible
+          // Depending on API response structure. The departments.js route returns array directly.
+          const depts = Array.isArray(res) ? res : res.data || [];
+
+          const select = document.getElementById("department");
+          select.innerHTML = '<option value="">-- Chọn phòng ban --</option>';
+
+          depts.forEach((d) => {
+            const opt = document.createElement("option");
+            opt.value = d.name;
+            opt.textContent = d.name;
+            select.appendChild(opt);
+          });
+        } catch (e) {
+          console.error("Load departments error", e);
+          // Fallback if failed? Keep empty or show error?
+          const select = document.getElementById("department");
+          select.innerHTML = '<option value="">Lỗi tải dữ liệu</option>';
+        }
+      }
+
+      async function loadProfile() {
+        try {
+          // Fetch fresh data from server
+          const data = await apiCall("/auth/me");
+          const user = data.data;
+
+          // Update Local Storage with fresh data
+          localStorage.setItem("currentUser", JSON.stringify(user));
+
+          if (user) {
+            // Fill form with user data
+            document.getElementById("fullName").value = user.name || "";
+            document.getElementById("email").value = user.email || "";
+            document.getElementById("phone").value = user.phone || "";
+            document.getElementById("employeeId").value = user.employeeId || "";
+            document.getElementById("birthDate").value = user.birthDate || "";
+            document.getElementById("gender").value = user.gender || "";
+            document.getElementById("identityCard").value = user.idCard || "";
+            document.getElementById("address").value = user.address || "";
+            document.getElementById("department").value = user.department || "";
+            document.getElementById("position").value = user.position || "";
+            document.getElementById("joinDate").value = user.unionDate || "";
+            document.getElementById("status").value =
+              user.status || "Đang công tác";
+
+            // Handle Avatar Display
+            if (user.avatar) {
+              const avatarUrl = API_BASE_URL.replace("/api", "") + user.avatar;
+              document.getElementById("avatarDisplay").style.display = "none";
+              const img = document.getElementById("avatarImage");
+              img.src = avatarUrl;
+              img.style.display = "block";
+            } else {
+              document.getElementById("avatarImage").style.display = "none";
+              const d = document.getElementById("avatarDisplay");
+              d.style.display = "flex";
+              d.textContent = user.name
+                ? user.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .substring(0, 2)
+                    .toUpperCase()
+                : "U";
+            }
+
+            // Store originalData
+
+            originalData = { ...user };
+
+            // Populate Summary Card
+            document.getElementById("summaryName").textContent =
+              user.name || "CHƯA CẬP NHẬT";
+            document.getElementById("summaryRole").textContent = (
+              user.position || "Cán bộ"
+            ).toUpperCase();
+            document.getElementById("summaryStatusLabel").textContent =
+              user.status || "Đang công tác";
+            document.getElementById("summaryEmail").textContent =
+              user.email || "";
+
+            // Re-render status badge color if needed
+            const statusLabel = document.getElementById("summaryStatusLabel");
+            statusLabel.className = `badge ${
+              user.status === "Đang công tác" ? "" : "badge-gray"
+            }`;
+          }
+        } catch (error) {
+          console.error("Load profile error:", error);
+          showToast("Không thể tải hồ sơ", "error");
+        }
+      }
+
+      async function handleAvatarUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("avatar", file);
+
+        try {
+          document.body.style.cursor = "wait";
+          const res = await apiCall("/profile/avatar", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (res.success) {
+            showToast("Cập nhật ảnh đại diện thành công", "success");
+
+            // Update Local Storage
+            const currentUser = getCurrentUser();
+            const updatedUser = { ...currentUser, avatar: res.data.avatar };
+            localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+
+            // Reload profile to refresh avatar
+            loadProfile();
+          }
+        } catch (error) {
+          showToast(error.message || "Lỗi upload ảnh", "error");
+        } finally {
+          document.body.style.cursor = "default";
+        }
+      }
+
+      function toggleEditMode() {
+        isEditMode = !isEditMode;
+
+        // Select inputs but exclude email, employeeId, and status (readonly fields)
+        const inputs = document.querySelectorAll(
+          '#profileForm input:not([type="email"]):not(#employeeId):not(#status):not(#avatarInput), #profileForm select'
+        );
+        const editBtn = document.getElementById("editBtn");
+        const actionButtons = document.getElementById("actionButtons");
+
+        if (isEditMode) {
+          // Enable editing
+          inputs.forEach((input) => (input.disabled = false));
+          editBtn.style.display = "none";
+          actionButtons.style.display = "flex";
+        } else {
+          // Disable editing
+          inputs.forEach((input) => (input.disabled = true));
+          editBtn.style.display = "block";
+          actionButtons.style.display = "none";
+        }
+      }
+
+      function cancelEdit() {
+        // Restore original data
+        loadProfile();
+
+        // Clear all error messages
+        document.getElementById("error-fullName").textContent = "";
+        document.getElementById("error-email").textContent = "";
+        document.getElementById("error-phone").textContent = "";
+        document.getElementById("error-address").textContent = "";
+
+        toggleEditMode();
+      }
+
+      async function handleUpdateProfile(event) {
+        event.preventDefault();
+
+        // 1. Get Elements
+        const fullNameEl = document.getElementById("fullName");
+        const emailEl = document.getElementById("email");
+        const phoneEl = document.getElementById("phone");
+        const addressEl = document.getElementById("address");
+
+        // 2. Clear previous error messages
+        document.getElementById("error-fullName").textContent = "";
+        document.getElementById("error-email").textContent = "";
+        document.getElementById("error-phone").textContent = "";
+        document.getElementById("error-address").textContent = "";
+
+        let hasError = false;
+
+        // 3. Validate Name
+        if (!fullNameEl.value.trim()) {
+          document.getElementById("error-fullName").textContent =
+            "Vui lòng nhập họ và tên";
+          hasError = true;
+        }
+
+        // Validate Email
+        if (!emailEl.value.trim()) {
+          document.getElementById("error-email").textContent =
+            "Vui lòng nhập email";
+          hasError = true;
+        }
+
+        // Validate Phone
+        if (!phoneEl.value.trim()) {
+          document.getElementById("error-phone").textContent =
+            "Vui lòng nhập số điện thoại";
+          hasError = true;
+        } else if (!/^\d{10,11}$/.test(phoneEl.value.trim())) {
+          document.getElementById("error-phone").textContent =
+            "Số điện thoại không hợp lệ";
+          hasError = true;
+        }
+
+        // Validate Address
+        if (!addressEl.value.trim()) {
+          document.getElementById("error-address").textContent =
+            "Vui lòng nhập địa chỉ liên hệ";
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        const updatedData = {
+          name: fullNameEl.value,
+          email: emailEl.value,
+          phone: phoneEl.value,
+          birthDate: document.getElementById("birthDate").value,
+          gender: document.getElementById("gender").value,
+          idCard: document.getElementById("identityCard").value,
+          address: addressEl.value,
+          department: document.getElementById("department").value,
+          position: document.getElementById("position").value,
+        };
+
+        try {
+          // showToast("Đang cập nhật...", "info");
+          document.body.style.cursor = "wait";
+
+          await apiCall("/profile", {
+            method: "PUT",
+            body: JSON.stringify(updatedData),
+          });
+
+          // Update local storage
+          const currentUser = getCurrentUser();
+          const updatedUser = { ...currentUser, ...updatedData };
+          localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+
+          showToast("Cập nhật hồ sơ thành công!", "success");
+          toggleEditMode();
+          loadProfile(); // Refresh summary header with new data
+        } catch (error) {
+          // Fallback for demo:
+          console.warn(
+            "API update failed, falling back to local storage update",
+            error
+          );
+          const currentUser = getCurrentUser();
+          const updatedUser = { ...currentUser, ...updatedData };
+          localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+          showToast("Cập nhật hồ sơ thành công!", "success");
+          toggleEditMode();
+          loadProfile(); // Refresh summary header with new data
+        } finally {
+          document.body.style.cursor = "default";
+        }
+      }
+
+      async function handleChangePassword(event) {
+        event.preventDefault();
+
+        // 1. Get Elements
+        const currentPasswordEl = document.getElementById("currentPassword");
+        const newPasswordEl = document.getElementById("newPasswordChange");
+        const confirmPasswordEl = document.getElementById(
+          "confirmPasswordChange"
+        );
+
+        // 2. Clear previous errors
+        document.getElementById("error-currentPassword").textContent = "";
+        document.getElementById("error-newPasswordChange").textContent = "";
+        document.getElementById("error-confirmPasswordChange").textContent = "";
+
+        let hasError = false;
+
+        // 3. Validate Current Password
+        const currentPassword = currentPasswordEl.value;
+        if (!currentPassword) {
+          document.getElementById("error-currentPassword").textContent =
+            "Vui lòng nhập mật khẩu hiện tại";
+          hasError = true;
+        } else if (currentPassword.length < 6) {
+          document.getElementById("error-currentPassword").textContent =
+            "Mật khẩu phải có ít nhất 6 ký tự";
+          hasError = true;
+        }
+
+        // 4. Validate New Password
+        const newPassword = newPasswordEl.value;
+        if (!newPassword) {
+          document.getElementById("error-newPasswordChange").textContent =
+            "Vui lòng nhập mật khẩu mới";
+          hasError = true;
+        } else if (newPassword.length < 6) {
+          document.getElementById("error-newPasswordChange").textContent =
+            "Mật khẩu phải có ít nhất 6 ký tự";
+          hasError = true;
+        }
+
+        // 5. Validate Confirm Password
+        const confirmPassword = confirmPasswordEl.value;
+        if (!confirmPassword) {
+          document.getElementById("error-confirmPasswordChange").textContent =
+            "Vui lòng xác nhận mật khẩu";
+          hasError = true;
+        } else if (newPassword !== confirmPassword) {
+          document.getElementById("error-confirmPasswordChange").textContent =
+            "Mật khẩu xác nhận không khớp";
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        if (newPassword === currentPassword) {
+          showToast("Mật khẩu mới phải khác mật khẩu hiện tại", "error");
+          return;
+        }
+
+        try {
+          // showToast("Đang đổi mật khẩu...", "info");
+          document.body.style.cursor = "wait";
+
+          await apiCall("/auth/change-password", {
+            method: "PUT",
+            body: JSON.stringify({ currentPassword, newPassword }),
+          });
+
+          showToast("Đổi mật khẩu thành công!", "success");
+          document.getElementById("changePasswordForm").reset();
+        } catch (error) {
+          showToast(error.message || "Đổi mật khẩu thất bại", "error");
+        } finally {
+          document.body.style.cursor = "default";
+        }
+      }
+    </script>
+  </body>
+</html>

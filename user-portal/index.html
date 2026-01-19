@@ -1,0 +1,1141 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cổng Thông Tin Cán Bộ - HRM</title>
+    <link rel="stylesheet" href="../shared/styles.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <!-- Navigation -->
+    <nav class="nav glass-nav">
+      <div class="container nav-container">
+        <a href="index.html" class="nav-logo-wrapper">
+          <div class="logo-icon-container">
+            <img src="../shared/logo.png" alt="Logo" class="nav-logo-img" />
+          </div>
+          <span class="nav-logo-text">CỔNG CÁN BỘ</span>
+        </a>
+        <ul class="nav-menu">
+          <!-- Empty menu -->
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero-section">
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="hero-title animate-fade-up">
+            CỔNG THÔNG TIN<br />
+            CÁN BỘ<br />
+            CÔNG ĐOÀN
+          </h1>
+          <p
+            class="hero-subtitle animate-fade-up"
+            style="animation-delay: 0.2s"
+          >
+            Quản lý thông tin cá nhân, CV và trình độ học vấn của bạn
+          </p>
+          <div
+            class="hero-actions animate-fade-up"
+            style="animation-delay: 0.4s"
+          >
+            <button
+              class="btn btn-primary btn-large"
+              onclick="showLoginModal()"
+            >
+              Đăng nhập
+            </button>
+            <!-- Register hidden if not needed, or kept as is -->
+            <button
+              class="btn btn-outline btn-large"
+              onclick="showRegisterModal()"
+            >
+              Đăng ký
+            </button>
+          </div>
+        </div>
+
+        <div class="hero-visual" id="hero-visual">
+          <!-- Ambient Background Layer -->
+          <div class="parallax-layer" data-speed="0.02">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+          </div>
+
+          <!-- Midground Layer: Decorative Elements -->
+          <div class="parallax-layer" data-speed="0.05">
+            <div class="decorative-grid"></div>
+            <div class="floating-icon icon-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <div class="floating-icon icon-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Foreground Layer: Glass Cards -->
+          <div class="parallax-layer" data-speed="0.08">
+            <div class="glass-card card-1">
+              <div class="card-line short"></div>
+              <div class="card-line long"></div>
+            </div>
+            <div class="glass-card card-2">
+              <div class="card-circle"></div>
+              <div class="card-line medium"></div>
+            </div>
+          </div>
+
+          <!-- Main Logo Layer -->
+          <div class="parallax-layer main-layer" data-speed="0.03">
+            <div class="logo-container-glass">
+              <img src="../shared/logo.png" alt="HRM Logo" class="hero-logo" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+      <div class="container">
+        <h2 class="text-center mb-4">DÀNH CHO CÁN BỘ</h2>
+
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">HỒ SƠ CÁ NHÂN</h3>
+            </div>
+            <div class="card-body">
+              <ul class="feature-list">
+                <li>Cập nhật thông tin</li>
+                <li>Quản lý liên hệ</li>
+                <li>Theo dõi đơn vị</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card card-accent">
+            <div class="card-header">
+              <h3 class="card-title">QUẢN LÝ CV</h3>
+            </div>
+            <div class="card-body">
+              <ul class="feature-list">
+                <li>Tải lên CV</li>
+                <li>Lưu phiên bản</li>
+                <li>Tự động tạo CV</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">TRÌNH ĐỘ</h3>
+            </div>
+            <div class="card-body">
+              <ul class="feature-list">
+                <li>Học vấn</li>
+                <li>Kinh nghiệm</li>
+                <li>Kỹ năng</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">ĐĂNG NHẬP</h2>
+          <button class="modal-close" onclick="closeModal('loginModal')">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="loginEmail"
+                >Email / Mã cán bộ *</label
+              >
+              <input type="text" id="loginEmail" class="form-input" required />
+              <div class="form-error-message" id="error-loginEmail"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="loginPassword">Mật khẩu *</label>
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="loginPassword"
+                  class="form-input"
+                  required
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePasswordVisibility('loginPassword')"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+              <div class="form-error-message" id="error-loginPassword"></div>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary" style="width: 100%">
+                Đăng nhập
+              </button>
+            </div>
+            <div style="text-align: center; margin-top: var(--space-2)">
+              <a
+                href="#"
+                onclick="
+                  showForgotPasswordModal();
+                  return false;
+                "
+                style="
+                  color: var(--color-red);
+                  text-decoration: none;
+                  font-size: 0.875rem;
+                "
+                >Quên mật khẩu?</a
+              >
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal-overlay" id="registerModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">ĐĂNG KÝ TÀI KHOẢN</h2>
+          <button class="modal-close" onclick="closeModal('registerModal')">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="registerForm" onsubmit="handleRegister(event)" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="regName">Họ và tên *</label>
+              <input type="text" id="regName" class="form-input" required />
+              <div class="form-error-message" id="error-regName"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regEmail">Email *</label>
+              <input type="email" id="regEmail" class="form-input" required />
+              <div class="form-error-message" id="error-regEmail"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regPhone">Số điện thoại *</label>
+              <input type="tel" id="regPhone" class="form-input" required />
+              <div class="form-error-message" id="error-regPhone"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regEmployeeId">Mã cán bộ *</label>
+              <input
+                type="text"
+                id="regEmployeeId"
+                class="form-input"
+                required
+              />
+              <div class="form-error-message" id="error-regEmployeeId"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regPassword">Mật khẩu *</label>
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="regPassword"
+                  class="form-input"
+                  required
+                  minlength="6"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePasswordVisibility('regPassword')"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+              <div class="form-error-message" id="error-regPassword"></div>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary" style="width: 100%">
+                Đăng ký
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal-overlay" id="forgotPasswordModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">QUÊN MẬT KHẨU</h2>
+          <button
+            class="modal-close"
+            onclick="closeModal('forgotPasswordModal')"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p
+            style="
+              margin-bottom: var(--space-3);
+              text-align: center;
+              color: var(--color-gray-700);
+            "
+          >
+            Nhập email của bạn để nhận mã xác thực
+          </p>
+          <form
+            id="forgotPasswordForm"
+            onsubmit="handleForgotPassword(event)"
+            novalidate
+          >
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input
+                type="email"
+                id="forgotEmail"
+                class="form-input"
+                required
+              />
+              <div class="form-error-message" id="error-forgotEmail"></div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="closeModal('forgotPasswordModal')"
+              >
+                Hủy
+              </button>
+              <button type="submit" class="btn btn-primary">Gửi mã</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div class="modal-overlay" id="resetPasswordModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">ĐẶT LẠI MẬT KHẨU</h2>
+          <button
+            class="modal-close"
+            onclick="closeModal('resetPasswordModal')"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p
+            style="
+              margin-bottom: var(--space-3);
+              text-align: center;
+              color: var(--color-gray-700);
+            "
+          >
+            Nhập mã xác thực đã được gửi đến email của bạn
+          </p>
+          <form
+            id="resetPasswordForm"
+            onsubmit="handleResetPassword(event)"
+            novalidate
+          >
+            <div class="form-group">
+              <label class="form-label">Mã xác thực</label>
+              <input
+                type="text"
+                id="resetCode"
+                class="form-input"
+                required
+                maxlength="6"
+                pattern="[0-9]{6}"
+                placeholder="000000"
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 1.5rem;
+                  text-align: center;
+                  letter-spacing: 0.5rem;
+                "
+              />
+              <div class="form-error-message" id="error-resetCode"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mật khẩu mới</label>
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="newPassword"
+                  class="form-input"
+                  required
+                  minlength="6"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePasswordVisibility('newPassword')"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+              <div class="form-error-message" id="error-newPassword"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Xác nhận mật khẩu</label>
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  class="form-input"
+                  required
+                  minlength="6"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePasswordVisibility('confirmPassword')"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+              <div class="form-error-message" id="error-confirmPassword"></div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="closeModal('resetPasswordModal')"
+              >
+                Hủy
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Đặt lại mật khẩu
+              </button>
+            </div>
+          </form>
+          <div style="text-align: center; margin-top: var(--space-2)">
+            <a
+              href="#"
+              onclick="
+                resendResetCode();
+                return false;
+              "
+              style="
+                color: var(--color-red);
+                text-decoration: none;
+                font-size: 0.875rem;
+              "
+              >Gửi lại mã</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Verification Code Modal -->
+    <div class="modal-overlay" id="verificationModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">XÁC THỰC TÀI KHOẢN</h2>
+          <button class="modal-close" onclick="closeModal('verificationModal')">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p
+            style="
+              margin-bottom: var(--space-3);
+              text-align: center;
+              color: var(--color-gray-700);
+            "
+          >
+            Mã xác thực đã được gửi đến email: <br />
+            <strong id="verificationEmail"></strong>
+          </p>
+          <form
+            id="verificationForm"
+            onsubmit="handleVerification(event)"
+            novalidate
+          >
+            <div class="form-group">
+              <label class="form-label" for="verificationCode"
+                >Mã xác thực (6 số)</label
+              >
+              <input
+                type="text"
+                id="verificationCode"
+                class="form-input"
+                required
+                maxlength="6"
+                pattern="[0-9]{6}"
+                placeholder="Nhập mã 6 số"
+                style="
+                  text-align: center;
+                  font-size: 1.5rem;
+                  letter-spacing: 0.5em;
+                  font-family: var(--font-mono);
+                "
+              />
+              <div class="form-error-message" id="error-verificationCode"></div>
+              <p
+                style="
+                  font-size: 0.875rem;
+                  color: var(--color-gray-700);
+                  margin-top: var(--space-1);
+                "
+              >
+                Mã có hiệu lực trong 15 phút
+              </p>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary" style="width: 100%">
+                Xác thực
+              </button>
+            </div>
+            <div class="form-group" style="text-align: center">
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="resendVerification()"
+                style="width: 100%"
+              >
+                Gửi lại mã
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <style>
+      /* Refined Navigation */
+      .glass-nav {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+        background: transparent; /* Overlay on hero */
+        padding: var(--space-4) 0;
+      }
+
+      .nav-logo-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        text-decoration: none;
+        color: var(--color-primary);
+        transition: opacity 0.3s ease;
+      }
+      .nav-logo-wrapper:hover {
+        opacity: 0.8;
+      }
+
+      .logo-icon-container {
+        width: 48px;
+        height: 48px;
+        background: white;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Soft shadow */
+      }
+
+      .nav-logo-img {
+        height: 28px;
+        width: auto;
+      }
+
+      .nav-logo-text {
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 1.125rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #1a1a1a;
+      }
+
+      .hero {
+        min-height: 80vh;
+        padding-top: 80px; /* Offset for absolute nav */
+        display: flex;
+        align-items: center;
+        background: linear-gradient(
+          135deg,
+          #f5f7fa 0%,
+          #e4e8f0 100%
+        ); /* Softer gradient */
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-6);
+        align-items: center;
+      }
+
+      .hero-title {
+        font-size: 4rem;
+        line-height: 1.15;
+        margin-bottom: var(--space-3);
+      }
+
+      .hero-title::after {
+        content: "";
+        display: block;
+        width: 120px;
+        height: 6px;
+        background: var(--color-red);
+        margin-top: var(--space-3);
+      }
+
+      .hero-subtitle {
+        font-size: 1.25rem;
+        color: var(--color-gray-700);
+        margin-bottom: var(--space-4);
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: var(--space-2);
+      }
+
+      .hero-visual {
+        width: 100%;
+        height: 500px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1000px;
+      }
+
+      .parallax-layer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        will-change: transform;
+        transition: transform 0.1s linear;
+      }
+
+      .hero-logo {
+        max-width: 80%;
+        max-height: 80%;
+        object-fit: contain;
+        filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
+        z-index: 10;
+      }
+
+      /* CREATIVE PARALLAX STYLES */
+      .hero-visual {
+        width: 100%;
+        height: 550px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1000px;
+      }
+
+      .parallax-layer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        will-change: transform;
+        transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      /* Orbs - Soft Blurry Backgrounds */
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(40px);
+        opacity: 0.5;
+        animation: floatOrb 8s ease-in-out infinite;
+      }
+      .orb-1 {
+        width: 300px;
+        height: 300px;
+        background: linear-gradient(135deg, #ff6b6b, #556270);
+        top: -10%;
+        right: -10%;
+        opacity: 0.2;
+      }
+      .orb-2 {
+        width: 250px;
+        height: 250px;
+        background: linear-gradient(135deg, #4ecdc4, #556270);
+        bottom: 0%;
+        left: 10%;
+        opacity: 0.2;
+        animation-delay: -4s;
+      }
+
+      /* Logo Glass Container */
+      .logo-container-glass {
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+        animation: floatMain 6s ease-in-out infinite;
+      }
+      .hero-logo {
+        max-width: 120px;
+        height: auto;
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+      }
+
+      /* Floating Glass Cards */
+      .glass-card {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        z-index: 5;
+      }
+      .card-1 {
+        width: 100px;
+        top: 20%;
+        left: 20%;
+        transform: rotate(-10deg);
+      }
+      .card-2 {
+        width: 80px;
+        bottom: 25%;
+        right: 15%;
+        transform: rotate(5deg);
+      }
+
+      /* Card Content Indicators */
+      .card-line {
+        height: 6px;
+        background: #e0e0e0;
+        border-radius: 3px;
+        margin-bottom: 6px;
+      }
+      .card-line.long {
+        width: 100%;
+      }
+      .card-line.medium {
+        width: 70%;
+      }
+      .card-line.short {
+        width: 40%;
+      }
+      .card-circle {
+        width: 24px;
+        height: 24px;
+        background: #e0e0e0;
+        border-radius: 50%;
+        margin-bottom: 8px;
+      }
+
+      /* Floating Icons */
+      .floating-icon {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        background: white;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        color: var(--color-accent);
+      }
+      .icon-1 {
+        top: 15%;
+        right: 30%;
+        font-size: 20px;
+      }
+      .icon-2 {
+        bottom: 20%;
+        left: 30%;
+        font-size: 20px;
+      }
+
+      /* Animations */
+      @keyframes floatOrb {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-20px) scale(1.05);
+        }
+      }
+      @keyframes floatMain {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* PREMIUM UPGRADES */
+
+      /* 1. Typography Glow-up */
+      .hero-title {
+        font-family: "Inter", sans-serif; /* Ensure display font */
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: var(--space-4);
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero-title::after {
+        background: linear-gradient(
+          90deg,
+          var(--color-red),
+          #ff8f70
+        ); /* Gradient underline */
+        height: 8px;
+        border-radius: 4px;
+        width: 140px;
+      }
+
+      .hero-subtitle {
+        font-size: 1.35rem;
+        font-weight: 400;
+        line-height: 1.6;
+        color: #555;
+        max-width: 600px;
+      }
+
+      /* 2. Premium Buttons */
+      .btn-primary.btn-large {
+        background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+        box-shadow: 0 10px 20px rgba(211, 47, 47, 0.3);
+        border: none;
+        transition: all 0.3s ease;
+        padding: 16px 40px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        font-size: 1.1rem;
+      }
+      .btn-primary.btn-large:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px rgba(211, 47, 47, 0.4);
+        filter: brightness(1.1);
+      }
+      .btn-primary.btn-large:active {
+        transform: translateY(1px);
+      }
+
+      .btn-outline.btn-large {
+        border: 2px solid #e0e0e0;
+        color: #555;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(5px);
+        padding: 14px 40px; /* Adjust for border */
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+      .btn-outline.btn-large:hover {
+        border-color: #555;
+        background: white;
+        color: #000;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      }
+
+      /* 3. Wave Divider */
+      .hero-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+        transform: rotate(180deg);
+      }
+      .hero-wave svg {
+        position: relative;
+        display: block;
+        width: calc(100% + 1.3px);
+        height: 80px;
+      }
+      .hero-wave .shape-fill {
+        fill: #ffffff;
+      }
+
+      /* 4. Entrance Animations */
+      .animate-fade-up {
+        opacity: 0;
+        animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Password Toggle */
+      .password-wrapper {
+        position: relative;
+      }
+      .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        color: var(--color-gray-700);
+        font-size: 1.2rem;
+      }
+      .password-toggle:hover {
+        color: var(--color-black);
+      }
+
+      .features {
+        padding: var(--space-8) 0;
+      }
+
+      .feature-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .feature-list li {
+        padding: var(--space-1) 0;
+        padding-left: var(--space-3);
+        position: relative;
+      }
+
+      .feature-list li::before {
+        content: "■";
+        position: absolute;
+        left: 0;
+        color: var(--color-red);
+        font-size: 0.75rem;
+      }
+
+      @media (max-width: 768px) {
+        .hero .container {
+          grid-template-columns: 1fr;
+        }
+        .hero-title {
+          font-size: 2.5rem;
+        }
+      }
+    </style>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      // Initialize Parallax
+      document.addEventListener("DOMContentLoaded", () => {
+        // No need to inject generic logo anymore, we have the structured one
+
+        const heroSection = document.getElementById("hero-section");
+        const layers = document.querySelectorAll(".parallax-layer");
+
+        // Check for reduced motion preference
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        if (!prefersReducedMotion && heroSection) {
+          heroSection.addEventListener("mousemove", (e) => {
+            const rect = heroSection.getBoundingClientRect();
+            // Calculate mouse position relative to center of hero section
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            layers.forEach((layer) => {
+              const speed = parseFloat(layer.getAttribute("data-speed"));
+              const xOffset = x * speed;
+              const yOffset = y * speed;
+
+              layer.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+          });
+
+          // Reset on mouse leave
+          heroSection.addEventListener("mouseleave", () => {
+            layers.forEach((layer) => {
+              layer.style.transform = `translate(0, 0)`;
+              layer.style.transition = "transform 0.5s ease-out";
+            });
+          });
+
+          // Re-enable quick transition on enter
+          heroSection.addEventListener("mouseenter", () => {
+            layers.forEach((layer) => {
+              layer.style.transition = "transform 0.1s linear";
+            });
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

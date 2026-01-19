@@ -1,0 +1,13 @@
+node_modules/
+.venv/
+.env
+*.log
+.vscode/
+**/uploads/
+**/node_modules/
+.agent/
+.gemini/
+dist/
+build/
+.DS_Store
+Thumbs.db

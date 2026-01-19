@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - HRM System</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="container nav-container">
+        <a href="index.html" class="nav-logo">HRM</a>
+        <ul class="nav-menu">
+          <li>
+            <a href="admin-dashboard.html" class="nav-link active">Dashboard</a>
+          </li>
+          <li><a href="admin-users.html" class="nav-link">Người dùng</a></li>
+          <li><a href="admin-reports.html" class="nav-link">Báo cáo</a></li>
+          <li><a href="#" class="nav-link" onclick="logout()">Đăng xuất</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Admin Dashboard -->
+    <div class="dashboard-container">
+      <div class="container" style="padding-top: 48px; padding-bottom: 48px">
+        <div class="flex items-center justify-between mb-4">
+          <h1>QUẢN TRỊ HỆ THỐNG</h1>
+          <span class="badge badge-red">ADMIN</span>
+        </div>
+
+        <!-- Statistics Overview -->
+        <div class="grid grid-4 mb-4">
+          <div class="stat-card">
+            <div class="stat-number">156</div>
+            <div class="stat-label">TỔNG CÁN BỘ</div>
+            <div class="stat-change positive">+12 tháng này</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">142</div>
+            <div class="stat-label">ĐANG CÔNG TÁC</div>
+            <div class="stat-change">91% tổng số</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">5</div>
+            <div class="stat-label">ĐƠN VỊ</div>
+            <div class="stat-change">Hành chính lớn nhất</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">23</div>
+            <div class="stat-label">HOẠT ĐỘNG HÔM NAY</div>
+            <div class="stat-change positive">+5 so với hôm qua</div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid grid-2 mb-4">
+          <!-- Department Distribution -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">PHÂN BỐ THEO ĐƠN VỊ</h3>
+            </div>
+            <div class="card-body">
+              <div class="chart-bars" id="departmentChart"></div>
+            </div>
+          </div>
+
+          <!-- Gender Distribution -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">PHÂN BỐ THEO GIỚI TÍNH</h3>
+            </div>
+            <div class="card-body">
+              <div class="chart-simple" id="genderChart"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activities & Quick Actions -->
+        <div class="grid grid-2">
+          <!-- Recent Activities -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">HOẠT ĐỘNG GẦN ĐÂY</h3>
+            </div>
+            <div class="card-body">
+              <div class="activity-list" id="adminActivityList"></div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">QUẢN LÝ NHANH</h3>
+            </div>
+            <div class="card-body">
+              <div class="quick-actions">
+                <a href="admin-users.html" class="action-btn">
+                  <span class="action-icon">👥</span>
+                  <span>Quản lý người dùng</span>
+                </a>
+                <a href="admin-reports.html" class="action-btn">
+                  <span class="action-icon">📊</span>
+                  <span>Tạo báo cáo</span>
+                </a>
+                <button
+                  class="action-btn"
+                  onclick="alert('Chức năng đang phát triển')"
+                >
+                  <span class="action-icon">⚙️</span>
+                  <span>Cài đặt hệ thống</span>
+                </button>
+                <button class="action-btn" onclick="exportSystemData()">
+                  <span class="action-icon">📥</span>
+                  <span>Xuất dữ liệu</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <style>
+      .dashboard-container {
+        background: var(--color-gray-100);
+        min-height: 100vh;
+      }
+
+      .stat-card {
+        background: var(--color-white);
+        border: 3px solid var(--color-black);
+        padding: var(--space-3);
+        text-align: center;
+      }
+
+      .stat-number {
+        font-family: var(--font-heading);
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: var(--space-2);
+      }
+
+      .stat-label {
+        font-family: var(--font-heading);
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        margin-bottom: var(--space-1);
+      }
+
+      .stat-change {
+        font-size: 0.875rem;
+        color: var(--color-gray-700);
+      }
+
+      .stat-change.positive {
+        color: var(--color-red);
+      }
+
+      .chart-bars {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+      }
+
+      .chart-bar-item {
+        display: grid;
+        grid-template-columns: 120px 1fr auto;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .chart-label {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 0.875rem;
+      }
+
+      .chart-bar {
+        height: 32px;
+        background: var(--color-gray-100);
+        border: 2px solid var(--color-black);
+        overflow: hidden;
+      }
+
+      .chart-bar-fill {
+        height: 100%;
+        background: var(--color-black);
+        transition: width var(--transition-slow);
+      }
+
+      .chart-value {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        min-width: 40px;
+        text-align: right;
+      }
+
+      .chart-simple {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-3);
+      }
+
+      .chart-simple-item {
+        text-align: center;
+        padding: var(--space-3);
+        background: var(--color-gray-100);
+        border: 2px solid var(--color-black);
+      }
+
+      .chart-simple-value {
+        font-family: var(--font-heading);
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: var(--space-1);
+      }
+
+      .chart-simple-label {
+        font-family: var(--font-heading);
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-2);
+      }
+
+      .action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-3);
+        background: var(--color-gray-100);
+        border: 2px solid var(--color-black);
+        text-decoration: none;
+        color: var(--color-black);
+        cursor: pointer;
+        transition: all var(--transition-base);
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 0.875rem;
+      }
+
+      .action-btn:hover {
+        background: var(--color-black);
+        color: var(--color-white);
+        transform: translateY(-4px);
+      }
+
+      .action-icon {
+        font-size: 2rem;
+      }
+
+      .activity-list {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .activity-item {
+        padding: var(--space-2);
+        border-left: 3px solid var(--color-gray-400);
+        margin-bottom: var(--space-2);
+      }
+
+      .activity-item:hover {
+        border-left-color: var(--color-red);
+        background: var(--color-gray-100);
+      }
+
+      @media (max-width: 768px) {
+        .stat-card {
+          padding: var(--space-2);
+        }
+
+        .stat-number {
+          font-size: 2rem;
+        }
+
+        .quick-actions {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      // For demo purposes, allow access without strict admin check
+      // In production, add: requireAuth() and check admin role
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadDepartmentChart();
+        loadGenderChart();
+        loadAdminActivities();
+      });
+
+      function loadDepartmentChart() {
+        const chart = document.getElementById("departmentChart");
+        const departments = sampleStatistics.departments;
+        const max = Math.max(...Object.values(departments));
+
+        chart.innerHTML = Object.entries(departments)
+          .map(([dept, count]) => {
+            const percentage = (count / max) * 100;
+            return `
+                    <div class="chart-bar-item">
+                        <div class="chart-label">${dept}</div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-fill" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="chart-value">${count}</div>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      function loadGenderChart() {
+        const chart = document.getElementById("genderChart");
+        const gender = sampleStatistics.byGender;
+
+        chart.innerHTML = Object.entries(gender)
+          .map(
+            ([type, count]) => `
+                <div class="chart-simple-item">
+                    <div class="chart-simple-value">${count}</div>
+                    <div class="chart-simple-label">${type}</div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function loadAdminActivities() {
+        const list = document.getElementById("adminActivityList");
+        const activities = sampleStatistics.recentActivities;
+
+        list.innerHTML = activities
+          .map(
+            (activity) => `
+                <div class="activity-item">
+                    <div class="flex justify-between items-center mb-1">
+                        <strong>${activity.type}</strong>
+                        <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-gray-700);">${activity.time}</span>
+                    </div>
+                    <div style="font-size: 0.875rem;">
+                        ${activity.user} - ${activity.description}
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function exportSystemData() {
+        showToast("Đang xuất dữ liệu hệ thống...", "info");
+        setTimeout(() => {
+          showToast("Xuất dữ liệu thành công!", "success");
+        }, 1500);
+      }
+    </script>
+  </body>
+</html>

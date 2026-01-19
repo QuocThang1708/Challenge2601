@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Người Dùng - HRM System</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="container nav-container">
+        <a href="index.html" class="nav-logo">HRM</a>
+        <ul class="nav-menu">
+          <li><a href="admin-dashboard.html" class="nav-link">Dashboard</a></li>
+          <li>
+            <a href="admin-users.html" class="nav-link active">Người dùng</a>
+          </li>
+          <li><a href="admin-reports.html" class="nav-link">Báo cáo</a></li>
+          <li><a href="#" class="nav-link" onclick="logout()">Đăng xuất</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Users Management -->
+    <div class="dashboard-container">
+      <div class="container" style="padding-top: 48px; padding-bottom: 48px">
+        <div class="flex items-center justify-between mb-4">
+          <h1>QUẢN LÝ NGƯỜI DÙNG</h1>
+          <button class="btn btn-primary" onclick="showModal('addUserModal')">
+            + Thêm cán bộ
+          </button>
+        </div>
+
+        <!-- Filters -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="grid grid-4 gap-3">
+              <div class="form-group">
+                <label class="form-label" for="searchUser">Tìm kiếm</label>
+                <input
+                  type="text"
+                  id="searchUser"
+                  class="form-input"
+                  placeholder="Tên, email, mã CB..."
+                  onkeyup="filterUsers()"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="filterDepartment">Đơn vị</label>
+                <select
+                  id="filterDepartment"
+                  class="form-select"
+                  onchange="filterUsers()"
+                >
+                  <option value="">Tất cả</option>
+                  <option value="Hành chính">Hành chính</option>
+                  <option value="Tài chính">Tài chính</option>
+                  <option value="Nhân sự">Nhân sự</option>
+                  <option value="Kỹ thuật">Kỹ thuật</option>
+                  <option value="Marketing">Marketing</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="filterRole">Vai trò</label>
+                <select
+                  id="filterRole"
+                  class="form-select"
+                  onchange="filterUsers()"
+                >
+                  <option value="">Tất cả</option>
+                  <option value="Admin tổng">Admin tổng</option>
+                  <option value="Admin đơn vị">Admin đơn vị</option>
+                  <option value="Cán bộ thường">Cán bộ thường</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="filterStatus">Trạng thái</label>
+                <select
+                  id="filterStatus"
+                  class="form-select"
+                  onchange="filterUsers()"
+                >
+                  <option value="">Tất cả</option>
+                  <option value="Đang công tác">Đang công tác</option>
+                  <option value="Nghỉ việc">Nghỉ việc</option>
+                  <option value="Chuyển đơn vị">Chuyển đơn vị</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="card">
+          <div class="card-header">
+            <div class="flex justify-between items-center">
+              <h3 class="card-title">DANH SÁCH CÁN BỘ</h3>
+              <div class="flex gap-2">
+                <button
+                  class="btn btn-small btn-outline"
+                  onclick="exportTableToCSV('usersTable', 'danh-sach-can-bo.csv')"
+                >
+                  Xuất CSV
+                </button>
+                <button
+                  class="btn btn-small btn-outline"
+                  onclick="alert('Chức năng đang phát triển')"
+                >
+                  Xuất Excel
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="table" id="usersTable">
+                <thead>
+                  <tr>
+                    <th>Mã CB</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>Đơn vị</th>
+                    <th>Chức vụ</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                  <!-- Users will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal-overlay" id="addUserModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">THÊM CÁN BỘ MỚI</h2>
+          <button class="modal-close" onclick="closeModal('addUserModal')">
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addUserForm" onsubmit="handleAddUser(event)">
+            <div class="grid grid-2 gap-3">
+              <div class="form-group">
+                <label class="form-label" for="newName">Họ và tên *</label>
+                <input type="text" id="newName" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newEmployeeId"
+                  >Mã cán bộ *</label
+                >
+                <input
+                  type="text"
+                  id="newEmployeeId"
+                  class="form-input"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newEmail">Email *</label>
+                <input type="email" id="newEmail" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newPhone">Số điện thoại *</label>
+                <input type="tel" id="newPhone" class="form-input" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newDepartment">Đơn vị *</label>
+                <select id="newDepartment" class="form-select" required>
+                  <option value="">Chọn đơn vị</option>
+                  <option value="Hành chính">Hành chính</option>
+                  <option value="Tài chính">Tài chính</option>
+                  <option value="Nhân sự">Nhân sự</option>
+                  <option value="Kỹ thuật">Kỹ thuật</option>
+                  <option value="Marketing">Marketing</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newPosition">Chức vụ *</label>
+                <input
+                  type="text"
+                  id="newPosition"
+                  class="form-input"
+                  required
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="closeModal('addUserModal')"
+              >
+                Hủy
+              </button>
+              <button type="submit" class="btn btn-primary">Thêm cán bộ</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <style>
+      .dashboard-container {
+        background: var(--color-gray-100);
+        min-height: 100vh;
+      }
+
+      .user-actions {
+        display: flex;
+        gap: var(--space-1);
+      }
+
+      .user-actions button {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+      }
+    </style>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      let allUsers = [];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadUsers();
+      });
+
+      function loadUsers() {
+        allUsers = sampleEmployees;
+        renderUsers(allUsers);
+      }
+
+      function renderUsers(users) {
+        const tbody = document.getElementById("usersTableBody");
+
+        tbody.innerHTML = users
+          .map(
+            (user, index) => `
+                <tr>
+                    <td class="code">${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.department}</td>
+                    <td>${user.position}</td>
+                    <td>
+                        <span class="badge ${
+                          user.status === "Đang công tác" ? "" : "badge-gray"
+                        }">${user.status}</span>
+                    </td>
+                    <td class="user-actions">
+                        <button class="btn btn-small btn-outline" onclick="viewUser(${index})">Xem</button>
+                        <button class="btn btn-small btn-outline" onclick="editUser(${index})">Sửa</button>
+                        <button class="btn btn-small btn-outline" onclick="toggleUserStatus(${index})">
+                            ${
+                              user.status === "Đang công tác"
+                                ? "Khóa"
+                                : "Mở khóa"
+                            }
+                        </button>
+                    </td>
+                </tr>
+            `
+          )
+          .join("");
+      }
+
+      function filterUsers() {
+        const searchValue = document
+          .getElementById("searchUser")
+          .value.toLowerCase();
+        const departmentFilter =
+          document.getElementById("filterDepartment").value;
+        const roleFilter = document.getElementById("filterRole").value;
+        const statusFilter = document.getElementById("filterStatus").value;
+
+        let filtered = allUsers.filter((user) => {
+          const matchSearch =
+            !searchValue ||
+            user.name.toLowerCase().includes(searchValue) ||
+            user.email.toLowerCase().includes(searchValue) ||
+            user.id.toLowerCase().includes(searchValue);
+
+          const matchDepartment =
+            !departmentFilter || user.department === departmentFilter;
+          const matchStatus = !statusFilter || user.status === statusFilter;
+
+          return matchSearch && matchDepartment && matchStatus;
+        });
+
+        renderUsers(filtered);
+      }
+
+      function handleAddUser(event) {
+        event.preventDefault();
+
+        if (!validateForm("addUserForm")) {
+          return;
+        }
+
+        const newUser = {
+          id: document.getElementById("newEmployeeId").value,
+          name: document.getElementById("newName").value,
+          email: document.getElementById("newEmail").value,
+          phone: document.getElementById("newPhone").value,
+          department: document.getElementById("newDepartment").value,
+          position: document.getElementById("newPosition").value,
+          status: "Đang công tác",
+        };
+
+        showToast("Đang thêm cán bộ mới...", "info");
+
+        setTimeout(() => {
+          allUsers.push(newUser);
+          renderUsers(allUsers);
+          closeModal("addUserModal");
+          document.getElementById("addUserForm").reset();
+          showToast("Đã thêm cán bộ mới thành công!", "success");
+        }, 500);
+      }
+
+      function viewUser(index) {
+        const user = allUsers[index];
+        alert(
+          `Xem chi tiết cán bộ:\n\nMã: ${user.id}\nTên: ${user.name}\nEmail: ${user.email}\nĐơn vị: ${user.department}\nChức vụ: ${user.position}\nTrạng thái: ${user.status}\n\nChức năng đang phát triển`
+        );
+      }
+
+      function editUser(index) {
+        const user = allUsers[index];
+        showToast(`Đang mở form chỉnh sửa cho ${user.name}...`, "info");
+        setTimeout(() => {
+          alert("Chức năng chỉnh sửa đang phát triển");
+        }, 500);
+      }
+
+      function toggleUserStatus(index) {
+        const user = allUsers[index];
+        const newStatus =
+          user.status === "Đang công tác" ? "Nghỉ việc" : "Đang công tác";
+
+        if (
+          confirm(
+            `Bạn có chắc muốn ${
+              user.status === "Đang công tác" ? "khóa" : "mở khóa"
+            } tài khoản ${user.name}?`
+          )
+        ) {
+          user.status = newStatus;
+          renderUsers(allUsers);
+          showToast(
+            `Đã ${newStatus === "Nghỉ việc" ? "khóa" : "mở khóa"} tài khoản ${
+              user.name
+            }`,
+            "success"
+          );
+        }
+      }
+    </script>
+  </body>
+</html>

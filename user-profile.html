@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hồ Sơ Cá Nhân - HRM System</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="container nav-container">
+        <a href="index.html" class="nav-logo">HRM</a>
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Trang chủ</a></li>
+          <li><a href="user-dashboard.html" class="nav-link">Dashboard</a></li>
+          <li><a href="user-profile.html" class="nav-link active">Hồ sơ</a></li>
+          <li><a href="user-cv.html" class="nav-link">CV</a></li>
+          <li>
+            <a href="user-qualifications.html" class="nav-link">Trình độ</a>
+          </li>
+          <li><a href="#" class="nav-link" onclick="logout()">Đăng xuất</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Profile Content -->
+    <div class="dashboard-container">
+      <div class="container" style="padding-top: 48px; padding-bottom: 48px">
+        <div class="flex items-center justify-between mb-4">
+          <h1>HỒ SƠ CÁN BỘ CÔNG ĐOÀN</h1>
+          <button class="btn btn-primary" id="editBtn" onclick="toggleEdit()">
+            Chỉnh sửa
+          </button>
+        </div>
+
+        <form id="profileForm" onsubmit="handleSaveProfile(event)">
+          <!-- Personal Information -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <h3 class="card-title">THÔNG TIN CÁ NHÂN</h3>
+            </div>
+            <div class="card-body">
+              <div class="grid grid-2 gap-3">
+                <div class="form-group">
+                  <label class="form-label" for="fullName">Họ và tên *</label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    class="form-input"
+                    value="Nguyễn Văn An"
+                    required
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="birthDate">Ngày sinh *</label>
+                  <input
+                    type="date"
+                    id="birthDate"
+                    class="form-input"
+                    value="1985-03-15"
+                    required
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="gender">Giới tính *</label>
+                  <select id="gender" class="form-select" required disabled>
+                    <option value="Nam" selected>Nam</option>
+                    <option value="Nữ">Nữ</option>
+                    <option value="Khác">Khác</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="idCard">Số CCCD/CMND *</label>
+                  <input
+                    type="text"
+                    id="idCard"
+                    class="form-input"
+                    value="001085123456"
+                    required
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Information -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <h3 class="card-title">THÔNG TIN LIÊN HỆ</h3>
+            </div>
+            <div class="card-body">
+              <div class="grid grid-2 gap-3">
+                <div class="form-group">
+                  <label class="form-label" for="email">Email *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="form-input"
+                    value="an.nv@congdoan.vn"
+                    required
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="phone">Số điện thoại *</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    class="form-input"
+                    value="0901234567"
+                    required
+                    disabled
+                  />
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1">
+                  <label class="form-label" for="address"
+                    >Địa chỉ liên hệ *</label
+                  >
+                  <input
+                    type="text"
+                    id="address"
+                    class="form-input"
+                    value="Hà Nội"
+                    required
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Work Information -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <h3 class="card-title">THÔNG TIN CÔNG TÁC</h3>
+            </div>
+            <div class="card-body">
+              <div class="grid grid-2 gap-3">
+                <div class="form-group">
+                  <label class="form-label" for="department"
+                    >Đơn vị công tác *</label
+                  >
+                  <select id="department" class="form-select" required disabled>
+                    <option value="Hành chính" selected>Hành chính</option>
+                    <option value="Tài chính">Tài chính</option>
+                    <option value="Nhân sự">Nhân sự</option>
+                    <option value="Kỹ thuật">Kỹ thuật</option>
+                    <option value="Marketing">Marketing</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="position"
+                    >Chức vụ công đoàn *</label
+                  >
+                  <input
+                    type="text"
+                    id="position"
+                    class="form-input"
+                    value="Trưởng phòng"
+                    required
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="unionDate"
+                    >Ngày vào công đoàn *</label
+                  >
+                  <input
+                    type="date"
+                    id="unionDate"
+                    class="form-input"
+                    value="2010-01-15"
+                    required
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="employeeId">Mã cán bộ *</label>
+                  <input
+                    type="text"
+                    id="employeeId"
+                    class="form-input"
+                    value="CB0001"
+                    required
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="status"
+                    >Tình trạng công tác *</label
+                  >
+                  <select id="status" class="form-select" required disabled>
+                    <option value="Đang công tác" selected>
+                      Đang công tác
+                    </option>
+                    <option value="Nghỉ việc">Nghỉ việc</option>
+                    <option value="Chuyển đơn vị">Chuyển đơn vị</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons (hidden by default) -->
+          <div
+            class="flex gap-2 justify-end"
+            id="actionButtons"
+            style="display: none"
+          >
+            <button
+              type="button"
+              class="btn btn-outline"
+              onclick="cancelEdit()"
+            >
+              Hủy
+            </button>
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <style>
+      .dashboard-container {
+        background: var(--color-gray-100);
+        min-height: 100vh;
+      }
+    </style>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      requireAuth();
+
+      let isEditing = false;
+      const originalData = {};
+
+      function toggleEdit() {
+        isEditing = !isEditing;
+        const inputs = document.querySelectorAll(
+          "#profileForm input, #profileForm select"
+        );
+        const editBtn = document.getElementById("editBtn");
+        const actionButtons = document.getElementById("actionButtons");
+
+        if (isEditing) {
+          // Save original data
+          inputs.forEach((input) => {
+            originalData[input.id] = input.value;
+            input.disabled = false;
+          });
+          editBtn.style.display = "none";
+          actionButtons.style.display = "flex";
+        } else {
+          inputs.forEach((input) => {
+            input.disabled = true;
+          });
+          editBtn.style.display = "inline-flex";
+          actionButtons.style.display = "none";
+        }
+      }
+
+      function cancelEdit() {
+        // Restore original data
+        Object.keys(originalData).forEach((key) => {
+          const input = document.getElementById(key);
+          if (input) {
+            input.value = originalData[key];
+          }
+        });
+        toggleEdit();
+      }
+
+      function handleSaveProfile(event) {
+        event.preventDefault();
+
+        if (!validateForm("profileForm")) {
+          return;
+        }
+
+        // Simulate API call
+        setTimeout(() => {
+          showToast("Hồ sơ đã được cập nhật thành công!", "success");
+          toggleEdit();
+        }, 500);
+      }
+    </script>
+  </body>
+</html>

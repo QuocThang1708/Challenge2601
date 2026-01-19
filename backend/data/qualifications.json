@@ -1,0 +1,390 @@
+{
+  "1768231207602": {
+    "education": [
+      {
+        "id": "17686513276410.8632654219001079",
+        "school": "Trình độ học vấn: Đại học Kinh tế Huế từ",
+        "degree": "Chứng chỉ/Bằng cấp",
+        "startYear": "2018",
+        "endYear": "2025",
+        "description": "Trích xuất tự động",
+        "createdAt": "2026-01-17T12:02:07.641Z"
+      },
+      {
+        "id": "17686521372000.19448555068153994",
+        "school": "Trình độ học vấn: Đại học Kinh tế Huế từ",
+        "degree": "Chứng chỉ/Bằng cấp",
+        "startYear": "2018",
+        "endYear": "2025",
+        "description": "Trích xuất tự động",
+        "createdAt": "2026-01-17T12:15:37.200Z"
+      },
+      {
+        "id": "17686521533090.6015526956957846",
+        "school": "Trình độ học vấn: Đại học Kinh tế Huế từ",
+        "degree": "Chứng chỉ/Bằng cấp",
+        "startYear": "2018",
+        "endYear": "2025",
+        "description": "Trích xuất tự động",
+        "createdAt": "2026-01-17T12:15:53.309Z"
+      }
+    ],
+    "experience": [
+      {
+        "id": "17684674667710.8966622740239827",
+        "company": "Công ty: Tenomad",
+        "position": "Nhân viên",
+        "startDate": "2024",
+        "endDate": "2026",
+        "description": "",
+        "createdAt": "2026-01-15T08:57:46.771Z"
+      },
+      {
+        "id": "17684674667710.6264412788658531",
+        "company": "Kinh nghiệm làm việc",
+        "position": "QC / QA Engineer (8 năm kinh nghiệm)- Phân tích tài liệu yêu cầu (BRD, SRS)- Viết test plan, test case, test scenario- Thực hiện manual testing (Web, Mobile, API)- Thực hiện regression test, smoke test, UAT- Quản lý và theo dõi bug bằng Jira/Redmine- Phối hợp với Dev, BA, PO để xử lý lỗi- Hỗ trợ automation testing (Cypress / Selenium / Playwright)",
+        "startDate": "2026",
+        "endDate": "Hiện tại",
+        "description": "Mô tả kinh nghiệm",
+        "createdAt": "2026-01-15T08:57:46.771Z"
+      },
+      {
+        "id": "17686513276410.5136705009211984",
+        "company": "Công ty: Tenomad",
+        "position": "Nhân viên",
+        "startDate": "2024",
+        "endDate": "2026",
+        "description": "",
+        "createdAt": "2026-01-17T12:02:07.641Z"
+      },
+      {
+        "id": "17686521371990.7829404451254149",
+        "company": "Công ty: Tenomad",
+        "position": "Nhân viên",
+        "startDate": "2024",
+        "endDate": "2026",
+        "description": "",
+        "createdAt": "2026-01-17T12:15:37.199Z"
+      },
+      {
+        "id": "17686521371990.6051986289630458",
+        "company": "Kinh nghiệm làm việc",
+        "position": "QC / QA Engineer (8 năm kinh nghiệm)- Phân tích tài liệu yêu cầu (BRD, SRS)- Viết test plan, test case, test scenario- Thực hiện manual testing (Web, Mobile, API)- Thực hiện regression test, smoke test, UAT- Quản lý và theo dõi bug bằng Jira/Redmine- Phối hợp với Dev, BA, PO để xử lý lỗi- Hỗ trợ automation testing (Cypress / Selenium / Playwright)",
+        "startDate": "2026",
+        "endDate": "Hiện tại",
+        "description": "Mô tả kinh nghiệm",
+        "createdAt": "2026-01-17T12:15:37.199Z"
+      },
+      {
+        "id": "17686521533080.5963633310689442",
+        "company": "Công ty: Tenomad",
+        "position": "Nhân viên",
+        "startDate": "2024",
+        "endDate": "2026",
+        "description": "",
+        "createdAt": "2026-01-17T12:15:53.309Z"
+      },
+      {
+        "id": "17686521533090.946761120010067",
+        "company": "Kinh nghiệm làm việc",
+        "position": "QC / QA Engineer (8 năm kinh nghiệm)- Phân tích tài liệu yêu cầu (BRD, SRS)- Viết test plan, test case, test scenario- Thực hiện manual testing (Web, Mobile, API)- Thực hiện regression test, smoke test, UAT- Quản lý và theo dõi bug bằng Jira/Redmine- Phối hợp với Dev, BA, PO để xử lý lỗi- Hỗ trợ automation testing (Cypress / Selenium / Playwright)",
+        "startDate": "2026",
+        "endDate": "Hiện tại",
+        "description": "Mô tả kinh nghiệm",
+        "createdAt": "2026-01-17T12:15:53.309Z"
+      }
+    ],
+    "skills": [
+      {
+        "id": "17686521371990.6288450893395094",
+        "name": "TestRail- Git cơ bản",
+        "level": 3,
+        "createdAt": "2026-01-17T12:15:37.199Z"
+      },
+      {
+        "id": "17686521372000.31983813681758644",
+        "name": "- Tiếng Anh: Đọc hiểu tài liệu kỹ thuật",
+        "level": 3,
+        "createdAt": "2026-01-17T12:15:37.200Z"
+      },
+      {
+        "id": "17686521372000.9803790575006746",
+        "name": "giao tiếp cơ bản",
+        "level": 3,
+        "createdAt": "2026-01-17T12:15:37.200Z"
+      },
+      {
+        "id": "17686521372000.0167042833565485",
+        "name": "- Chăm chỉ",
+        "level": 3,
+        "createdAt": "2026-01-17T12:15:37.200Z"
+      },
+      {
+        "id": "17686521372000.1256533705564673",
+        "name": "cẩn thận",
+        "level": 3,
+        "createdAt": "2026-01-17T12:15:37.200Z"
+      },
+      {
+        "id": "17686521533090.6671653689095889",
+        "name": "TestRail- Git cơ bản",
+        "level": 3,
+        "createdAt": "2026-01-17T12:15:53.309Z"
+      },
+      {
+        "id": "17686521533090.9099327157114347",
+        "name": "- Tiếng Anh: Đọc hiểu tài liệu kỹ thuật",
+        "level": 3,
+        "createdAt": "2026-01-17T12:15:53.309Z"
+      },
+      {
+        "id": "17686521533090.4511747372126431",
+        "name": "giao tiếp cơ bản",
+        "level": 3,
+        "createdAt": "2026-01-17T12:15:53.309Z"
+      },
+      {
+        "id": "17686521533090.05800146872942391",
+        "name": "- Chăm chỉ",
+        "level": 3,
+        "createdAt": "2026-01-17T12:15:53.309Z"
+      },
+      {
+        "id": "17686521533090.7280753586565256",
+        "name": "cẩn thận",
+        "level": 3,
+        "createdAt": "2026-01-17T12:15:53.309Z"
+      }
+    ],
+    "achievements": []
+  },
+  "1768473107420": {
+    "education": [],
+    "experience": [],
+    "skills": [],
+    "achievements": []
+  },
+  "1768469745245": {
+    "education": [
+      {
+        "id": "17685313685680.29581531650116744",
+        "school": "Trình độ học vấn: Đại học Kinh tế Huế từ",
+        "degree": "Chứng chỉ/Bằng cấp",
+        "startYear": "2018",
+        "endYear": "2025",
+        "description": "Trích xuất tự động",
+        "createdAt": "2026-01-16T02:42:48.568Z"
+      }
+    ],
+    "experience": [
+      {
+        "id": "17685313685670.11006945052866524",
+        "company": "Công ty: Tenomad",
+        "position": "Nhân viên",
+        "startDate": "2024",
+        "endDate": "2026",
+        "description": "",
+        "createdAt": "2026-01-16T02:42:48.567Z"
+      },
+      {
+        "id": "17685313685670.5869611700400748",
+        "company": "Kinh nghiệm làm việc",
+        "position": "QC / QA Engineer (8 năm kinh nghiệm)- Phân tích tài liệu yêu cầu (BRD, SRS)- Viết test plan, test case, test scenario- Thực hiện manual testing (Web, Mobile, API)- Thực hiện regression test, smoke test, UAT- Quản lý và theo dõi bug bằng Jira/Redmine- Phối hợp với Dev, BA, PO để xử lý lỗi- Hỗ trợ automation testing (Cypress / Selenium / Playwright)",
+        "startDate": "2026",
+        "endDate": "Hiện tại",
+        "description": "Mô tả kinh nghiệm",
+        "createdAt": "2026-01-16T02:42:48.567Z"
+      }
+    ],
+    "skills": [
+      {
+        "id": "17685313685670.40225612212919093",
+        "name": "TestRail- Git cơ bản",
+        "level": 3,
+        "createdAt": "2026-01-16T02:42:48.567Z"
+      },
+      {
+        "id": "17685313685680.15826404363022606",
+        "name": "- Tiếng Anh: Đọc hiểu tài liệu kỹ thuật",
+        "level": 3,
+        "createdAt": "2026-01-16T02:42:48.568Z"
+      },
+      {
+        "id": "17685313685680.7604332722594596",
+        "name": "giao tiếp cơ bản",
+        "level": 3,
+        "createdAt": "2026-01-16T02:42:48.568Z"
+      },
+      {
+        "id": "17685313685680.5726670588810847",
+        "name": "- Chăm chỉ",
+        "level": 3,
+        "createdAt": "2026-01-16T02:42:48.568Z"
+      },
+      {
+        "id": "17685313685680.14062565015351947",
+        "name": "cẩn thận",
+        "level": 3,
+        "createdAt": "2026-01-16T02:42:48.568Z"
+      }
+    ],
+    "achievements": []
+  },
+  "1768664661012": {
+    "education": [
+      {
+        "id": "1768665122233",
+        "school": "ĐH kinh Tế",
+        "degree": "Cử nhân",
+        "startYear": "2018",
+        "endYear": "2022",
+        "description": "",
+        "createdAt": "2026-01-17T15:52:02.233Z"
+      }
+    ],
+    "experience": [
+      {
+        "id": "17686648467850.6724594222311144",
+        "company": "Công ty: Tenomad",
+        "position": "Nhân viên",
+        "startDate": "2024",
+        "endDate": "2026",
+        "description": "",
+        "createdAt": "2026-01-17T15:47:26.785Z"
+      },
+      {
+        "id": "17686648467850.18415630701348507",
+        "company": "Kinh nghiệm làm việc",
+        "position": "QC / QA Engineer (8 năm kinh nghiệm)- Phân tích tài liệu yêu cầu (BRD, SRS)- Viết test plan, test case, test scenario- Thực hiện manual testing (Web, Mobile, API)- Thực hiện regression test, smoke test, UAT- Quản lý và theo dõi bug bằng Jira/Redmine- Phối hợp với Dev, BA, PO để xử lý lỗi- Hỗ trợ automation testing (Cypress / Selenium / Playwright)",
+        "startDate": "2026",
+        "endDate": "Hiện tại",
+        "description": "Mô tả kinh nghiệm",
+        "createdAt": "2026-01-17T15:47:26.785Z"
+      },
+      {
+        "id": "1768665140075",
+        "company": "ADB",
+        "position": "Test",
+        "startDate": "2018",
+        "endDate": "2022",
+        "description": "Test",
+        "createdAt": "2026-01-17T15:52:20.075Z",
+        "updatedAt": "2026-01-17T15:52:27.034Z"
+      }
+    ],
+    "skills": [
+      {
+        "id": "17686648467850.9196587095140352",
+        "name": "TestRail- Git cơ bản",
+        "level": 3,
+        "createdAt": "2026-01-17T15:47:26.785Z"
+      },
+      {
+        "id": "17686648467860.4557653893901559",
+        "name": "- Tiếng Anh: Đọc hiểu tài liệu kỹ thuật",
+        "level": 3,
+        "createdAt": "2026-01-17T15:47:26.786Z"
+      },
+      {
+        "id": "17686648467860.9304422383826529",
+        "name": "giao tiếp cơ bản",
+        "level": 3,
+        "createdAt": "2026-01-17T15:47:26.786Z"
+      },
+      {
+        "id": "17686648467860.06819493133122312",
+        "name": "- Chăm chỉ",
+        "level": 3,
+        "createdAt": "2026-01-17T15:47:26.786Z"
+      },
+      {
+        "id": "17686648467860.9107967719570165",
+        "name": "cẩn thận",
+        "level": 3,
+        "createdAt": "2026-01-17T15:47:26.786Z"
+      },
+      {
+        "id": "1768665158175",
+        "name": "Tiếng nhật",
+        "level": "4",
+        "createdAt": "2026-01-17T15:52:38.175Z"
+      }
+    ],
+    "achievements": [
+      {
+        "id": "1768665177613",
+        "title": "MVP quý",
+        "issuer": "Test",
+        "date": "2022",
+        "description": "Test",
+        "createdAt": "2026-01-17T15:52:57.613Z"
+      }
+    ]
+  },
+  "1768665632582": {
+    "education": [
+      {
+        "id": "17686657701580.7230593742073155",
+        "school": "Trình độ học vấn: Đại học Kinh tế Huế từ",
+        "degree": "Chứng chỉ/Bằng cấp",
+        "startYear": "2018",
+        "endYear": "2025",
+        "description": "Trích xuất tự động",
+        "createdAt": "2026-01-17T16:02:50.158Z"
+      }
+    ],
+    "experience": [
+      {
+        "id": "17686657701580.45509891016188075",
+        "company": "Công ty: Tenomad",
+        "position": "Nhân viên",
+        "startDate": "2024",
+        "endDate": "2026",
+        "description": "",
+        "createdAt": "2026-01-17T16:02:50.158Z"
+      },
+      {
+        "id": "17686657701580.7658756159531801",
+        "company": "Kinh nghiệm làm việc",
+        "position": "QC / QA Engineer (8 năm kinh nghiệm)- Phân tích tài liệu yêu cầu (BRD, SRS)- Viết test plan, test case, test scenario- Thực hiện manual testing (Web, Mobile, API)- Thực hiện regression test, smoke test, UAT- Quản lý và theo dõi bug bằng Jira/Redmine- Phối hợp với Dev, BA, PO để xử lý lỗi- Hỗ trợ automation testing (Cypress / Selenium / Playwright)",
+        "startDate": "2026",
+        "endDate": "Hiện tại",
+        "description": "Mô tả kinh nghiệm",
+        "createdAt": "2026-01-17T16:02:50.158Z"
+      }
+    ],
+    "skills": [
+      {
+        "id": "17686657701580.8581347964933508",
+        "name": "TestRail- Git cơ bản",
+        "level": 3,
+        "createdAt": "2026-01-17T16:02:50.158Z"
+      },
+      {
+        "id": "17686657701580.45583273005757086",
+        "name": "- Tiếng Anh: Đọc hiểu tài liệu kỹ thuật",
+        "level": 3,
+        "createdAt": "2026-01-17T16:02:50.158Z"
+      },
+      {
+        "id": "17686657701580.40890665586154906",
+        "name": "giao tiếp cơ bản",
+        "level": 3,
+        "createdAt": "2026-01-17T16:02:50.158Z"
+      },
+      {
+        "id": "17686657701590.4463087834268127",
+        "name": "- Chăm chỉ",
+        "level": 3,
+        "createdAt": "2026-01-17T16:02:50.159Z"
+      },
+      {
+        "id": "17686657701590.8692667206762468",
+        "name": "cẩn thận",
+        "level": 3,
+        "createdAt": "2026-01-17T16:02:50.159Z"
+      }
+    ],
+    "achievements": []
+  }
+}

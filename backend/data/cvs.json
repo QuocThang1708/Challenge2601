@@ -1,0 +1,74 @@
+{
+  "cvs": [
+    {
+      "id": "1768269138800",
+      "userId": "1768231207602",
+      "filename": "OS250618002.pdf",
+      "storedFilename": "cv-1768269138793-64438890.pdf",
+      "size": 4986,
+      "mimetype": "application/pdf",
+      "uploadDate": "2026-01-13T01:52:18.800Z",
+      "path": "C:\\HRM-AI\\backend\\uploads\\cv\\cv-1768269138793-64438890.pdf"
+    },
+    {
+      "id": "1768473185061",
+      "userId": "1768473107420",
+      "filename": "CV_QC_8_nam_kinh_nghiem.docx",
+      "storedFilename": "cv-1768473185058-253115183.docx",
+      "size": 27684,
+      "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "uploadDate": "2026-01-15T10:34:16.210Z",
+      "path": "C:\\HRM-AI\\backend\\uploads\\cv\\cv-1768473256206-448825690.docx"
+    },
+    {
+      "id": "1768531365821",
+      "userId": "1768469745245",
+      "filename": "CV_QC_8_nam_kinh_nghiem.docx",
+      "storedFilename": "cv-1768531365815-627971793.docx",
+      "size": 27684,
+      "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "uploadDate": "2026-01-16T02:42:45.821Z",
+      "path": "C:\\HRM-AI\\backend\\uploads\\cv\\cv-1768531365815-627971793.docx"
+    },
+    {
+      "id": "1768651325603",
+      "userId": "1768231207602",
+      "filename": "CV_QC_8_nam_kinh_nghiem.docx",
+      "storedFilename": "cv-1768651325600-242112695.docx",
+      "size": 27684,
+      "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "uploadDate": "2026-01-17T12:15:35.180Z",
+      "path": "C:\\HRM-AI\\backend\\uploads\\cv\\cv-1768652135177-367152524.docx"
+    },
+    {
+      "id": "1768652151645",
+      "userId": "1768231207602",
+      "filename": "CV_QC_8_nam_kinh_nghiem.docx",
+      "storedFilename": "cv-1768652151643-551712473.docx",
+      "size": 27684,
+      "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "uploadDate": "2026-01-17T12:15:51.645Z",
+      "path": "C:\\HRM-AI\\backend\\uploads\\cv\\cv-1768652151643-551712473.docx"
+    },
+    {
+      "id": "1768664839222",
+      "userId": "1768664661012",
+      "filename": "CV_QC_8_nam_kinh_nghiem (1).docx",
+      "storedFilename": "cv-1768664839220-574192230.docx",
+      "size": 27684,
+      "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "uploadDate": "2026-01-17T15:51:03.332Z",
+      "path": "C:\\HRM-AI\\backend\\uploads\\cv\\cv-1768665063329-408334599.docx"
+    },
+    {
+      "id": "1768665768354",
+      "userId": "1768665632582",
+      "filename": "CV_QC_8_nam_kinh_nghiem (1).docx",
+      "storedFilename": "cv-1768665768353-879763279.docx",
+      "size": 27684,
+      "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "uploadDate": "2026-01-17T16:02:48.354Z",
+      "path": "C:\\HRM-AI\\backend\\uploads\\cv\\cv-1768665768353-879763279.docx"
+    }
+  ]
+}
