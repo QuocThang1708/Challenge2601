@@ -28,7 +28,10 @@ npm install
 Cấu hình biến môi trường:
 
 - Copy file `.env.example` thành `.env`.
-- Cập nhật các thông số `JWT_SECRET`, `EMAIL_USER`, và `EMAIL_PASSWORD` (nếu cần dùng tính năng gửi mail).
+- Cập nhật các thông số `JWT_SECRET`.
+- **Cấu hình Email (SMTP):** Dự án sử dụng Gmail SMTP để gửi mã xác thực (OTP) cho các tính năng Đăng ký và Quên mật khẩu.
+  - `EMAIL_USER`: Địa chỉ Gmail của bạn.
+  - `EMAIL_PASSWORD`: **Mật khẩu ứng dụng (App Password)** của Gmail (không phải mật khẩu đăng nhập thông thường). Bạn cần bật 2FA và tạo App Password trong cài đặt tài khoản Google.
 
 Khởi chạy server:
 
