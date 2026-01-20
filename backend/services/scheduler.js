@@ -21,6 +21,8 @@ async function loadTasks() {
 
 async function initializeScheduler() {
   console.log("⏰ Initializing Scheduler...");
+  console.log(`   Server Time: ${new Date().toString()}`);
+  console.log(`   Timezone Offset: ${new Date().getTimezoneOffset()}`);
   const tasks = await loadTasks();
 
   tasks.forEach((task) => {
@@ -31,7 +33,7 @@ async function initializeScheduler() {
   console.log(
     `⏰ Scheduler initialized with ${
       Object.keys(programmedJobs).length
-    } active jobs.`
+    } active jobs.`,
   );
 }
 
@@ -39,7 +41,7 @@ function scheduleTask(task) {
   // Validate Cron Expression
   if (!cron.validate(task.cronExpression)) {
     console.error(
-      `❌ Invalid cron expression for task ${task.id}: ${task.cronExpression}`
+      `❌ Invalid cron expression for task ${task.id}: ${task.cronExpression}`,
     );
     return;
   }
@@ -50,7 +52,7 @@ function scheduleTask(task) {
   }
 
   console.log(
-    `📅 Scheduling task [${task.name}] with cron: ${task.cronExpression}`
+    `📅 Scheduling task [${task.name}] with cron: ${task.cronExpression}`,
   );
 
   const job = cron.schedule(task.cronExpression, async () => {
@@ -175,7 +177,7 @@ async function executeReportGeneration(task) {
   }
 
   console.log(
-    `   Time Range (${period}): ${dateFrom.toISOString()} - ${dateTo.toISOString()}`
+    `   Time Range (${period}): ${dateFrom.toISOString()} - ${dateTo.toISOString()}`,
   );
 
   // 2. Generate Content
@@ -183,7 +185,7 @@ async function executeReportGeneration(task) {
     task.reportType,
     dateFrom,
     dateTo,
-    task.department
+    task.department,
   );
   const fileName = `baocao-${task.reportType}-${Date.now()}.csv`;
 
@@ -191,7 +193,7 @@ async function executeReportGeneration(task) {
   console.log(
     `🕵️ Validating recipients... (Users loaded: ${
       users ? users.length : "undefined"
-    })`
+    })`,
   );
 
   const validRecipients = [];
@@ -204,7 +206,7 @@ async function executeReportGeneration(task) {
     if (!users || !Array.isArray(users)) {
       console.error(
         "❌ CRTICAL: users array is invalid during validation:",
-        users
+        users,
       );
       // Fallback: don't crash, but can't validate roles. Maybe allow if forced?
       // Safe fail:
@@ -222,7 +224,7 @@ async function executeReportGeneration(task) {
               validRecipients.push(email);
             } else {
               invalidLog.push(
-                `${email} (Role: ${user.role}, Status: ${user.status})`
+                `${email} (Role: ${user.role}, Status: ${user.status})`,
               );
             }
           } else {
@@ -247,7 +249,7 @@ async function executeReportGeneration(task) {
     console.log(`   Skipped: ${invalidLog.join(", ")}`);
 
   const dateRangeStr = `${dateFrom.toLocaleDateString(
-    "vi-VN"
+    "vi-VN",
   )} - ${dateTo.toLocaleDateString("vi-VN")}`;
 
   try {
@@ -260,7 +262,7 @@ async function executeReportGeneration(task) {
           filename: fileName,
           content: "\uFEFF" + csvContent,
         },
-      ]
+      ],
     );
   } catch (e) {
     console.error(`❌ FATAL: Could not send email for task ${task.id}`, e);
