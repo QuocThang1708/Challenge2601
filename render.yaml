@@ -18,14 +18,14 @@ services:
         value: production
 
   # User Portal Static Site
-  - type: static
+  - type: staticsite
     name: hrm-ai-user-portal
     env: static
     plan: free
     publishDir: user-portal
 
   # Admin Portal Static Site
-  - type: static
+  - type: staticsite
     name: hrm-ai-admin-portal
     env: static
     plan: free
