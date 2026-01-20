@@ -25,12 +25,14 @@ services:
   - type: web
     name: hrm-ai-user-portal
     runtime: static
+    buildCommand: cp -r shared user-portal/ && find user-portal -name "*.html" -exec sed -i 's|../shared/|shared/|g' {} +
     staticPublishPath: user-portal
 
   # Admin Portal Static Site
   - type: web
     name: hrm-ai-admin-portal
     runtime: static
+    buildCommand: cp -r shared admin-portal/ && find admin-portal -name "*.html" -exec sed -i 's|../shared/|shared/|g' {} +
     staticPublishPath: admin-portal
 
 databases:
