@@ -21,14 +21,12 @@ services:
   - type: web
     name: hrm-ai-user-portal
     runtime: static
-    plan: free
     staticPublishPath: user-portal
 
   # Admin Portal Static Site
   - type: web
     name: hrm-ai-admin-portal
     runtime: static
-    plan: free
     staticPublishPath: admin-portal
 
 databases:
