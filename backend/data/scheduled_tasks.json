@@ -5,9 +5,7 @@
     "reportType": "general",
     "cronExpression": "13 20 * * *",
     "dataPeriod": "current_week",
-    "recipients": [
-      "hovanquocthang1708+6@gmail.com"
-    ],
+    "recipients": ["hovanquocthang1708+6@gmail.com"],
     "department": "",
     "createdBy": "Admin",
     "active": true,
@@ -19,12 +17,22 @@
     "reportType": "general",
     "cronExpression": "10 23 * * *",
     "dataPeriod": "previous_week",
-    "recipients": [
-      "hovanquocthang1708+6@gmail.com"
-    ],
+    "recipients": ["hovanquocthang1708+6@gmail.com"],
     "department": "",
     "createdBy": "Admin",
     "active": true,
     "createdAt": "2026-01-17T16:08:14.206Z"
+  },
+  {
+    "id": "test-task-immediate",
+    "name": "TEST - Email ngay lập tức",
+    "reportType": "general",
+    "cronExpression": "* * * * *",
+    "dataPeriod": "same_day",
+    "recipients": ["hovanquocthang1708+6@gmail.com"],
+    "department": "",
+    "createdBy": "Admin",
+    "active": true,
+    "createdAt": "2026-01-20T14:44:00.000Z"
   }
 ]
