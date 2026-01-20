@@ -60,6 +60,19 @@ const createSmtpTransporter = () => {
 async function sendEmail({ to, subject, html, text, attachments }) {
   console.log(`🚀 Sending email to: ${to}`);
 
+  // Normalize attachments: Convert string content to Buffer for Nodemailer
+  const normalizedAttachments = attachments
+    ? attachments.map((att) => {
+        if (typeof att.content === "string") {
+          return {
+            filename: att.filename,
+            content: Buffer.from(att.content, "utf-8"),
+          };
+        }
+        return att;
+      })
+    : undefined;
+
   // DEVELOPMENT MODE: Use SMTP directly
   if (isDevelopment) {
     console.log("🛠️ Development Mode: Using SMTP");
@@ -72,7 +85,7 @@ async function sendEmail({ to, subject, html, text, attachments }) {
       subject,
       html,
       text,
-      attachments,
+      attachments: normalizedAttachments,
     });
     console.log("✅ Local SMTP Success:", info.messageId);
     return { success: true, messageId: info.messageId, provider: "smtp_local" };
@@ -111,7 +124,7 @@ async function sendEmail({ to, subject, html, text, attachments }) {
         subject,
         html,
         text,
-        attachments,
+        attachments: normalizedAttachments,
       });
       console.log("✅ MailTrap Sandbox Success:", info.messageId);
       return {
@@ -137,7 +150,7 @@ async function sendEmail({ to, subject, html, text, attachments }) {
         subject,
         html,
         text,
-        attachments,
+        attachments: normalizedAttachments,
       });
       console.log("✅ OAuth2 Success:", info.messageId);
       return { success: true, messageId: info.messageId, provider: "oauth2" };
@@ -156,8 +169,8 @@ async function sendEmail({ to, subject, html, text, attachments }) {
         subject,
         html,
         text,
-        attachments: attachments
-          ? attachments.map((a) => ({
+        attachments: normalizedAttachments
+          ? normalizedAttachments.map((a) => ({
               filename: a.filename,
               content: a.content,
             }))
