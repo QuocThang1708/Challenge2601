@@ -3,13 +3,16 @@ const nodemailer = require("nodemailer");
 // Email transporter configuration
 const isProduction = process.env.NODE_ENV === "production";
 
+// Sanitize App Password (remove spaces if user copied with formatting)
+const emailPassword = (process.env.EMAIL_PASSWORD || "").replace(/\s+/g, "");
+
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
   secure: false, // use TLS
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
+    pass: emailPassword,
   },
   tls: {
     rejectUnauthorized: false,
