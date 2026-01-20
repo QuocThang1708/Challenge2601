@@ -16,6 +16,10 @@ services:
         generateValue: true
       - key: NODE_ENV
         value: production
+      - key: EMAIL_USER
+        sync: false # User will provide this in Render Dashboard
+      - key: EMAIL_PASSWORD
+        sync: false # User will provide this in Render Dashboard
 
   # User Portal Static Site
   - type: web
