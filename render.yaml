@@ -22,6 +22,8 @@ services:
         sync: false # User will provide this in Render Dashboard
       - key: EMAIL_PASSWORD
         sync: false # User will provide this in Render Dashboard
+      - key: RESEND_API_KEY
+        sync: false # User will provide this in Render Dashboard
 
   # User Portal Static Site
   - type: web
