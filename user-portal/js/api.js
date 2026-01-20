@@ -1,9 +1,10 @@
 // API Configuration for Backend
 const API_BASE_URL =
   window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1"
+  window.location.hostname === "127.0.0.1" ||
+  window.location.protocol === "file:" // Add file protocol check
     ? "http://localhost:5000/api"
-    : "https://hrm-ai-backend.onrender.com/api"; // Updated for Render
+    : "https://hrm-ai-backend.onrender.com/api";
 
 // API Helper function with better error handling
 async function apiCall(endpoint, options = {}) {

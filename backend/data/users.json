@@ -43,7 +43,9 @@
       "tags": [
         "Đảng viên",
         "Nhân sự cấp cao"
-      ]
+      ],
+      "resetCode": "112735",
+      "resetCodeExpiry": "2026-01-20T09:42:15.787Z"
     },
     {
       "id": "1768445122396",
@@ -379,6 +381,27 @@
       "unionDate": "2026-01-17",
       "createdAt": "2026-01-17T16:00:32.582Z",
       "tags": []
+    },
+    {
+      "id": "1768900984509",
+      "employeeId": "CB123456535",
+      "name": "Quốc Thắng",
+      "email": "hovanquocthang1708+13@gmail.com",
+      "phone": "0796656835",
+      "password": "$2b$10$nB2ZolhT15nSdEiDbUMgte2.In4E72DEwcgf6D0PTAsTOIluygjH.",
+      "role": "user",
+      "status": "Đang công tác",
+      "verified": true,
+      "verificationCode": null,
+      "verificationCodeExpiry": null,
+      "department": "",
+      "position": "",
+      "gender": "",
+      "birthDate": "",
+      "idCard": "",
+      "address": "",
+      "unionDate": "2026-01-20",
+      "createdAt": "2026-01-20T09:23:04.509Z"
     }
   ]
 }
