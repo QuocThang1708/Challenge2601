@@ -1,5 +1,29 @@
 [
   {
+    "id": "1768789288439",
+    "timestamp": "2026-01-19T02:21:28.439Z",
+    "actorId": "1768231207602",
+    "actorName": "Quốc Thắng",
+    "actionType": "LOGIN",
+    "target": "System",
+    "status": "SUCCESS",
+    "ip": "",
+    "source": "USER_PORTAL",
+    "details": "User logged in via EmployeeID"
+  },
+  {
+    "id": "1768789254884",
+    "timestamp": "2026-01-19T02:20:54.884Z",
+    "actorId": "1",
+    "actorName": "Admin",
+    "actionType": "LOGIN",
+    "target": "System",
+    "status": "SUCCESS",
+    "ip": "",
+    "source": "ADMIN_PORTAL",
+    "details": "User logged in via Email"
+  },
+  {
     "id": "1768666386494",
     "timestamp": "2026-01-17T16:13:06.494Z",
     "actorId": "1",
