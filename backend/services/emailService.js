@@ -1,6 +1,8 @@
 const nodemailer = require("nodemailer");
 
 // Email transporter configuration
+const isProduction = process.env.NODE_ENV === "production";
+
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
@@ -12,7 +14,8 @@ const transporter = nodemailer.createTransport({
   tls: {
     rejectUnauthorized: false,
   },
-  family: 4, // Force IPv4
+  // Only force IPv4 in production (Render), behave normally in development (Local)
+  family: isProduction ? 4 : undefined,
   connectionTimeout: 10000,
 });
 
