@@ -6,7 +6,7 @@ services:
     plan: free
     rootDir: backend
     buildCommand: npm install && DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres" npx prisma generate
-    startCommand: npm start
+    startCommand: npx prisma db push && npm start
     envVars:
       - key: DATABASE_URL
         fromDatabase:
