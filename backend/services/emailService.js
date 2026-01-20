@@ -280,10 +280,52 @@ async function sendReportEmail(
   attachments = [],
 ) {
   const html = `
-    <div style="font-family: Arial; padding: 20px;">
-        <h2>Báo cáo: ${reportName}</h2>
-        <p>Thời gian: ${dateRange}</p>
-    </div>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: #000; color: #fff; padding: 20px; text-align: center; }
+            .content { background: #f5f5f5; padding: 30px; }
+            .info-box { background: #fff; border-left: 4px solid #e53935; padding: 15px; margin: 20px 0; }
+            .attachment-note { background: #e8f5e9; border: 1px solid #4caf50; padding: 12px; margin: 15px 0; border-radius: 4px; }
+            .footer { text-align: center; padding: 20px; color: #757575; font-size: 12px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>📊 HRM SYSTEM</h1>
+            </div>
+            <div class="content">
+                <h2>Báo cáo định kỳ</h2>
+                
+                <div class="info-box">
+                    <p><strong>📋 Tên báo cáo:</strong> ${reportName}</p>
+                    <p><strong>📅 Khoảng thời gian:</strong> ${dateRange}</p>
+                    <p><strong>⏰ Thời điểm tạo:</strong> ${new Date().toLocaleString("vi-VN")}</p>
+                </div>
+                
+                <div class="attachment-note">
+                    <p><strong>📎 File đính kèm:</strong></p>
+                    <p>Báo cáo chi tiết được đính kèm dưới dạng file CSV. Vui lòng tải xuống để xem đầy đủ dữ liệu.</p>
+                </div>
+                
+                <p><strong>Lưu ý:</strong></p>
+                <ul>
+                    <li>File CSV có thể mở bằng Excel, Google Sheets hoặc các công cụ tương tự</li>
+                    <li>Đảm bảo mã hóa UTF-8 để hiển thị đúng tiếng Việt</li>
+                    <li>Báo cáo được tạo tự động từ hệ thống HRM</li>
+                </ul>
+            </div>
+            <div class="footer">
+                <p>© 2026 HRM System. All rights reserved.</p>
+                <p>Email này được gửi tự động, vui lòng không reply.</p>
+            </div>
+        </div>
+    </body>
+    </html>
   `;
   return sendEmail({
     to: toEmail,
