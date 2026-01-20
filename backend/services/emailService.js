@@ -11,9 +11,9 @@ const transporter = nodemailer.createTransport({
 
 // Send verification email
 async function sendVerificationEmail(toEmail, verificationCode, userName) {
-  // DEBUG LOGGING FOR DEVELOPMENT
+  // DEBUG LOGGING
   console.log("==========================================");
-  console.log("📧 MOCK EMAIL SEND (Verification)");
+  console.log("📧 ATTEMPTING EMAIL SEND (Verification)");
   console.log(`To: ${toEmail}`);
   console.log(`User: ${userName}`);
   console.log(`Code: ${verificationCode}`);
@@ -85,9 +85,9 @@ async function sendVerificationEmail(toEmail, verificationCode, userName) {
 
 // Send password reset email (for future use)
 async function sendPasswordResetEmail(toEmail, resetToken, userName) {
-  // DEBUG LOGGING FOR DEVELOPMENT
+  // DEBUG LOGGING
   console.log("==========================================");
-  console.log("📧 MOCK EMAIL SEND (Password Reset)");
+  console.log("📧 ATTEMPTING EMAIL SEND (Password Reset)");
   console.log(`To: ${toEmail}`);
   console.log(`User: ${userName}`);
   console.log(`Reset Token: ${resetToken}`);
@@ -146,7 +146,7 @@ async function sendReportEmail(
   toEmail,
   reportName,
   dateRange,
-  attachments = []
+  attachments = [],
 ) {
   // DEBUG LOGGING
   console.log("==========================================");
@@ -185,7 +185,7 @@ async function sendReportEmail(
                         <p><strong>Tên báo cáo:</strong> ${reportName}</p>
                         <p><strong>Phạm vi dữ liệu:</strong> ${dateRange}</p>
                         <p><strong>Ngày tạo:</strong> ${new Date().toLocaleString(
-                          "vi-VN"
+                          "vi-VN",
                         )}</p>
                     </div>
 
@@ -212,7 +212,7 @@ async function sendReportEmail(
   try {
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
       console.warn(
-        "⚠️ SMTP credentials missing inside .env. Cannot send email."
+        "⚠️ SMTP credentials missing inside .env. Cannot send email.",
       );
       // We throw error here to make it visible in logs
       throw new Error("SMTP Credentials Missing in Environment");
