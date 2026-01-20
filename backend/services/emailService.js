@@ -302,13 +302,13 @@ async function sendReportEmail(
                 <h2>Báo cáo định kỳ</h2>
                 
                 <div class="info-box">
-                    <p><strong>📋 Tên báo cáo:</strong> ${reportName}</p>
-                    <p><strong>📅 Khoảng thời gian:</strong> ${dateRange}</p>
-                    <p><strong>⏰ Thời điểm tạo:</strong> ${new Date().toLocaleString("vi-VN")}</p>
+                    <p><strong>Tên báo cáo:</strong> ${reportName}</p>
+                    <p><strong>Khoảng thời gian:</strong> ${dateRange}</p>
+                    <p><strong>Thời điểm tạo:</strong> ${new Date().toLocaleString("vi-VN")}</p>
                 </div>
                 
                 <div class="attachment-note">
-                    <p><strong>📎 File đính kèm:</strong></p>
+                    <p><strong>File đính kèm:</strong></p>
                     <p>Báo cáo chi tiết được đính kèm dưới dạng file CSV. Vui lòng tải xuống để xem đầy đủ dữ liệu.</p>
                 </div>
                 
