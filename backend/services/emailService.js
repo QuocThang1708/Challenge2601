@@ -1,20 +1,19 @@
 const nodemailer = require("nodemailer");
 
 // Email transporter configuration
-// Email transporter configuration
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // use SSL
+  port: 587,
+  secure: false, // use TLS
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
   },
   tls: {
-    // Determine if we need to accept self-signed certificates (usually not for Gmail, but good for debugging)
     rejectUnauthorized: false,
   },
-  connectionTimeout: 10000, // 10 seconds timeout
+  family: 4, // Force IPv4
+  connectionTimeout: 10000,
 });
 
 // Send verification email
