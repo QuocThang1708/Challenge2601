@@ -22,7 +22,15 @@ const UserSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Đang công tác", "Đã nghỉ việc", "Active", "Inactive"], // Including both VN/EN formats seen in data
+      enum: [
+        "Đang công tác",
+        "Đã nghỉ việc",
+        "Nghi phép",
+        "Thai sản",
+        "Đình chỉ",
+        "Active",
+        "Inactive",
+      ],
       default: "Đang công tác",
     },
     department: {
