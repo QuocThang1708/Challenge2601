@@ -88,29 +88,53 @@ router.post("/upload", auth, upload.single("cv"), async (req, res) => {
     await newCV.save();
 
     // --- AUTO EXTRACT QUALIFICATIONS ---
-    const text = await extractTextFromFile(req.file.path, req.file.mimetype);
-    if (text && text.length > 50) {
-      const extracted = cvParser.parse(text);
-      if (
-        extracted.education.length ||
-        extracted.experience.length ||
-        extracted.skills.length
-      ) {
-        let qual = await Qualification.findOne({ userId: req.user.id });
-        if (!qual) {
-          qual = new Qualification({ userId: req.user.id });
+    console.log(
+      `[CV] Starting text extraction for ${req.file.originalname} (${req.file.mimetype})`,
+    );
+    try {
+      const text = await extractTextFromFile(req.file.path, req.file.mimetype);
+      console.log(`[CV] Extracted text length: ${text ? text.length : 0}`);
+
+      if (text && text.length > 20) {
+        // Relaxed valid text check
+        const extracted = cvParser.parse(text);
+        console.log(
+          `[CV] Extracted Data:`,
+          JSON.stringify(extracted).substring(0, 200) + "...",
+        );
+
+        if (
+          extracted.education.length ||
+          extracted.experience.length ||
+          extracted.skills.length ||
+          extracted.achievements.length
+        ) {
+          // Find by String ID
+          let qual = await Qualification.findOne({
+            userId: req.user.id.toString(),
+          });
+          if (!qual) {
+            qual = new Qualification({ userId: req.user.id.toString() });
+          }
+
+          if (extracted.education?.length)
+            qual.education.push(...extracted.education);
+          if (extracted.experience?.length)
+            qual.experience.push(...extracted.experience);
+          if (extracted.skills?.length) qual.skills.push(...extracted.skills);
+          if (extracted.achievements?.length)
+            qual.achievements.push(...extracted.achievements);
+
+          await qual.save();
+          console.log("[CV] Qualifications updated successfully.");
+        } else {
+          console.log("[CV] No structured data found in text.");
         }
-
-        if (extracted.education?.length)
-          qual.education.push(...extracted.education);
-        if (extracted.experience?.length)
-          qual.experience.push(...extracted.experience);
-        if (extracted.skills?.length) qual.skills.push(...extracted.skills);
-        if (extracted.achievements?.length)
-          qual.achievements.push(...extracted.achievements);
-
-        await qual.save();
+      } else {
+        console.log("[CV] Text too short to parse.");
       }
+    } catch (e) {
+      console.error("[CV] Auto-extract failed:", e);
     }
     // -----------------------------------
 
@@ -130,7 +154,7 @@ router.post("/upload", auth, upload.single("cv"), async (req, res) => {
 // GET /api/cv
 router.get("/", auth, async (req, res) => {
   try {
-    const cvs = await CV.find({ userId: req.user.id });
+    const cvs = await CV.find({ userId: req.user.id.toString() });
     res.json({ success: true, data: cvs });
   } catch (error) {
     res.status(500).json({ success: false, message: "Lỗi lấy danh sách CV" });
@@ -253,18 +277,24 @@ router.put("/:id", auth, upload.single("cv"), async (req, res) => {
     await cv.save();
 
     // --- AUTO EXTRACT QUALIFICATIONS (UPDATE) ---
+    console.log(`[CV-UPDATE] Starting extraction for ${req.file.originalname}`);
     try {
       const text = await extractTextFromFile(req.file.path, req.file.mimetype);
-      if (text && text.length > 50) {
+      console.log(`[CV-UPDATE] Text length: ${text ? text.length : 0}`);
+
+      if (text && text.length > 20) {
         const extracted = cvParser.parse(text);
+
         if (
           extracted.education.length ||
           extracted.experience.length ||
           extracted.skills.length
         ) {
-          let qual = await Qualification.findOne({ userId: req.user.id });
+          let qual = await Qualification.findOne({
+            userId: req.user.id.toString(),
+          });
           if (!qual) {
-            qual = new Qualification({ userId: req.user.id });
+            qual = new Qualification({ userId: req.user.id.toString() });
           }
 
           if (extracted.education?.length)
@@ -276,10 +306,11 @@ router.put("/:id", auth, upload.single("cv"), async (req, res) => {
             qual.achievements.push(...extracted.achievements);
 
           await qual.save();
+          console.log("[CV-UPDATE] Qualifications updated.");
         }
       }
     } catch (aiError) {
-      console.error("Auto-extract failed on update:", aiError);
+      console.error("[CV-UPDATE] Auto-extract failed:", aiError);
       // Don't fail the upload if AI fails
     }
     // -----------------------------------
@@ -311,7 +342,10 @@ router.delete("/:id", auth, async (req, res) => {
 // POST /api/cv/:id/extract-qualifications (Manual Trigger)
 router.post("/:id/extract-qualifications", auth, async (req, res) => {
   try {
-    const cv = await CV.findOne({ _id: req.params.id, userId: req.user.id });
+    const cv = await CV.findOne({
+      _id: req.params.id,
+      userId: req.user.id.toString(),
+    });
     if (!cv)
       return res.status(404).json({ success: false, message: "CV not found" });
 
@@ -319,10 +353,12 @@ router.post("/:id/extract-qualifications", auth, async (req, res) => {
     try {
       await fs.access(cv.path);
     } catch (e) {
-      return res.status(404).json({
-        success: false,
-        message: "File gốc không còn tồn tại để scan",
-      });
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message: "File gốc không còn tồn tại để scan",
+        });
     }
 
     const text = await extractTextFromFile(cv.path, cv.mimetype);
@@ -339,9 +375,9 @@ router.post("/:id/extract-qualifications", auth, async (req, res) => {
     const extracted = cvParser.parse(text);
 
     // Save to DB
-    let qual = await Qualification.findOne({ userId: req.user.id });
+    let qual = await Qualification.findOne({ userId: req.user.id.toString() });
     if (!qual) {
-      qual = new Qualification({ userId: req.user.id });
+      qual = new Qualification({ userId: req.user.id.toString() });
     }
 
     if (extracted.education?.length)

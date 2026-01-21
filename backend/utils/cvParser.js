@@ -46,7 +46,10 @@ class CVParserAgent {
   }
 
   normalizeText(text) {
+    // Basic normalization: unify newlines
     return text
+      .replace(/\r\n/g, "\n")
+      .replace(/\r/g, "\n")
       .split("\n")
       .map((line) => line.trim())
       .filter((line) => line.length > 0);
@@ -58,8 +61,8 @@ class CVParserAgent {
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, ""); // Remove accents roughly for detection
 
-    // Heuristic: Section headers are usually short and often Uppercase or Title Case
-    if (line.length > 50) return null;
+    // Heuristic: Section headers are usually short
+    if (line.length > 100) return null; // Relaxed limit from 50 to 100
 
     for (const [section, keywords] of Object.entries(this.sections)) {
       if (keywords.some((k) => lower.includes(k))) {
