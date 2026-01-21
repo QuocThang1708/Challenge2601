@@ -9,7 +9,19 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5500",
+      "http://127.0.0.1:5500",
+      "https://hrm-ai-user-portal.onrender.com",
+      "https://hrm-ai-admin-portal.onrender.com",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
