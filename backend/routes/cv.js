@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
-const { pathToFileURL } = require("url");
 const fs = require("fs").promises;
 const { auth } = require("../middlewares/auth");
 
@@ -10,6 +9,11 @@ const { auth } = require("../middlewares/auth");
 const CV = require("../models/CV");
 const Qualification = require("../models/Qualification");
 const User = require("../models/User");
+
+// Utils
+const cvParser = require("../utils/cvParser");
+const pdf = require("pdf-parse");
+const mammoth = require("mammoth");
 
 // Multer Config
 const storage = multer.diskStorage({
@@ -43,6 +47,23 @@ const upload = multer({
   },
 });
 
+// Helper: Extract Text from File
+async function extractTextFromFile(filePath, mimetype) {
+  try {
+    if (mimetype.includes("pdf")) {
+      const dataBuffer = await fs.readFile(filePath);
+      const data = await pdf(dataBuffer);
+      return data.text;
+    } else if (mimetype.includes("word") || mimetype.includes("office")) {
+      const result = await mammoth.extractRawText({ path: filePath });
+      return result.value;
+    }
+  } catch (err) {
+    console.error("Text extraction failed:", err);
+  }
+  return "";
+}
+
 // POST /api/cv/upload
 router.post("/upload", auth, upload.single("cv"), async (req, res) => {
   try {
@@ -62,9 +83,40 @@ router.post("/upload", auth, upload.single("cv"), async (req, res) => {
 
     await newCV.save();
 
+    // --- AUTO EXTRACT QUALIFICATIONS ---
+    const text = await extractTextFromFile(req.file.path, req.file.mimetype);
+    if (text && text.length > 50) {
+      const extracted = cvParser.parse(text);
+      if (
+        extracted.education.length ||
+        extracted.experience.length ||
+        extracted.skills.length
+      ) {
+        let qual = await Qualification.findOne({ userId: req.user.id });
+        if (!qual) {
+          qual = new Qualification({ userId: req.user.id });
+        }
+
+        if (extracted.education?.length)
+          qual.education.push(...extracted.education);
+        if (extracted.experience?.length)
+          qual.experience.push(...extracted.experience);
+        if (extracted.skills?.length) qual.skills.push(...extracted.skills);
+        if (extracted.achievements?.length)
+          qual.achievements.push(...extracted.achievements);
+
+        await qual.save();
+      }
+    }
+    // -----------------------------------
+
     res
       .status(201)
-      .json({ success: true, message: "Tải lên CV thành công", data: newCV });
+      .json({
+        success: true,
+        message: "Tải lên CV & Trích xuất tự động thành công",
+        data: newCV,
+      });
   } catch (error) {
     console.error("CV upload error:", error);
     res
@@ -114,9 +166,25 @@ router.get("/:id/download", auth, async (req, res) => {
     if (!canAccess)
       return res.status(403).json({ success: false, message: "Forbidden" });
 
-    res.download(cv.path, cv.filename);
+    // Validate path
+    // If path is stored as absolute local path from previous deploy, it might be wrong.
+    // Try to resolve it relative to current uploads dir if possible, or trust db.
+    let filePath = cv.path;
+    try {
+      await fs.access(filePath);
+    } catch (e) {
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message:
+            "File gốc không còn tồn tại trên server (có thể do redeploy)",
+        });
+    }
+
+    res.download(filePath, cv.filename);
   } catch (error) {
-    res.status(500).json({ success: false, message: "download error" });
+    res.status(500).json({ success: false, message: "Download error" });
   }
 });
 
@@ -127,59 +195,36 @@ router.get("/:id/view", auth, async (req, res) => {
     if (!cv)
       return res.status(404).json({ success: false, message: "CV not found" });
 
-    // Verify file exists
+    // Fix check file exist
+    let filePath = cv.path;
     try {
-      await fs.access(cv.path);
+      await fs.access(filePath);
     } catch (e) {
       return res
         .status(404)
-        .json({ success: false, message: "File không tồn tại trên hệ thống" });
+        .json({ success: false, message: "File không tồn tại (Disk Missing)" });
     }
 
-    if (cv.mimetype.includes("officedocument")) {
+    if (
+      cv.mimetype.includes("officedocument") ||
+      cv.mimetype.includes("word") ||
+      cv.filename.endsWith("docx") ||
+      cv.filename.endsWith("doc")
+    ) {
       const mammoth = require("mammoth");
-      const result = await mammoth.convertToHtml({ path: cv.path });
-      const html = `<!DOCTYPE html><html><body style="padding:40px;max-width:900px;margin:0 auto;font-family:sans-serif">${result.value}</body></html>`;
+      const result = await mammoth.convertToHtml({ path: filePath });
+      const html = `<!DOCTYPE html><html><body style="padding:40px;max-width:900px;margin:0 auto;font-family:sans-serif;line-height:1.6">${result.value}</body></html>`;
       res.setHeader("Content-Type", "text/html");
       return res.send(html);
     }
 
     res.setHeader("Content-Type", cv.mimetype);
     res.setHeader("Content-Disposition", "inline");
-    const stream = require("fs").createReadStream(cv.path);
+    const stream = require("fs").createReadStream(filePath);
     stream.pipe(res);
   } catch (error) {
-    res.status(500).send("Server Error");
-  }
-});
-
-// PUT /api/cv/:id
-router.put("/:id", auth, upload.single("cv"), async (req, res) => {
-  try {
-    if (!req.file)
-      return res.status(400).json({ success: false, message: "Thiếu file" });
-
-    const cv = await CV.findOne({ _id: req.params.id, userId: req.user.id });
-    if (!cv)
-      return res
-        .status(404)
-        .json({ success: false, message: "CV không tồn tại" });
-
-    // Delete old file
-    try {
-      await fs.unlink(cv.path);
-    } catch (e) {}
-
-    cv.filename = req.file.originalname;
-    cv.path = req.file.path;
-    cv.mimetype = req.file.mimetype;
-    cv.size = req.file.size;
-    cv.uploadDate = new Date(); // Update date
-
-    await cv.save();
-    res.json({ success: true, message: "Cập nhật thành công", data: cv });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Lỗi server" });
+    console.error("View CV Error:", error);
+    res.status(500).send("Server Error: " + error.message);
   }
 });
 
@@ -198,77 +243,6 @@ router.delete("/:id", auth, async (req, res) => {
     res.json({ success: true, message: "Xóa thành công" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Lỗi Server" });
-  }
-});
-
-// POST /api/cv/:id/extract-qualifications
-const cvParser = require("../utils/cvParser");
-const pdf = require("pdf-parse"); // Using pdf-parse directly in file or check if utility exists
-
-router.post("/:id/extract-qualifications", auth, async (req, res) => {
-  try {
-    const cv = await CV.findOne({ _id: req.params.id, userId: req.user.id });
-    if (!cv)
-      return res.status(404).json({ success: false, message: "CV not found" });
-
-    let text = "";
-    const filePath = cv.path;
-
-    if (cv.mimetype.includes("pdf")) {
-      const dataBuffer = await fs.readFile(filePath);
-      try {
-        // Basic pdf-parse usage assuming simple install
-        // If complex setup needed, use existing util. previous code had complex pdf setup.
-        // I'll assume simple pdf-parse works or rely on catch.
-        // Previously checked code used `new pdf(...)`.
-        const parser = await pdf(dataBuffer);
-        text = parser.text;
-      } catch (e) {
-        console.error("PDF Parse error", e);
-        // Fallback or error
-      }
-    } else if (cv.mimetype.includes("word") || cv.mimetype.includes("office")) {
-      const mammoth = require("mammoth");
-      const result = await mammoth.extractRawText({ path: filePath });
-      text = result.value;
-    }
-
-    if (!text || text.length < 50) {
-      return res.json({
-        success: true,
-        warning: "NO_TEXT",
-        message: "Không đọc được nội dung text (Scan?)",
-        extracted: {},
-      });
-    }
-
-    let extracted = cvParser.parse(text);
-
-    // Save to DB
-    let qual = await Qualification.findOne({ userId: req.user.id });
-    if (!qual) {
-      qual = new Qualification({ userId: req.user.id });
-    }
-
-    if (extracted.education?.length)
-      qual.education.push(...extracted.education);
-    if (extracted.experience?.length)
-      qual.experience.push(...extracted.experience);
-    if (extracted.skills?.length) qual.skills.push(...extracted.skills);
-    if (extracted.achievements?.length)
-      qual.achievements.push(...extracted.achievements);
-
-    await qual.save();
-
-    res.json({
-      success: true,
-      message: "Đã trích xuất thông tin",
-      data: extracted,
-    });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ success: false, message: "Lỗi AI: " + error.message });
   }
 });
 
