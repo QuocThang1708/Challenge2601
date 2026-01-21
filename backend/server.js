@@ -57,12 +57,16 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
+const connectDB = require("./config/db");
 const scheduler = require("./services/scheduler");
 
 app.listen(PORT, async () => {
   console.log(`🚀 HRM API Server running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
   console.log(`🔐 Environment: ${process.env.NODE_ENV}`);
+
+  // Connect Database
+  await connectDB();
 
   // Initialize Scheduled Tasks
   await scheduler.initializeScheduler();
