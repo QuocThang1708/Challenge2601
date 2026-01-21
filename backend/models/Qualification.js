@@ -14,11 +14,11 @@ const QualificationSchema = new mongoose.Schema({
     default: [],
   },
   skills: {
-    type: [String],
+    type: [mongoose.Schema.Types.Mixed],
     default: [],
   },
   achievements: {
-    type: [String],
+    type: [mongoose.Schema.Types.Mixed],
     default: [],
   },
   updatedAt: {

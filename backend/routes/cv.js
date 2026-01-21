@@ -25,6 +25,10 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
+    // Fix UTF-8 encoding for originalname
+    file.originalname = Buffer.from(file.originalname, "latin1").toString(
+      "utf8",
+    );
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(
       null,
@@ -110,13 +114,11 @@ router.post("/upload", auth, upload.single("cv"), async (req, res) => {
     }
     // -----------------------------------
 
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "Tải lên CV & Trích xuất tự động thành công",
-        data: newCV,
-      });
+    res.status(201).json({
+      success: true,
+      message: "Tải lên CV & Trích xuất tự động thành công",
+      data: newCV,
+    });
   } catch (error) {
     console.error("CV upload error:", error);
     res
@@ -173,13 +175,10 @@ router.get("/:id/download", auth, async (req, res) => {
     try {
       await fs.access(filePath);
     } catch (e) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message:
-            "File gốc không còn tồn tại trên server (có thể do redeploy)",
-        });
+      return res.status(404).json({
+        success: false,
+        message: "File gốc không còn tồn tại trên server (có thể do redeploy)",
+      });
     }
 
     res.download(filePath, cv.filename);
