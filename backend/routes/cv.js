@@ -227,21 +227,66 @@ router.get("/:id/view", auth, async (req, res) => {
   }
 });
 
-// DELETE /api/cv/:id
-router.delete("/:id", auth, async (req, res) => {
+// PUT /api/cv/:id
+router.put("/:id", auth, upload.single("cv"), async (req, res) => {
   try {
+    if (!req.file)
+      return res.status(400).json({ success: false, message: "Thiếu file" });
+
     const cv = await CV.findOne({ _id: req.params.id, userId: req.user.id });
     if (!cv)
-      return res.status(404).json({ success: false, message: "CV not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "CV không tồn tại" });
 
+    // Delete old file
     try {
       await fs.unlink(cv.path);
     } catch (e) {}
 
-    await CV.deleteOne({ _id: req.params.id });
-    res.json({ success: true, message: "Xóa thành công" });
+    cv.filename = req.file.originalname;
+    cv.path = req.file.path;
+    cv.mimetype = req.file.mimetype;
+    cv.size = req.file.size;
+    cv.uploadDate = new Date(); // Update date
+
+    await cv.save();
+
+    // --- AUTO EXTRACT QUALIFICATIONS (UPDATE) ---
+    try {
+      const text = await extractTextFromFile(req.file.path, req.file.mimetype);
+      if (text && text.length > 50) {
+        const extracted = cvParser.parse(text);
+        if (
+          extracted.education.length ||
+          extracted.experience.length ||
+          extracted.skills.length
+        ) {
+          let qual = await Qualification.findOne({ userId: req.user.id });
+          if (!qual) {
+            qual = new Qualification({ userId: req.user.id });
+          }
+
+          if (extracted.education?.length)
+            qual.education.push(...extracted.education);
+          if (extracted.experience?.length)
+            qual.experience.push(...extracted.experience);
+          if (extracted.skills?.length) qual.skills.push(...extracted.skills);
+          if (extracted.achievements?.length)
+            qual.achievements.push(...extracted.achievements);
+
+          await qual.save();
+        }
+      }
+    } catch (aiError) {
+      console.error("Auto-extract failed on update:", aiError);
+      // Don't fail the upload if AI fails
+    }
+    // -----------------------------------
+
+    res.json({ success: true, message: "Cập nhật thành công", data: cv });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Lỗi Server" });
+    res.status(500).json({ success: false, message: "Lỗi server" });
   }
 });
 
