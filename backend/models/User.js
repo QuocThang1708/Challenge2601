@@ -25,10 +25,12 @@ const UserSchema = new mongoose.Schema(
       enum: [
         "Đang công tác",
         "Đã nghỉ việc",
+        "Nghỉ việc",
         "Nghi phép",
         "Nghỉ phép",
         "Thai sản",
         "Đình chỉ",
+        "Chuyển đơn vị",
         "Active",
         "Inactive",
       ],
