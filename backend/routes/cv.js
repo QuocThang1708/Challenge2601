@@ -290,6 +290,24 @@ router.put("/:id", auth, upload.single("cv"), async (req, res) => {
   }
 });
 
+// DELETE /api/cv/:id
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    const cv = await CV.findOne({ _id: req.params.id, userId: req.user.id });
+    if (!cv)
+      return res.status(404).json({ success: false, message: "CV not found" });
+
+    try {
+      await fs.unlink(cv.path);
+    } catch (e) {}
+
+    await CV.deleteOne({ _id: req.params.id });
+    res.json({ success: true, message: "Xóa thành công" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Lỗi Server" });
+  }
+});
+
 // POST /api/cv/:id/extract-qualifications (Manual Trigger)
 router.post("/:id/extract-qualifications", auth, async (req, res) => {
   try {
