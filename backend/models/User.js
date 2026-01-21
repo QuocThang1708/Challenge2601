@@ -26,6 +26,7 @@ const UserSchema = new mongoose.Schema(
         "Đang công tác",
         "Đã nghỉ việc",
         "Nghi phép",
+        "Nghỉ phép",
         "Thai sản",
         "Đình chỉ",
         "Active",

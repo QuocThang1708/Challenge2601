@@ -166,7 +166,7 @@ router.put("/:id", auth, async (req, res) => {
     res.json({ success: true, data: user });
   } catch (error) {
     console.error("Update user error:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: error.message });
   }
 });
 
