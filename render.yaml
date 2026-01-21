@@ -37,6 +37,8 @@ services:
         sync: false
       - key: TZ
         value: Asia/Ho_Chi_Minh
+      - key: MONGODB_URI
+        sync: false # User will provide this in Render Dashboard
 
   # User Portal Static Site
   - type: web
