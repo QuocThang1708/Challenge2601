@@ -245,4 +245,65 @@ router.delete("/:id", auth, async (req, res) => {
   }
 });
 
+// POST /api/cv/:id/extract-qualifications (Manual Trigger)
+router.post("/:id/extract-qualifications", auth, async (req, res) => {
+  try {
+    const cv = await CV.findOne({ _id: req.params.id, userId: req.user.id });
+    if (!cv)
+      return res.status(404).json({ success: false, message: "CV not found" });
+
+    // Validate path
+    try {
+      await fs.access(cv.path);
+    } catch (e) {
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message: "File gốc không còn tồn tại để scan",
+        });
+    }
+
+    const text = await extractTextFromFile(cv.path, cv.mimetype);
+
+    if (!text || text.length < 50) {
+      return res.json({
+        success: true,
+        warning: "NO_TEXT",
+        message: "Không đọc được nội dung text (Scan?)",
+        extracted: {},
+      });
+    }
+
+    const extracted = cvParser.parse(text);
+
+    // Save to DB
+    let qual = await Qualification.findOne({ userId: req.user.id });
+    if (!qual) {
+      qual = new Qualification({ userId: req.user.id });
+    }
+
+    if (extracted.education?.length)
+      qual.education.push(...extracted.education);
+    if (extracted.experience?.length)
+      qual.experience.push(...extracted.experience);
+    if (extracted.skills?.length) qual.skills.push(...extracted.skills);
+    if (extracted.achievements?.length)
+      qual.achievements.push(...extracted.achievements);
+
+    await qual.save();
+
+    res.json({
+      success: true,
+      message: "Đã trích xuất thông tin (Manual)",
+      data: extracted,
+    });
+  } catch (error) {
+    console.error("Manual Extract Error:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Lỗi AI: " + error.message });
+  }
+});
+
 module.exports = router;
