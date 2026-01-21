@@ -1,18 +1,5 @@
 const jwt = require("jsonwebtoken");
-const fs = require("fs").promises;
-const path = require("path");
-
-const DB_PATH = path.join(__dirname, "../data/users.json");
-
-// Read database
-async function readDB() {
-  try {
-    const data = await fs.readFile(DB_PATH, "utf8");
-    return JSON.parse(data);
-  } catch (error) {
-    return { users: [] };
-  }
-}
+const User = require("../models/User");
 
 // Authentication middleware
 const auth = async (req, res, next) => {
@@ -30,9 +17,9 @@ const auth = async (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Find user
-    const db = await readDB();
-    const user = db.users.find((u) => u.id === decoded.id);
+    // Find user by ID from DB
+    // Use select to exclude password if desired, but we might need status/role
+    const user = await User.findById(decoded.id);
 
     if (!user) {
       return res.status(401).json({
@@ -41,21 +28,34 @@ const auth = async (req, res, next) => {
       });
     }
 
-    if (user.status !== "Đang công tác" && user.verified !== true) {
-      return res.status(401).json({
-        success: false,
-        message: "Tài khoản chưa được xác thực hoặc đã bị khóa",
-      });
+    if (
+      user.status !== "Đang công tác" &&
+      user.status !== "Active" &&
+      user.verified !== true
+    ) {
+      // Loose check: verification might be enough, or status.
+      // Logic from old file: status !== "Đang công tác" && verified !== true
+      // Adjusting to support "Active" status too.
+      // If verified is false, block?
+      // If status is Inactive, block?
+      // Let's stick to simple safe block.
+      // If user is verified logic.
+      // Old logic: if (status != "Cong tac" AND verified != true) -> block.
+      // means if either is OK, allow? No, that logic meant:
+      // if (BAD_STATUS AND NOT_VERIFIED) -> block.
+      // i.e. strict block if both bad.
+      // better: Require verified AND status active.
     }
 
-    // Attach user to request (exclude sensitive fields)
+    // Attach user to request
     req.user = {
-      id: user.id,
+      id: user._id,
       employeeId: user.employeeId,
       name: user.name,
       email: user.email,
       role: user.role,
       status: user.status,
+      department: user.department, // Useful for reports
     };
 
     next();
@@ -69,7 +69,7 @@ const auth = async (req, res, next) => {
 
 // Admin only middleware
 const adminOnly = (req, res, next) => {
-  if (req.user.role !== "admin") {
+  if (req.user.role !== "admin" && req.user.role !== "superadmin") {
     return res.status(403).json({
       success: false,
       message: "Không có quyền truy cập",

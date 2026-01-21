@@ -1,126 +1,73 @@
 const express = require("express");
 const router = express.Router();
-const fs = require("fs").promises;
-const path = require("path");
 const jwt = require("jsonwebtoken");
+const { auth } = require("../middlewares/auth"); // Use centralized auth
+const scheduler = require("../services/scheduler");
 
-const USERS_PATH = path.join(__dirname, "../data/users.json");
-const REPORTS_PATH = path.join(__dirname, "../data/reports.json");
-const HISTORY_PATH = path.join(__dirname, "../data/job_history.json");
+// Import Models
+const Report = require("../models/Report");
+const ScheduledTask = require("../models/ScheduledTask");
+const User = require("../models/User");
+const JobHistory = require("../models/JobHistory");
 
-// Helper: Read/Write DB
-async function readDB(filePath) {
+// POST /api/reports/generate - Generate & Save Report (To History)
+router.post("/generate", auth, async (req, res) => {
   try {
-    const data = await fs.readFile(filePath, "utf8");
-    return JSON.parse(data);
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      if (filePath === REPORTS_PATH) return { reports: [] };
-      if (filePath === HISTORY_PATH) return []; // Array
-      return { users: [] };
-    }
-    throw error;
-  }
-}
-
-async function writeDB(filePath, data) {
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2));
-}
-
-// Auth middleware
-async function authMiddleware(req, res, next) {
-  try {
-    const token = req.header("Authorization")?.replace("Bearer ", "");
-    if (!token) throw new Error();
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.id;
-    req.userRole = decoded.role;
-    req.userName = decoded.name || "Admin"; // Fallback
-    next();
-  } catch (error) {
-    res.status(401).json({ success: false, message: "Unauthorized" });
-  }
-}
-
-// POST /api/reports/generate - Generate & Save Report
-router.post("/generate", authMiddleware, async (req, res) => {
-  try {
-    if (req.userRole !== "admin" && req.userRole !== "superadmin") {
+    if (req.user.role !== "admin" && req.user.role !== "superadmin") {
       return res.status(403).json({ success: false, message: "Forbidden" });
     }
 
     const { reportType, dateFrom, dateTo, department, exportFormat } = req.body;
 
-    // Report Type Definitions
-    // 1. HR_MASTER ("general"): Tổng hợp nhân sự (Profile)
-    // 2. HR_MOVEMENT ("movement"): Biến động (History)
-    // 3. HR_TAGS ("classifications"): Phân loại (Tags)
-
     // Count Records Logic
     let recordCount = 0;
+    const from = dateFrom ? new Date(dateFrom) : new Date(0);
+    const to = dateTo ? new Date(dateTo) : new Date();
+    to.setHours(23, 59, 59, 999);
 
     if (reportType === "movement") {
-      const history = await readDB(HISTORY_PATH);
-      // Filter History by Date
-      const from = dateFrom ? new Date(dateFrom) : new Date(0);
-      const to = dateTo ? new Date(dateTo) : new Date();
-      to.setHours(23, 59, 59, 999);
-
-      recordCount = history.filter((h) => {
-        const t = new Date(h.timestamp);
-        return t >= from && t <= to;
-      }).length;
+      recordCount = await JobHistory.countDocuments({
+        timestamp: { $gte: from, $lte: to },
+      });
     } else {
       // Users based reports
-      const usersDb = await readDB(USERS_PATH);
-      let filteredUsers = usersDb.users || [];
+      const query = {};
+      if (department) query.department = department;
 
-      if (department) {
-        filteredUsers = filteredUsers.filter(
-          (u) => u.department === department
-        );
-      }
-      // Date filter usually applies to Join Date for Master lists?
-      // Or "Active as of"? Let's apply Join Date filter if provided.
+      // Date filter for users (Join date or Created date)
       if (dateFrom || dateTo) {
-        const from = dateFrom ? new Date(dateFrom) : new Date(0);
-        const to = dateTo ? new Date(dateTo) : new Date();
-        to.setHours(23, 59, 59, 999);
-        filteredUsers = filteredUsers.filter((u) => {
-          const dateStr = u.unionDate || u.createdAt;
-          const d = dateStr ? new Date(dateStr) : null;
-          return d && d >= from && d <= to;
-        });
+        query.$or = [
+          { unionDate: { $gte: dateFrom, $lte: dateTo } }, // String comparison might be iffy if format varies
+          { createdAt: { $gte: from, $lte: to } },
+        ];
+        // Note: unionDate is String (YYYY-MM-DD). createdAt is Date.
+        // Simple string comparison for unionDate works if YYYY-MM-DD.
+        // But safer to rely on createdAt for "Recent" reports.
+        // Let's stick to createdAt filter for now or build complex query.
+        delete query.$or;
+        query.createdAt = { $gte: from, $lte: to };
       }
-      recordCount = filteredUsers.length;
+      recordCount = await User.countDocuments(query);
     }
 
-    // Create Report Metadata
     const reportNames = {
       general: "Danh sách trích ngang (Tổng hợp)",
       movement: "Báo cáo Biến động Nhân sự",
       classifications: "Báo cáo Phân loại & Quy hoạch",
     };
 
-    const newReport = {
-      id: Date.now().toString(),
-      name: `${reportNames[reportType] || "Báo cáo"} ${
-        department ? `- ${department}` : ""
-      }`,
+    const newReport = new Report({
+      name: `${reportNames[reportType] || "Báo cáo"} ${department ? `- ${department}` : ""}`,
       type: reportType || "general",
-      createdBy: req.userName || "Admin",
-      createdAt: new Date().toISOString(),
+      createdBy: req.user.name || "Admin",
       format: exportFormat || "csv",
       recordCount: recordCount,
       status: "Hoàn thành",
       criteria: { department, dateFrom, dateTo },
-    };
+      createdAt: new Date(),
+    });
 
-    // Save to History
-    const reportsDb = await readDB(REPORTS_PATH);
-    reportsDb.reports = reportsDb.reports || [];
-    reportsDb.reports.unshift(newReport);
-    await writeDB(REPORTS_PATH, reportsDb);
+    await newReport.save();
 
     res.json({
       success: true,
@@ -134,72 +81,58 @@ router.post("/generate", authMiddleware, async (req, res) => {
 });
 
 // GET /api/reports - Get History
-router.get("/", authMiddleware, async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
-    const db = await readDB(REPORTS_PATH);
-    res.json({ success: true, data: db.reports || [] });
+    const reports = await Report.find().sort({ createdAt: -1 });
+    res.json({ success: true, data: reports });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
 // GET /api/reports/:id/download - Download file
-router.get("/:id/download", authMiddleware, async (req, res) => {
+router.get("/:id/download", auth, async (req, res) => {
   try {
-    const reportId = req.params.id;
-    const reportsDb = await readDB(REPORTS_PATH);
-    const reportVal = reportsDb.reports.find((r) => r.id === reportId);
-
-    if (!reportVal) {
+    const report = await Report.findById(req.params.id);
+    if (!report)
       return res
         .status(404)
         .json({ success: false, message: "Report not found" });
-    }
 
-    const { type, criteria } = reportVal;
+    const { type, criteria } = report;
     let csvContent = "";
 
     // Load Data Sources
-    const usersDb = await readDB(USERS_PATH);
-    const users = usersDb.users || [];
+    const users = await User.find({});
 
     // --- GENERATE CONTENT BASED ON TYPE ---
+    // (Logic duplicated from scheduler logic for now - clean overlap later)
+
+    const from = criteria.dateFrom ? new Date(criteria.dateFrom) : new Date(0);
+    const to = criteria.dateTo ? new Date(criteria.dateTo) : new Date();
+    to.setHours(23, 59, 59, 999);
 
     if (type === "movement") {
-      // === BIẾN ĐỘNG (JOB HISTORY) ===
-      const historyFull = await readDB(HISTORY_PATH);
-
-      // Filter History
-      const from = criteria.dateFrom
-        ? new Date(criteria.dateFrom)
-        : new Date(0);
-      const to = criteria.dateTo ? new Date(criteria.dateTo) : new Date();
-      to.setHours(23, 59, 59, 999);
-
-      let filteredHistory = historyFull.filter((h) => {
-        const t = new Date(h.timestamp);
-        return t >= from && t <= to;
+      const historyFull = await JobHistory.find({
+        timestamp: { $gte: from, $lte: to },
       });
 
-      // Enrich with User Names
-      let enriched = filteredHistory.map((h) => {
-        const u = users.find((user) => String(user.id) === String(h.userId));
+      let enriched = historyFull.map((h) => {
+        const u = users.find((user) => String(user._id) === String(h.userId));
         return {
-          ...h,
+          ...h.toObject(),
           userName: u ? u.name : "Unknown/Deleted",
           userCode: u ? u.employeeId : "N/A",
         };
       });
 
-      // Refilter by Dept if needed
       if (criteria.department) {
         enriched = enriched.filter((h) => {
-          const u = users.find((user) => String(user.id) === String(h.userId));
+          const u = users.find((user) => String(user._id) === String(h.userId));
           return u && u.department === criteria.department;
         });
       }
 
-      // CSV Structure: Time | Staff Code | Name | Type | Content | Old | New | Note
       const header =
         "Thoi Gian,Ma CB,Ho Ten,Loai Bien Dong,Noi Dung,Cu,Moi,Ghi Chu\n";
       const rows = enriched
@@ -209,65 +142,46 @@ router.get("/:id/download", authMiddleware, async (req, res) => {
             h.type === "LUAN_CHUYEN"
               ? "Luân chuyển/Bổ nhiệm"
               : h.type === "THAY_DOI_TRANG_THAI"
-              ? "Thay đổi trạng thái"
-              : h.type;
+                ? "Thay đổi trạng thái"
+                : h.type;
           return `"${time}","${h.userCode}","${h.userName}","${typeName}","${h.fieldName}","${h.oldValue}","${h.newValue}","${h.note}"`;
         })
         .join("\n");
       csvContent = header + rows;
     } else if (type === "classifications") {
-      // === PHÂN LOẠI / TAGS (TAGS REPORT) ===
       let filteredUsers = users;
-
-      if (criteria.department) {
+      if (criteria.department)
         filteredUsers = filteredUsers.filter(
-          (u) => u.department === criteria.department
+          (u) => u.department === criteria.department,
         );
-      }
-      // Date filter usually less relevant for Tags, but we respect it if set for "New tagged users"?
-      // Let's assume Director wants ALL active staff classified.
-      // If dates provided, maybe filter by join date.
 
-      // CSV Structure: Code | Name | Dept | Position | TAGS | Status
       const header = "Ma CB,Ho Ten,Don Vi,Chuc Vu,Nhan/Phan Loai,Trang Thai\n";
       const rows = filteredUsers
         .map((u) => {
-          const tags = (u.tags || []).join(", ");
-          return `${u.employeeId},"${u.name}","${u.department}","${u.position}","${tags}","${u.status}"`;
+          return `${u.employeeId},"${u.name}","${u.department}","${u.position}","${(u.tags || []).join(", ")}","${u.status}"`;
         })
         .join("\n");
       csvContent = header + rows;
     } else {
-      // === HR MASTER (GENERAL) ===
+      // HR MASTER
       let filteredUsers = users;
-
       if (criteria.department)
         filteredUsers = filteredUsers.filter(
-          (u) => u.department === criteria.department
+          (u) => u.department === criteria.department,
         );
+
       if (criteria.dateFrom || criteria.dateTo) {
-        const from = criteria.dateFrom
-          ? new Date(criteria.dateFrom)
-          : new Date(0);
-        const to = criteria.dateTo ? new Date(criteria.dateTo) : new Date();
-        to.setHours(23, 59, 59, 999);
         filteredUsers = filteredUsers.filter((u) => {
-          const dateStr = u.unionDate || u.createdAt;
-          const d = dateStr ? new Date(dateStr) : null;
-          return d && d >= from && d <= to;
+          const d = new Date(u.createdAt);
+          return d >= from && d <= to;
         });
       }
 
-      // CSV Structure: Detailed Profile
       const header =
         "Ma CB,Ho Ten,Email,SDT,Don Vi,Chuc Vu,Trang Thai,Ngay Gia Nhap,Ngay Sinh,Dia Chi,CCCD\n";
       const rows = filteredUsers
         .map((u) => {
-          return `${u.employeeId},"${u.name}",${u.email},${u.phone},"${
-            u.department
-          }","${u.position}","${u.status}","${u.unionDate || ""}","${
-            u.birthDate || ""
-          }","${u.address || ""}","${u.idCard || ""}"`;
+          return `${u.employeeId},"${u.name}",${u.email},${u.phone},"${u.department}","${u.position}","${u.status}","${u.unionDate || ""}","${u.birthDate || ""}","${u.address || ""}","${u.idCard || ""}"`;
         })
         .join("\n");
       csvContent = header + rows;
@@ -276,7 +190,7 @@ router.get("/:id/download", authMiddleware, async (req, res) => {
     res.setHeader("Content-Type", "text/csv; charset=utf-8");
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="baocao-${type}-${reportId}.csv"`
+      `attachment; filename="baocao-${type}-${report._id}.csv"`,
     );
     res.send("\uFEFF" + csvContent);
   } catch (error) {
@@ -286,27 +200,12 @@ router.get("/:id/download", authMiddleware, async (req, res) => {
 });
 
 // --- SCHEDULE ROUTE HANDLERS ---
-const SCHEDULE_PATH = path.join(__dirname, "../data/scheduled_tasks.json");
-const scheduler = require("../services/scheduler"); // Need to export scheduleTask from scheduler service
 
-// GET /api/reports/schedule
-router.get("/schedule/list", authMiddleware, async (req, res) => {
+// GET /api/reports/schedule/list
+router.get("/schedule/list", auth, async (req, res) => {
   try {
-    const tasks = await readDB(SCHEDULE_PATH); // Reuse readDB helper if compatible (it checks ENOENT)
-    // readDB returns object? No, readDB helper in this file returns object {users:[]} etc based on path check.
-    // Need to update readDB helper or just use fs.
-    // Let's use fs for simplicity here or update helper.
-    // The helper checks specific paths. Let's update helper logic?
-    // Easier to just read here
-    let data = [];
-    try {
-      const raw = await fs.readFile(SCHEDULE_PATH, "utf8");
-      data = JSON.parse(raw);
-    } catch (e) {
-      data = [];
-    }
-
-    res.json({ success: true, data });
+    const tasks = await ScheduledTask.find({});
+    res.json({ success: true, data: tasks });
   } catch (e) {
     res
       .status(500)
@@ -314,8 +213,8 @@ router.get("/schedule/list", authMiddleware, async (req, res) => {
   }
 });
 
-// POST /api/reports/schedule
-router.post("/schedule/create", authMiddleware, async (req, res) => {
+// POST /api/reports/schedule/create
+router.post("/schedule/create", auth, async (req, res) => {
   try {
     const {
       name,
@@ -326,42 +225,20 @@ router.post("/schedule/create", authMiddleware, async (req, res) => {
       dataPeriod,
     } = req.body;
 
-    let tasks = [];
-    try {
-      const raw = await fs.readFile(SCHEDULE_PATH, "utf8");
-      tasks = JSON.parse(raw);
-    } catch (e) {
-      tasks = [];
-    }
-
-    const newTask = {
-      id: Date.now().toString(),
+    const newTask = new ScheduledTask({
       name,
       reportType,
-      cronExpression, // "0 8 * * 1"
-      dataPeriod: dataPeriod || "previous_day", // Default
-      recipients: recipients, // Assuming string or array
+      cronExpression,
+      dataPeriod: dataPeriod || "previous_day",
+      recipients,
       department,
-      createdBy: req.userName,
+      createdBy: req.user.name,
       active: true,
-      createdAt: new Date().toISOString(),
-    };
+    });
 
-    tasks.push(newTask);
-    await fs.writeFile(SCHEDULE_PATH, JSON.stringify(tasks, null, 2));
+    await newTask.save();
 
-    // Activate immediately in memory
-    // We need to require the scheduler service.
-    // Note: Circular dependency risk? reports.js -> scheduler.js. scheduler.js -> reports.js?
-    // scheduler.js does NOT require reports.js. It implements its own logic. Safe.
-    // But we need to export scheduleTask from scheduler.js (I did not export it in previous step).
-    // Wait, I only exported { initializeScheduler, loadTasks }.
-    // usage: scheduler.initializeScheduler() re-reads everything? No, inefficient.
-    // Better to export scheduleTask. I will fix scheduler.js next.
-
-    // For now, let's just save. The restart will pick it up.
-    // Or better: call a reload function.
-    await scheduler.initializeScheduler();
+    await scheduler.scheduleTask(newTask); // Schedule immediately
 
     res.json({
       success: true,
@@ -369,7 +246,7 @@ router.post("/schedule/create", authMiddleware, async (req, res) => {
       data: newTask,
     });
   } catch (e) {
-    console.error(e);
+    console.error("Create schedule error", e);
     res
       .status(500)
       .json({ success: false, message: "Error creating schedule" });
@@ -377,34 +254,33 @@ router.post("/schedule/create", authMiddleware, async (req, res) => {
 });
 
 // PUT /api/reports/schedule/:id/toggle
-router.put("/schedule/:id/toggle", authMiddleware, async (req, res) => {
+router.put("/schedule/:id/toggle", auth, async (req, res) => {
   try {
-    const { id } = req.params;
-    const { active } = req.body; // true/false
+    const { active } = req.body;
+    const task = await ScheduledTask.findByIdAndUpdate(
+      req.params.id,
+      { active },
+      { new: true },
+    );
 
-    let tasks = [];
-    try {
-      const raw = await fs.readFile(SCHEDULE_PATH, "utf8");
-      tasks = JSON.parse(raw);
-    } catch (e) {
-      return res.status(500).json({ success: false, message: "Read Error" });
-    }
-
-    const index = tasks.findIndex((t) => t.id === id);
-    if (index === -1)
+    if (!task)
       return res
         .status(404)
         .json({ success: false, message: "Task not found" });
 
-    tasks[index].active = active;
-    await fs.writeFile(SCHEDULE_PATH, JSON.stringify(tasks, null, 2));
+    // Reload scheduler logic for this task
+    // Or simpler: Full reload.
+    // Optimization: Just update specific task
+    // If active: schedule. If inactive: stop (handled in reloadTasks logic usually, or explicitly stop)
+    // scheduler.js `scheduleTask` handles stopping existing job if re-scheduling.
+    // But if we toggle to INACTIVE, `scheduleTask` in my rewrite checks `if (!task.active) return`.
+    // So if we call `scheduleTask` with inactive task, it returns (and doesn't stop explicitly if logic doesn't say so).
+    // My rewrite:
+    // if (programmedJobs[task._id]) programmedJobs[task._id].stop();
+    // if (!task.active) return;
+    // So calling scheduleTask WILL stop the job correctly!
 
-    // Reload scheduler
-    try {
-      await scheduler.reloadTasks();
-    } catch (e) {
-      console.error("Scheduler reload failed:", e);
-    }
+    scheduler.scheduleTask(task);
 
     res.json({
       success: true,
@@ -416,9 +292,8 @@ router.put("/schedule/:id/toggle", authMiddleware, async (req, res) => {
 });
 
 // PUT /api/reports/schedule/:id (Update Full)
-router.put("/schedule/:id", authMiddleware, async (req, res) => {
+router.put("/schedule/:id", auth, async (req, res) => {
   try {
-    const { id } = req.params;
     const {
       name,
       reportType,
@@ -428,34 +303,25 @@ router.put("/schedule/:id", authMiddleware, async (req, res) => {
       dataPeriod,
     } = req.body;
 
-    let tasks = [];
-    try {
-      const raw = await fs.readFile(SCHEDULE_PATH, "utf8");
-      tasks = JSON.parse(raw);
-    } catch (e) {
-      return res.status(500).json({ success: false, message: "Read Error" });
-    }
+    const task = await ScheduledTask.findByIdAndUpdate(
+      req.params.id,
+      {
+        name,
+        reportType,
+        cronExpression,
+        recipients,
+        department,
+        dataPeriod,
+      },
+      { new: true },
+    );
 
-    const index = tasks.findIndex((t) => t.id === id);
-    if (index === -1)
+    if (!task)
       return res
         .status(404)
         .json({ success: false, message: "Task not found" });
 
-    // Update fields
-    tasks[index].name = name;
-    tasks[index].reportType = reportType;
-    tasks[index].cronExpression = cronExpression;
-    tasks[index].recipients = recipients;
-    tasks[index].department = department;
-    tasks[index].dataPeriod = dataPeriod;
-
-    await fs.writeFile(SCHEDULE_PATH, JSON.stringify(tasks, null, 2));
-
-    // Reload scheduler
-    try {
-      await scheduler.reloadTasks();
-    } catch (e) {}
+    scheduler.scheduleTask(task);
 
     res.json({ success: true, message: "Cập nhật thành công" });
   } catch (err) {
@@ -464,26 +330,17 @@ router.put("/schedule/:id", authMiddleware, async (req, res) => {
 });
 
 // DELETE /api/reports/schedule/:id
-router.delete("/schedule/:id", authMiddleware, async (req, res) => {
+router.delete("/schedule/:id", auth, async (req, res) => {
   try {
-    const { id } = req.params;
-    let tasks = [];
-    try {
-      const raw = await fs.readFile(SCHEDULE_PATH, "utf8");
-      tasks = JSON.parse(raw);
-    } catch (e) {
-      return res.status(500).json({ success: false, message: "Read Error" });
-    }
-
-    const newTasks = tasks.filter((t) => t.id !== id);
-
-    await fs.writeFile(SCHEDULE_PATH, JSON.stringify(newTasks, null, 2));
-
-    // Reload scheduler
-    try {
+    const task = await ScheduledTask.findByIdAndDelete(req.params.id);
+    if (task) {
+      // Stop the job instance if it exists - reusing logic?
+      // scheduleTask logic handles stop if exists in map.
+      // But passing null/deleted task?
+      // We need to validly stop it.
+      // Let's call scheduler.reloadTasks() to be safe and clean.
       await scheduler.reloadTasks();
-    } catch (e) {}
-
+    }
     res.json({ success: true, message: "Đã xóa lịch trình" });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

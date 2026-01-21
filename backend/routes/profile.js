@@ -1,66 +1,34 @@
 const express = require("express");
 const router = express.Router();
-const fs = require("fs").promises;
+const User = require("../models/User");
+const { auth } = require("../middlewares/auth");
+const multer = require("multer");
 const path = require("path");
-const jwt = require("jsonwebtoken");
+const fs = require("fs").promises; // Used for file operations (Avatar)
 
-const USERS_PATH = path.join(__dirname, "../data/users.json");
-
-// Auth middleware
-async function authMiddleware(req, res, next) {
+// GET /api/profile
+router.get("/", auth, async (req, res) => {
   try {
-    const token = req.header("Authorization")?.replace("Bearer ", "");
-    if (!token) throw new Error();
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.id;
-    next();
-  } catch (error) {
-    res.status(401).json({ success: false, message: "Unauthorized" });
-  }
-}
-
-// Read/Write helpers
-async function readUsers() {
-  const data = await fs.readFile(USERS_PATH, "utf8");
-  return JSON.parse(data);
-}
-
-async function writeUsers(data) {
-  await fs.writeFile(USERS_PATH, JSON.stringify(data, null, 2));
-}
-
-// GET /api/profile - Get current user profile
-router.get("/", authMiddleware, async (req, res) => {
-  try {
-    const db = await readUsers();
-    const user = db.users.find((u) => u.id === req.userId);
-
-    if (!user) {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user)
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
-    }
-
-    const { password, ...userWithoutPassword } = user;
-    res.json({ success: true, data: userWithoutPassword });
+    res.json({ success: true, data: user });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// PUT /api/profile - Update current user profile
-router.put("/", authMiddleware, async (req, res) => {
+// PUT /api/profile
+router.put("/", auth, async (req, res) => {
   try {
-    const db = await readUsers();
-    const index = db.users.findIndex((u) => u.id === req.userId);
-
-    if (index === -1) {
+    const user = await User.findById(req.user.id);
+    if (!user)
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
-    }
 
-    // Update user data (don't allow changing id, password, role)
     const allowedFields = [
       "name",
       "email",
@@ -76,34 +44,32 @@ router.put("/", authMiddleware, async (req, res) => {
 
     allowedFields.forEach((field) => {
       if (req.body[field] !== undefined) {
-        db.users[index][field] = req.body[field];
+        user[field] = req.body[field];
       }
     });
 
-    await writeUsers(db);
+    await user.save();
 
-    const { password, ...userWithoutPassword } = db.users[index];
+    // Return updated
+    const userObj = user.toObject();
+    delete userObj.password;
     res.json({
       success: true,
       message: "Cập nhật profile thành công",
-      data: userWithoutPassword,
+      data: userObj,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-const multer = require("multer");
-
-// Configure multer for avatar uploads
+// Multer Config
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
     const uploadDir = path.join(__dirname, "../uploads/avatars");
     try {
       await fs.mkdir(uploadDir, { recursive: true });
-    } catch (error) {
-      console.error("Error creating upload directory:", error);
-    }
+    } catch (e) {}
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
@@ -113,71 +79,54 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({
-  storage: storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB limit
+  storage,
+  limits: { fileSize: 2 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    if (!file.mimetype.startsWith("image/")) {
-      return cb(new Error("Chỉ chấp nhận file ảnh (JPG, PNG, GIF)"));
-    }
+    if (!file.mimetype.startsWith("image/"))
+      return cb(new Error("Chỉ chấp nhận file ảnh"));
     cb(null, true);
   },
 });
 
-// POST /api/profile/avatar - Upload avatar
-router.post(
-  "/avatar",
-  authMiddleware,
-  upload.single("avatar"),
-  async (req, res) => {
-    try {
-      if (!req.file) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Vui lòng chọn ảnh" });
-      }
+// POST /api/profile/avatar
+router.post("/avatar", auth, upload.single("avatar"), async (req, res) => {
+  try {
+    if (!req.file)
+      return res
+        .status(400)
+        .json({ success: false, message: "Vui lòng chọn ảnh" });
 
-      const db = await readUsers();
-      const index = db.users.findIndex((u) => u.id === req.userId);
+    const user = await User.findById(req.user.id);
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
 
-      if (index === -1) {
-        await fs.unlink(req.file.path).catch(() => {});
-        return res
-          .status(404)
-          .json({ success: false, message: "User not found" });
-      }
-
-      // Delete old avatar if exists
-      if (db.users[index].avatar) {
-        const oldPath = path.join(__dirname, "..", db.users[index].avatar);
-        // Check if it's a file path we can delete (not a URL)
-        if (!db.users[index].avatar.startsWith("http")) {
-          await fs.unlink(oldPath).catch(() => {});
-        }
-      }
-
-      // Update user record - Store relative path for serving
-      const avatarUrl = `/uploads/avatars/${req.file.filename}`;
-      db.users[index].avatar = avatarUrl;
-
-      await writeUsers(db);
-
-      const { password, ...userWithoutPassword } = db.users[index];
-
-      res.json({
-        success: true,
-        message: "Cập nhật ảnh đại diện thành công",
-        data: {
-          avatar: avatarUrl,
-          user: userWithoutPassword,
-        },
-      });
-    } catch (error) {
-      console.error("Avatar upload error:", error);
-      res
-        .status(500)
-        .json({ success: false, message: "Lỗi upload ảnh: " + error.message });
+    // Delete old avatar
+    if (user.avatar && !user.avatar.startsWith("http")) {
+      const oldPath = path.join(__dirname, "..", user.avatar);
+      try {
+        await fs.unlink(oldPath);
+      } catch (e) {}
     }
+
+    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+    user.avatar = avatarUrl;
+    await user.save();
+
+    const userObj = user.toObject();
+    delete userObj.password;
+
+    res.json({
+      success: true,
+      message: "Cập nhật ảnh đại diện thành công",
+      data: { avatar: avatarUrl, user: userObj },
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Lỗi upload ảnh: " + error.message });
   }
-);
+});
 
 module.exports = router;
