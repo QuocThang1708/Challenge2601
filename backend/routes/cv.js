@@ -143,7 +143,7 @@ router.get("/user/:userId", auth, async (req, res) => {
     const canAccess =
       req.user.role === "admin" ||
       req.user.role === "dept_admin" ||
-      req.user.id === req.params.userId;
+      req.user.id.toString() === req.params.userId;
     if (!canAccess)
       return res.status(403).json({ success: false, message: "Forbidden" });
 
@@ -164,7 +164,7 @@ router.get("/:id/download", auth, async (req, res) => {
     const canAccess =
       req.user.role === "admin" ||
       req.user.role === "dept_admin" ||
-      cv.userId === req.user.id;
+      cv.userId === req.user.id.toString();
     if (!canAccess)
       return res.status(403).json({ success: false, message: "Forbidden" });
 
@@ -256,12 +256,10 @@ router.post("/:id/extract-qualifications", auth, async (req, res) => {
     try {
       await fs.access(cv.path);
     } catch (e) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: "File gốc không còn tồn tại để scan",
-        });
+      return res.status(404).json({
+        success: false,
+        message: "File gốc không còn tồn tại để scan",
+      });
     }
 
     const text = await extractTextFromFile(cv.path, cv.mimetype);
