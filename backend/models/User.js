@@ -31,6 +31,7 @@ const UserSchema = new mongoose.Schema(
         "Thai sản",
         "Đình chỉ",
         "Chuyển đơn vị",
+        "Chờ xác thực", // Explicitly added
         "Active",
         "Inactive",
       ],
